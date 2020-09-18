@@ -1,0 +1,124 @@
+﻿using Institute.Model;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+//using System.Threading.Tasks;
+
+namespace Institute.Data
+{
+    public class InstituteContext : IdentityDbContext<ApplicationUser,IdentityRole<int>, int>
+    {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Creating Composite Key
+            modelBuilder.Entity<UserTask>()
+                .HasKey(o => new { o.PerformerId, o.GivenTaskId });
+
+            modelBuilder.Entity<UserGivenTest>()
+                .HasKey(x => new { x.PerformerId, x.ConductedTestId });
+
+            modelBuilder.Entity<UserWatchedVideo>()
+                .HasKey(x => new { x.UserWatchedId, x.WatchedVideoId });
+
+            modelBuilder.Entity<TutorCourse>()
+                .HasKey(x => new { x.CourseId, x.TutorId });
+
+            modelBuilder.Entity<UserTask>()
+                .HasOne(x => x.Checker)
+                .WithMany()
+                .HasForeignKey(x => x.CheckerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+      
+            base.OnModelCreating(modelBuilder);
+
+            //Changing Table Names
+            modelBuilder.Entity<ApplicationUser>(b =>
+            {
+                b.ToTable("AppUsers");
+            });
+
+            modelBuilder.Entity<IdentityUserClaim<int>>(b =>
+            {
+                b.ToTable("UserClaims");
+            });
+
+            modelBuilder.Entity<IdentityUserLogin<int>>(b =>
+            {
+                b.ToTable("UserLogins");
+            });
+
+            modelBuilder.Entity<IdentityUserToken<int>>(b =>
+            {
+                b.ToTable("UserTokens");
+            });
+
+            modelBuilder.Entity<IdentityRole<int>>(b =>
+            {
+                b.ToTable("Roles");
+            });
+
+            modelBuilder.Entity<IdentityRoleClaim<int>>(b =>
+            {
+                b.ToTable("RoleClaims");
+            });
+
+            modelBuilder.Entity<IdentityUserRole<int>>(b =>
+            {
+                b.ToTable("UserRoles");
+            });
+        }
+
+        public InstituteContext(DbContextOptions<InstituteContext> opt) 
+            : base(opt)
+        {
+
+        }
+        
+        //Main Table
+        public DbSet<Course>  Courses { get; set; }
+        public DbSet<RejisteredCourse> RejisteredCourses { get; set; }
+        public DbSet<RequestedCourse> RequestedCourses { get; set; }
+        public DbSet<Chapter> Chapters { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<Task> Tasks { get; set; }
+        public DbSet<Test> Tests { get; set; }
+        public DbSet<File> Files { get; set; }
+        public DbSet<Video> Videos { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<QA> QAs { get; set; }
+        public DbSet<Answer> Answers { get; set; }
+
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<Tutor> Tutors { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<EnrollmentPayment> EnrollmentBills { get; set; }
+
+
+        //Relational or Axuillart Tables
+        public DbSet<CourseTask> CourseTasks { get; set; }
+        public DbSet<ChapterTask> ChapterTasks { get; set; }
+        public DbSet<LessonTask> LessonTasks { get; set; }
+        public DbSet<CourseTest> CourseTests { get; set; }
+        public DbSet<ChapterTest> ChapterTests { get; set; }
+        public DbSet<LessonTest> LessonTests { get; set; }
+        public DbSet<LessonMaterial> LessonMaterials { get; set; }
+        public DbSet<TestQA> TestQAs { get; set; }
+        public DbSet<UserTask> UserTasks { get; set; }
+        public DbSet<UserGivenTest> UserGivenTests { get; set; }
+        public DbSet<UserWatchedVideo> UserWatchedVideos { get; set; }
+        public DbSet<ConfirmedEnrollment> ConfirmedEnrollments { get; set; }
+        public DbSet<PendingEnrollment> PendingEnrollments { get; set; }
+        public DbSet<TrialEnrollment> TrialEnrollments { get; set; }
+        public DbSet<CourseApplication> CourseApplications { get; set; }
+        public DbSet<TutorCourse> TutorCourses { get; set; }
+        public DbSet<TaskMaterial> TaskMaterials { get; set; }
+
+    }
+}
