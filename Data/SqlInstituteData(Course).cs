@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Institute.Data
 {
-    public partial class SqlInstituteData
+    public partial class SqlInstituteData 
     {
         public void CreateCourse(Course newcourse)
         {
@@ -17,8 +17,30 @@ namespace Institute.Data
                 throw new ArgumentNullException(nameof(newcourse));
             }
 
-            _context.Courses.AddAsync(newcourse);
+            _context.Courses.AddAsync(newcourse);   
         }
+
+        public void AssignCourse(Tutor uploader, Course refCourse, decimal uploaderShare)
+        {
+            if (refCourse == null)
+            {
+                throw new ArgumentNullException(nameof(refCourse));
+            }
+
+            if(uploader==null)
+            {
+                throw new ArgumentNullException(nameof(uploader));
+            }
+
+            _context.TutorCourses.AddAsync(new TutorCourse
+            {
+                TutorId = uploader.Id,
+                CourseId = refCourse.Id,
+                TutorShare = uploaderShare
+            });
+        }
+
+
 
         public void DeleteCourse(Course deletingCourse)
         {
@@ -47,12 +69,41 @@ namespace Institute.Data
 
         public async Task<Course> GetCourseById(int Id)
         {
-            return await _context.Courses.FirstOrDefaultAsync(p => p.Id == Id);
+            return await _context.Courses.
+                FirstOrDefaultAsync(p => p.Id == Id);
         }
 
         public void UpdateCourse(Course updatingcourse)
         {
             //nothing
+        }
+
+        public void LoadToRequestedCourse(Course refCourse)
+        {
+            var requestedCourseModel = new RequestedCourse()
+            {
+                CourseId = refCourse.Id,
+                Comment = "",
+                RequestedShare = _context.TutorCourses.
+                    FirstOrDefault(p=> p.CourseId == refCourse.Id).TutorShare,
+            };
+
+            _context.RequestedCourses.AddAsync(requestedCourseModel);
+        }
+
+        public void DeleteFromRequestedCourse(Course refCourse)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LoadToRegisteredCourse(Course refCourse)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteFromRegisteredCourse(Course refCourse)
+        {
+            throw new NotImplementedException();
         }
     } 
     

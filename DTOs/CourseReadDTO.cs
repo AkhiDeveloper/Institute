@@ -19,5 +19,7 @@ namespace Institute.DTOs
         public string? Requriements { get; set; }
 #nullable disable
 
+        public decimal TutorShare { get; set; }
+
     }
 }

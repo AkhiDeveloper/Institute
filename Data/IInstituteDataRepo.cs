@@ -20,7 +20,16 @@ namespace Institute.Data
         //returns course of givrn Id
         Task<Course> GetCourseById(int Id);
         //Create a new course
-        void CreateCourse(Tutor uploader, Course newcourse);
+        void CreateCourse(Course newcourse);
+        //Assign Course to the tutor
+        void AssignCourse(Tutor uploader, Course refCourse, decimal uploaderShare);
+
+        void LoadToRequestedCourse(Course refCourse,decimal tutorShare);
+        void DeleteFromRequestedCourse(Course refCourse);
+
+        void LoadToRegisteredCourse(Course refCourse);
+        void DeleteFromRegisteredCourse(Course refCourse);
+
         //Update changed attributes of given course
         void UpdateCourse(Course updatingcourse);
         //delete given course
@@ -87,7 +96,8 @@ namespace Institute.Data
         void DeleteQA(QA deletingQA);
 
 
-        //
+        //User Detail
+        Task<Tutor> GetTutorById(int id); 
 
 
 

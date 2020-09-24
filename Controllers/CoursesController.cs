@@ -11,6 +11,8 @@ using AutoMapper;
 using Institute.DTOs;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace Institute.Controllers
 {
@@ -20,11 +22,18 @@ namespace Institute.Controllers
     {
         private readonly  IInstituteDataRepo _repository;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CoursesController(IInstituteDataRepo repository, IMapper mapper)
+        public CoursesController
+            (
+            IInstituteDataRepo repository, 
+            IMapper mapper,
+            UserManager<ApplicationUser> userManager
+            )
         {
             _repository = repository;
             _mapper = mapper;
+            _userManager = userManager;
         }
         
         //get api/courses
@@ -52,19 +61,40 @@ namespace Institute.Controllers
         }
 
         //POST api/courses
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<CourseReadDTO>> CreateCourse
+        public async Task<ActionResult<CourseReadDTO>> AddNewCourse
             (CourseCreateDTO newcourse)
         {
+            //Map DTO to Model
             var courseModel = _mapper.Map<Course>(newcourse);
+
+            //Getting User from HttpContext
+            var username = User.FindFirst(ClaimTypes.Name).Value;
+            var userModel = await _userManager.FindByNameAsync(username);
+            var tutorModel = await _repository.GetTutorById(userModel.Id);
+            if(tutorModel==null)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "Request not completed. User is not subscribed as Tutor." });
+            }
+
+            //Change to database
             _repository.CreateCourse(courseModel);
             await _repository.SaveChanges();
 
+            _repository.AssignCourse(tutorModel, courseModel,newcourse.TutorShare);
+            await _repository.SaveChanges();
+
+            _repository.LoadToRequestedCourse(courseModel, newcourse.TutorShare);
+            await _repository.SaveChanges();
+            
+
+            //Map Model to DTO
             var courseReadDTO = _mapper.Map<CourseReadDTO>(courseModel);
 
             return CreatedAtRoute(nameof(GetCourseById),
-                new { Id = courseModel.Id }, courseModel);
-            //return Ok(courseReadDTO);
+                new { Id = courseModel.Id }, courseReadDTO);
         }
 
         //PUT api/courses/{id}

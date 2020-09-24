@@ -22,6 +22,7 @@ namespace Institute.Model
         [AllowNull]
         public string LName { get; set; }
 
+#nullable enable
         public string? FullName
         {
             get
@@ -29,6 +30,7 @@ namespace Institute.Model
                 if (FName == null) return null;
                 return (MName == null) ? $"{FName.PadRight(1)}+{LName}" : $"{FName.PadRight(1)}+{MName.PadRight(1)}+{LName}";
             }
+#nullable disable
         }
     }
 }

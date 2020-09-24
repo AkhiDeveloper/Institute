@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -29,5 +30,8 @@ namespace Institute.DTOs
         [StringLength(200)]
         public string? Requriements { get; set; }
 #nullable disable
+
+        [DefaultValue(0)]
+        public int TutorShare { get; set; }
     }
 }
