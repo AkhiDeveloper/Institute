@@ -21,17 +21,20 @@ namespace Institute.Controllers
     public class CoursesController : ControllerBase
     {
         private readonly  IInstituteDataRepo _repository;
+        private readonly IInstituteDataRepoCRUD _dataRepoCRUD;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public CoursesController
             (
-            IInstituteDataRepo repository, 
+            IInstituteDataRepo repository,
+            IInstituteDataRepoCRUD dataRepoCRUD,
             IMapper mapper,
             UserManager<ApplicationUser> userManager
             )
         {
             _repository = repository;
+            _dataRepoCRUD = dataRepoCRUD;
             _mapper = mapper;
             _userManager = userManager;
         }
@@ -80,14 +83,34 @@ namespace Institute.Controllers
             }
 
             //Change to database
-            _repository.CreateCourse(courseModel);
-            await _repository.SaveChanges();
+            _dataRepoCRUD.CreateCourse(courseModel);
+            await _dataRepoCRUD.SaveChanges();
 
-            _repository.AssignCourse(tutorModel, courseModel,newcourse.TutorShare);
-            await _repository.SaveChanges();
+            var tutorCourseModel = new TutorCourse()
+            {
+                TutorId = tutorModel.Id,
+                CourseId = courseModel.Id,
+                TutorShare = newcourse.TutorShare,
+            };
+            _dataRepoCRUD.CreateTutorCourse(tutorCourseModel);
+            await _dataRepoCRUD.SaveChanges();
 
-            _repository.LoadToRequestedCourse(courseModel, newcourse.TutorShare);
-            await _repository.SaveChanges();
+            var requestedCourseModel = new RequestedCourse()
+            {
+                CourseId = courseModel.Id,
+                RequestedShare = newcourse.TutorShare,
+                Comment = "",
+            };
+            _dataRepoCRUD.CreateRequestedCourse(requestedCourseModel);
+            await _dataRepoCRUD.SaveChanges();
+            //_repository.CreateCourse(courseModel);
+            //await _repository.SaveChanges();
+
+            //_repository.AssignCourse(tutorModel, courseModel,newcourse.TutorShare);
+            //await _repository.SaveChanges();
+
+            //_repository.LoadToRequestedCourse(courseModel);
+            //await _repository.SaveChanges();
             
 
             //Map Model to DTO

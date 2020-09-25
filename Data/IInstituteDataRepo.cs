@@ -24,7 +24,7 @@ namespace Institute.Data
         //Assign Course to the tutor
         void AssignCourse(Tutor uploader, Course refCourse, decimal uploaderShare);
 
-        void LoadToRequestedCourse(Course refCourse,decimal tutorShare);
+        void LoadToRequestedCourse(Course refCourse);
         void DeleteFromRequestedCourse(Course refCourse);
 
         void LoadToRegisteredCourse(Course refCourse);
