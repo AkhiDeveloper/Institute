@@ -120,6 +120,8 @@ namespace Institute.Controllers
                 new { Id = courseModel.Id }, courseReadDTO);
         }
 
+
+
         //PUT api/courses/{id}
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateCourse(int id,CourseUpdateDTO courseUpdate)
