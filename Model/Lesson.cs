@@ -34,6 +34,7 @@ namespace Institute.Model
         public bool IsFree { get; set; }
 
         //Navigation Property
+        public Chapter Chapter { get; set; }
         public Video TeachingVideo { get; set; }
         public ICollection<LessonMaterial> LessonMaterials { get; set; }
 
