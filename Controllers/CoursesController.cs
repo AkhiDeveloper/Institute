@@ -240,7 +240,41 @@ namespace Institute.Controllers
         public async Task<ActionResult<Lesson>> AddLesson
             (int chapterid, Lesson lesson)
         {
+            var lessonmodel = _mapper.Map<Lesson>(lesson);
 
+            //Getting User from HttpContext
+            var username = User.FindFirst(ClaimTypes.Name).Value;
+            var userModel = await _userManager.FindByNameAsync(username);
+            var tutorModel = await _repository.GetTutorById(userModel.Id);
+            if (tutorModel == null)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "Request not completed. User is not subscribed as Tutor." });
+            }
+
+            //Checking Correct Tutor
+            var chaptermodel = await _dataRepoCRUD.GetChapter(chapterid);
+            var tutorcoursemodel = await _dataRepoCRUD.
+                GetTutorCourseByCourseId(chaptermodel.CourseId);
+            var Autheticated = false;
+            foreach(var x in tutorcoursemodel)
+            {
+                if(x.TutorId == tutorModel.Id)
+                {
+                    Autheticated = true;
+                }            
+            }
+            if(Autheticated == false)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "You are not correct tutor." });
+            }
+
+            //Change to database
+            _dataRepoCRUD.CreateLesson(lessonmodel);
+            await _dataRepoCRUD.SaveChanges();
+
+            return Ok();
         }
 
 
