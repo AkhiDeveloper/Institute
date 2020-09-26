@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace Institute.Controllers
 {
@@ -44,7 +46,8 @@ namespace Institute.Controllers
         //General
         //get api/courses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CourseReadDTO>>> SearchCourse()
+        public async Task<ActionResult<IEnumerable<CourseReadDTO>>> 
+            SearchCourse()
         {
             var courseitems = await _dataRepoCRUD.GetAllRegisteredCourses();
 
@@ -58,7 +61,8 @@ namespace Institute.Controllers
 
         //get api/courses/{searchtext}
         [HttpGet("{searchtext}")]
-        public async Task<ActionResult<IEnumerable<CourseReadDTO>>> SearchCourse(string searchtext)
+        public async Task<ActionResult<IEnumerable<CourseReadDTO>>> 
+            SearchCourse(string searchtext)
         {
             var rejistercoursesmodel =await _dataRepoCRUD.GetAllRegisteredCourses();
 
@@ -76,7 +80,7 @@ namespace Institute.Controllers
             {
                 return Ok(_mapper.Map<IEnumerable<CourseReadDTO>>(searchedcourse));
             }
-            return NotFound(new { Message = "No course foun for this keyword." });
+            return NotFound(new { Message = "No course found for this keyword." });
         }
 
 
@@ -84,7 +88,7 @@ namespace Institute.Controllers
         [HttpGet("{id}",Name ="GetCourseDetail")]
         public async Task<ActionResult<CourseReadDTO>> GetCourseDetail(int id)
         {
-            var courseitem = await _repository.GetCourseById(id);
+            var courseitem = await _dataRepoCRUD.GetCourse(id);
 
             if (courseitem != null)
             {
@@ -94,11 +98,48 @@ namespace Institute.Controllers
         }
 
 
+        //get api/course/{courseId}/Chapter
+        [HttpGet("/{courseId}/chapter")]
+        public async Task<ActionResult<ChapterReadDTO>> GetChapters
+            (int courseId)
+        {
+            var chaptersmodel = await _dataRepoCRUD
+                .GetChaptersByCourseId(courseId);
+
+            if(chaptersmodel == null)
+            {
+                return Ok
+                    (_mapper.Map<IEnumerable<ChapterReadDTO>>
+                    (chaptersmodel));
+            }
+
+            return NotFound();
+        }
+
+
+        //get api/course/chapter/{chapterid}/lesson
+        [HttpGet("/chapter/{chapterid}/lesson")]
+        public async Task<ActionResult<Lesson>> GetLessons
+            (int chapterid)
+        {
+            var lessonsmodel = await _dataRepoCRUD
+                .GetLessonsByChapterId(chapterid);
+
+            if(lessonsmodel != null)
+            {
+                return Ok(_mapper.Map<IEnumerable<Lesson>>(lessonsmodel));
+            }
+
+            return NotFound();
+        }
+
+
+
         //Tutor
-        //POST api/courses
+        //get api/courses
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<CourseReadDTO>> AddNewCourse
+        public async Task<ActionResult> AddNewCourse
             (CourseCreateDTO newcourse)
         {
             //Map DTO to Model
@@ -108,7 +149,7 @@ namespace Institute.Controllers
             var username = User.FindFirst(ClaimTypes.Name).Value;
             var userModel = await _userManager.FindByNameAsync(username);
             var tutorModel = await _repository.GetTutorById(userModel.Id);
-            if(tutorModel==null)
+            if (tutorModel == null)
             {
                 return new BadRequestObjectResult(new
                 { Message = "Request not completed. User is not subscribed as Tutor." });
@@ -143,7 +184,7 @@ namespace Institute.Controllers
 
             //_repository.LoadToRequestedCourse(courseModel);
             //await _repository.SaveChanges();
-            
+
 
             //Map Model to DTO
             var courseReadDTO = _mapper.Map<CourseReadDTO>(courseModel);
@@ -152,22 +193,55 @@ namespace Institute.Controllers
                 new { Id = courseModel.Id }, courseReadDTO);
         }
 
-        //Post api/course/{courseId}/Chapter
-        [HttpPost("/{courseId}/chapter")]
-        public async Task<ActionResult> AddChapter(int courseId, ChapterCreateDTO chapter)
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> AddChapter
+            (int courseId, ChapterCreateDTO chapter)
         {
-            return NotFound();
+            var chaptermodel = _mapper.Map<Chapter>(chapter);
+
+            //Getting User from HttpContext
+            var username = User.FindFirst(ClaimTypes.Name).Value;
+            var userModel = await _userManager.FindByNameAsync(username);
+            var tutorModel = await _repository.GetTutorById(userModel.Id);
+            if (tutorModel == null)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "Request not completed. User is not subscribed as Tutor." });
+            }
+
+            //Checking Correct Tutor
+            var tutorcoursemodel = await _dataRepoCRUD.
+                GetTutorCourseByCourseId(courseId);
+            var Autheticated = false;
+            foreach(var x in tutorcoursemodel)
+            {
+                if(x.TutorId == tutorModel.Id)
+                {
+                    Autheticated = true;
+                }            
+            }
+            if(Autheticated == false)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "You are not correct tutor." });
+            }
+
+            //Change to database
+            _dataRepoCRUD.CreateChapter(chaptermodel);
+            await _dataRepoCRUD.SaveChanges();
+
+            return Ok();
         }
 
-        //Post api/course/chapter/{chapterid}/lesson
-        [HttpPost("/chapter/{chapterid}/lesson")]
-        public async Task<ActionResult> AddLesson(int chapterid, Lesson lesson)
+
+        [HttpPost]
+        public async Task<ActionResult<Lesson>> AddLesson
+            (int chapterid, Lesson lesson)
         {
-            return NotFound();
+
         }
-
-
-
 
 
 
