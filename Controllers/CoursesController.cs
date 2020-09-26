@@ -39,11 +39,15 @@ namespace Institute.Controllers
             _userManager = userManager;
         }
         
+
+
+        //General
         //get api/courses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CourseReadDTO>>> GetAllCourses()
+        public async Task<ActionResult<IEnumerable<CourseReadDTO>>> SearchCourse()
         {
-            var courseitems = await _repository.GetAllCourses();
+            var courseitems = await _dataRepoCRUD.GetAllRegisteredCourses();
+
             if (courseitems != null)
             {
                 return Ok(_mapper.Map<IEnumerable<CourseReadDTO>>(courseitems));
@@ -51,11 +55,35 @@ namespace Institute.Controllers
             return NotFound();
         }
 
+        //get api/courses/{searchtext}
+        [HttpGet("{searchtext}")]
+        public async Task<ActionResult<IEnumerable<CourseReadDTO>>> SearchCourse(string searchtext)
+        {
+            var rejistercoursesmodel =await _dataRepoCRUD.GetAllRegisteredCourses();
+
+            var allcourses = new List<Course>();
+            foreach(var e in rejistercoursesmodel)
+            {
+                allcourses.Add(await _dataRepoCRUD.GetCourse(e.CourseId));
+            }
+
+            var searchedcourse = from e in allcourses
+                                 where e.Title.Contains(searchtext)
+                                 select e;
+
+            if(searchedcourse != null)
+            {
+                return Ok(_mapper.Map<IEnumerable<CourseReadDTO>>(searchedcourse));
+            }
+            return NotFound(new { Message = "No course foun for this keyword." });
+        }
+
         //get api/courses/{id}
-        [HttpGet("{id}",Name ="GetCourseById")]
-        public async Task<ActionResult<CourseReadDTO>> GetCourseById(int id)
+        [HttpGet("{id}",Name ="GetCourseDetail")]
+        public async Task<ActionResult<CourseReadDTO>> GetCourseDetail(int id)
         {
             var courseitem = await _repository.GetCourseById(id);
+
             if (courseitem != null)
             {
                 return Ok(_mapper.Map<CourseReadDTO>(courseitem));
@@ -63,6 +91,8 @@ namespace Institute.Controllers
             return NotFound();
         }
 
+
+        //Tutor
         //POST api/courses
         [Authorize]
         [HttpPost]
@@ -116,9 +146,31 @@ namespace Institute.Controllers
             //Map Model to DTO
             var courseReadDTO = _mapper.Map<CourseReadDTO>(courseModel);
 
-            return CreatedAtRoute(nameof(GetCourseById),
+            return CreatedAtRoute(nameof(GetCourseDetail),
                 new { Id = courseModel.Id }, courseReadDTO);
         }
+
+        //Post api/course/{courseId}/Chapter
+        [HttpPost("/{courseId}/chapter")]
+        public async Task<ActionResult> AddChapter(int courseId, ChapterCreateDTO chapter)
+        {
+            return NotFound();
+        }
+
+        //Post api/course/chapter/{chapterid}/lesson
+        [HttpPost("/chapter/{chapterid}/lesson")]
+        public async Task<ActionResult> AddLesson(int chapterid, Lesson lesson)
+        {
+            return NotFound();
+        }
+
+
+
+
+
+
+
+
 
 
 
