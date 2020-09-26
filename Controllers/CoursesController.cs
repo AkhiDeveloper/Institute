@@ -55,6 +55,7 @@ namespace Institute.Controllers
             return NotFound();
         }
 
+
         //get api/courses/{searchtext}
         [HttpGet("{searchtext}")]
         public async Task<ActionResult<IEnumerable<CourseReadDTO>>> SearchCourse(string searchtext)
@@ -62,14 +63,14 @@ namespace Institute.Controllers
             var rejistercoursesmodel =await _dataRepoCRUD.GetAllRegisteredCourses();
 
             var allcourses = new List<Course>();
-            foreach(var e in rejistercoursesmodel)
+            foreach(var x in rejistercoursesmodel)
             {
-                allcourses.Add(await _dataRepoCRUD.GetCourse(e.CourseId));
+                allcourses.Add(await _dataRepoCRUD.GetCourse(x.CourseId));
             }
 
-            var searchedcourse = from e in allcourses
-                                 where e.Title.Contains(searchtext)
-                                 select e;
+            var searchedcourse = from x in allcourses
+                                 where x.Title.Contains(searchtext)
+                                 select x;
 
             if(searchedcourse != null)
             {
@@ -77,6 +78,7 @@ namespace Institute.Controllers
             }
             return NotFound(new { Message = "No course foun for this keyword." });
         }
+
 
         //get api/courses/{id}
         [HttpGet("{id}",Name ="GetCourseDetail")]
