@@ -499,6 +499,12 @@ namespace Institute.Migrations
                         principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Chapters_Videos_IntroVideoId",
+                        column: x => x.IntroVideoId,
+                        principalTable: "Videos",
+                        principalColumn: "FileId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -633,40 +639,55 @@ namespace Institute.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RejisteredCourses",
+                name: "RegisteredTutorCourses",
                 columns: table => new
                 {
-                    CourseId = table.Column<int>(nullable: false),
-                    share = table.Column<decimal>(type: "decimal(4,2)", nullable: false)
+                    CourseId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TutorId = table.Column<int>(nullable: false),
+                    TutorShare = table.Column<decimal>(type: "decimal(4,2)", nullable: false),
+                    CourseId1 = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RejisteredCourses", x => x.CourseId);
+                    table.PrimaryKey("PK_RegisteredTutorCourses", x => x.CourseId);
                     table.ForeignKey(
-                        name: "FK_RejisteredCourses_Courses_CourseId",
-                        column: x => x.CourseId,
+                        name: "FK_RegisteredTutorCourses_Courses_CourseId1",
+                        column: x => x.CourseId1,
                         principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RegisteredTutorCourses_Tutors_TutorId",
+                        column: x => x.TutorId,
+                        principalTable: "Tutors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RequestedCourses",
+                name: "RequestedTutorCourse",
                 columns: table => new
                 {
                     CourseId = table.Column<int>(nullable: false),
-                    Comment = table.Column<string>(maxLength: 200, nullable: true),
-                    RequestedShare = table.Column<decimal>(type: "decimal(4,2)", nullable: false),
-                    IsRejected = table.Column<bool>(nullable: false),
-                    NumofEdites = table.Column<int>(nullable: false)
+                    TutorId = table.Column<int>(nullable: false),
+                    TutorShare = table.Column<decimal>(type: "decimal(4,2)", nullable: false),
+                    NumberofReviews = table.Column<int>(nullable: false),
+                    AdminComments = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RequestedCourses", x => x.CourseId);
+                    table.PrimaryKey("PK_RequestedTutorCourse", x => x.CourseId);
                     table.ForeignKey(
-                        name: "FK_RequestedCourses_Courses_CourseId",
+                        name: "FK_RequestedTutorCourse_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RequestedTutorCourse_Tutors_TutorId",
+                        column: x => x.TutorId,
+                        principalTable: "Tutors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -693,31 +714,6 @@ namespace Institute.Migrations
                         name: "FK_TrialEnrollments_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TutorCourses",
-                columns: table => new
-                {
-                    TutorId = table.Column<int>(nullable: false),
-                    CourseId = table.Column<int>(nullable: false),
-                    TutorShare = table.Column<decimal>(type: "decimal(4,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TutorCourses", x => new { x.CourseId, x.TutorId });
-                    table.ForeignKey(
-                        name: "FK_TutorCourses_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TutorCourses_Tutors_TutorId",
-                        column: x => x.TutorId,
-                        principalTable: "Tutors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -799,7 +795,7 @@ namespace Institute.Migrations
                         column: x => x.TeachingVideoId,
                         principalTable: "Videos",
                         principalColumn: "FileId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -959,6 +955,11 @@ namespace Institute.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Chapters_IntroVideoId",
+                table: "Chapters",
+                column: "IntroVideoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ChapterTasks_RefChapterId",
                 table: "ChapterTasks",
                 column: "RefChapterId");
@@ -1049,6 +1050,21 @@ namespace Institute.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RegisteredTutorCourses_CourseId1",
+                table: "RegisteredTutorCourses",
+                column: "CourseId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RegisteredTutorCourses_TutorId",
+                table: "RegisteredTutorCourses",
+                column: "TutorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequestedTutorCourse_TutorId",
+                table: "RequestedTutorCourse",
+                column: "TutorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
                 table: "RoleClaims",
                 column: "RoleId");
@@ -1089,11 +1105,6 @@ namespace Institute.Migrations
                 name: "IX_TrialEnrollments_StudentId",
                 table: "TrialEnrollments",
                 column: "StudentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TutorCourses_TutorId",
-                table: "TutorCourses",
-                column: "TutorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_UserId",
@@ -1173,10 +1184,10 @@ namespace Institute.Migrations
                 name: "LessonTests");
 
             migrationBuilder.DropTable(
-                name: "RejisteredCourses");
+                name: "RegisteredTutorCourses");
 
             migrationBuilder.DropTable(
-                name: "RequestedCourses");
+                name: "RequestedTutorCourse");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
@@ -1189,9 +1200,6 @@ namespace Institute.Migrations
 
             migrationBuilder.DropTable(
                 name: "TrialEnrollments");
-
-            migrationBuilder.DropTable(
-                name: "TutorCourses");
 
             migrationBuilder.DropTable(
                 name: "UserClaims");
@@ -1221,13 +1229,13 @@ namespace Institute.Migrations
                 name: "Payments");
 
             migrationBuilder.DropTable(
+                name: "Tutors");
+
+            migrationBuilder.DropTable(
                 name: "Lessons");
 
             migrationBuilder.DropTable(
                 name: "QAs");
-
-            migrationBuilder.DropTable(
-                name: "Tutors");
 
             migrationBuilder.DropTable(
                 name: "Tests");

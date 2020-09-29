@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Institute.Data;
 using Institute.Model;
 using AutoMapper;
-using Institute.DTOs;
+using DTO=Institute.DTOs;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
@@ -45,92 +45,92 @@ namespace Institute.Controllers
 
         //General
         //get api/courses
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CourseReadDTO>>> 
-            SearchCourse()
-        {
-            var courseitems = await _dataRepoCRUD.GetAllRegisteredCourses();
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<CourseReadDTO>>> 
+        //    SearchCourse()
+        //{
+        //    //var courseitems = await _dataRepoCRUD.GetAllRegisteredCourses();
 
-            if (courseitems != null)
-            {
-                return Ok(_mapper.Map<IEnumerable<CourseReadDTO>>(courseitems));
-            }
-            return NotFound();
-        }
+        //    //if (courseitems != null)
+        //    //{
+        //    //    return Ok(_mapper.Map<IEnumerable<CourseReadDTO>>(courseitems));
+        //    //}
+        //    return NotFound();
+        //}
 
 
         //get api/courses/{searchtext}
-        [HttpGet("{searchtext}")]
-        public async Task<ActionResult<IEnumerable<CourseReadDTO>>> 
-            SearchCourse(string searchtext)
-        {
-            var rejistercoursesmodel =await _dataRepoCRUD.GetAllRegisteredCourses();
+        //[HttpGet("{searchtext}")]
+        //public async Task<ActionResult<IEnumerable<CourseReadDTO>>> 
+        //    SearchCourse(string searchtext)
+        //{
+        //    //var rejistercoursesmodel =await _dataRepoCRUD.GetAllRegisteredCourses();
 
-            var allcourses = new List<Course>();
-            foreach(var x in rejistercoursesmodel)
-            {
-                allcourses.Add(await _dataRepoCRUD.GetCourse(x.CourseId));
-            }
+        //    //var allcourses = new List<Course>();
+        //    //foreach(var x in rejistercoursesmodel)
+        //    //{
+        //    //    allcourses.Add(await _dataRepoCRUD.GetCourse(x.CourseId));
+        //    //}
 
-            var searchedcourse = from x in allcourses
-                                 where x.Title.Contains(searchtext)
-                                 select x;
+        //    //var searchedcourse = from x in allcourses
+        //    //                     where x.Title.Contains(searchtext)
+        //    //                     select x;
 
-            if(searchedcourse != null)
-            {
-                return Ok(_mapper.Map<IEnumerable<CourseReadDTO>>(searchedcourse));
-            }
-            return NotFound(new { Message = "No course found for this keyword." });
-        }
+        //    //if(searchedcourse != null)
+        //    //{
+        //    //    return Ok(_mapper.Map<IEnumerable<CourseReadDTO>>(searchedcourse));
+        //    //}
+        //    return NotFound(new { Message = "No course found for this keyword." });
+        //}
 
 
         //get api/courses/{id}
-        [HttpGet("{id}",Name ="GetCourseDetail")]
-        public async Task<ActionResult<CourseReadDTO>> GetCourseDetail(int id)
-        {
-            var courseitem = await _dataRepoCRUD.GetCourse(id);
+        //[HttpGet("{id}",Name ="GetCourseDetail")]
+        //public async Task<ActionResult<CourseReadDTO>> GetCourseDetail(int id)
+        //{
+        //    var courseitem = await _dataRepoCRUD.GetCourse(id);
 
-            if (courseitem != null)
-            {
-                return Ok(_mapper.Map<CourseReadDTO>(courseitem));
-            }
-            return NotFound();
-        }
+        //    if (courseitem != null)
+        //    {
+        //        return Ok(_mapper.Map<CourseReadDTO>(courseitem));
+        //    }
+        //    return NotFound();
+        //}
 
 
         //get api/course/{courseId}/Chapter
-        [HttpGet("/{courseId}/chapter")]
-        public async Task<ActionResult<ChapterReadDTO>> GetChapters
-            (int courseId)
-        {
-            var chaptersmodel = await _dataRepoCRUD
-                .GetChaptersByCourseId(courseId);
+        //[HttpGet("/{courseId}/chapter")]
+        //public async Task<ActionResult<ChapterReadDTO>> GetChapters
+        //    (int courseId)
+        //{
+        //    var chaptersmodel = await _dataRepoCRUD
+        //        .GetChaptersByCourseId(courseId);
 
-            if(chaptersmodel == null)
-            {
-                return Ok
-                    (_mapper.Map<IEnumerable<ChapterReadDTO>>
-                    (chaptersmodel));
-            }
+        //    if(chaptersmodel == null)
+        //    {
+        //        return Ok
+        //            (_mapper.Map<IEnumerable<ChapterReadDTO>>
+        //            (chaptersmodel));
+        //    }
 
-            return NotFound();
-        }
+        //    return NotFound();
+        //}
 
 
         //get api/course/chapter/{chapterid}/lesson
-        [HttpGet("/chapter/{chapterid}/lesson")]
-        public async Task<ActionResult<Lesson>> GetLessons
-            (int chapterid)
-        {
-            var lessonsmodel = await _dataRepoCRUD
-                .GetLessonsByChapterId(chapterid);
+        //[HttpGet("/chapter/{chapterid}/lesson")]
+        //public async Task<ActionResult<Lesson>> GetLessons
+        //    (int chapterid)
+        //{
+        //    var lessonsmodel = await _dataRepoCRUD
+        //        .GetLessonsByChapterId(chapterid);
 
-            if(lessonsmodel != null)
-            {
-                return Ok(_mapper.Map<IEnumerable<Lesson>>(lessonsmodel));
-            }
+        //    if(lessonsmodel != null)
+        //    {
+        //        return Ok(_mapper.Map<IEnumerable<Lesson>>(lessonsmodel));
+        //    }
 
-            return NotFound();
+        //    return NotFound();
         }
 
 
@@ -142,9 +142,6 @@ namespace Institute.Controllers
         public async Task<ActionResult> AddNewCourse
             (CourseCreateDTO newcourse)
         {
-            //Map DTO to Model
-            var courseModel = _mapper.Map<Course>(newcourse);
-
             //Getting User from HttpContext
             var username = User.FindFirst(ClaimTypes.Name).Value;
             var userModel = await _userManager.FindByNameAsync(username);
@@ -155,26 +152,25 @@ namespace Institute.Controllers
                 { Message = "Request not completed. User is not subscribed as Tutor." });
             }
 
-            //Change to database
-            _dataRepoCRUD.CreateCourse(courseModel);
-            await _dataRepoCRUD.SaveChanges();
+            //Map DTO to Model
+            var courseModel = _mapper.Map<Course>(newcourse);
 
-            var tutorCourseModel = new TutorCourse()
+            var tutorCourseModel = new RequestedTutorCourse()
             {
-                TutorId = tutorModel.Id,
-                CourseId = courseModel.Id,
+                Tutor = tutorModel,
+                CourseDetail = courseModel,
                 TutorShare = newcourse.TutorShare,
             };
             _dataRepoCRUD.CreateTutorCourse(tutorCourseModel);
             await _dataRepoCRUD.SaveChanges();
 
-            var requestedCourseModel = new RequestedCourse()
-            {
-                CourseId = courseModel.Id,
-                RequestedShare = newcourse.TutorShare,
-                Comment = "",
-            };
-            _dataRepoCRUD.CreateRequestedCourse(requestedCourseModel);
+            //var requestedCourseModel = new RequestedCourse()
+            //{
+            //    CourseId = courseModel.Id,
+            //    RequestedShare = newcourse.TutorShare,
+            //    Comment = "",
+            //};
+            //_dataRepoCRUD.CreateRequestedCourse(requestedCourseModel);
             await _dataRepoCRUD.SaveChanges();
             //_repository.CreateCourse(courseModel);
             //await _repository.SaveChanges();
@@ -235,9 +231,9 @@ namespace Institute.Controllers
             return Ok();
         }
 
-
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Lesson>> AddLesson
+        public async Task<ActionResult> AddLesson
             (int chapterid, Lesson lesson)
         {
             var lessonmodel = _mapper.Map<Lesson>(lesson);
@@ -278,10 +274,76 @@ namespace Institute.Controllers
         }
 
 
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> AddCourseIntroVideo
+            ([FromRoute] int courseid, [FromBody] VideoCreateDTO video)
+        {
+            var videomodel = _mapper.Map<Video>(video);
 
+            var coursemodel = await _dataRepoCRUD.GetCourse(courseid);
+            coursemodel.IntroVideo = videomodel;
 
+            _dataRepoCRUD.UpdateCourse(coursemodel);
+            await _dataRepoCRUD.SaveChanges();
 
+            return Ok();
+        }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> AddChapterIntroVideo
+            ([FromRoute] int chapterid, [FromBody] VideoCreateDTO video)
+        {
+            var videomodel = _mapper.Map<Video>(video);
+
+            var chaptermodel = await _dataRepoCRUD.GetChapter(chapterid);
+            chaptermodel.IntroVideo = videomodel;
+
+            _dataRepoCRUD.UpdateChapter(chaptermodel);
+            await _dataRepoCRUD.SaveChanges();
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> AddLessonTeachingVideo
+            ([FromRoute] int lessonid, [FromBody] VideoCreateDTO video)
+        {
+            var videomodel = _mapper.Map<Video>(video);
+
+            var lessonmodel = await _dataRepoCRUD.GetLesson(lessonid);
+            lessonmodel.TeachingVideo = videomodel;
+
+            _dataRepoCRUD.UpdateLesson(lessonmodel);
+            await _dataRepoCRUD.SaveChanges();
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("pretest/{courseid}")]
+        public async Task<ActionResult> AddCoursePreTest
+            ([FromRoute] int courseid, [FromBody] TestCreateDTO test)
+        {
+            var testmodel = _mapper.Map<Test>(test);
+
+            var coursemodel = await _dataRepoCRUD.GetCourse(courseid);
+
+            coursemodel.Tests = new List<CourseTest>();
+
+            coursemodel.Tests.Add
+                (new CourseTest { TestDetail = testmodel });
+
+            _dataRepoCRUD.UpdateCourse(coursemodel);
+
+            await _dataRepoCRUD.SaveChanges();
+
+            return Ok();
+        }
+
+        
 
 
         //PUT api/courses/{id}

@@ -17,6 +17,7 @@ namespace Institute.Model
         public int RefCourseId { get; set; }
 
         [Required]
+        
         public int SN { get; set; }
 
         //Navigation Property

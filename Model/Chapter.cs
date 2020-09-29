@@ -36,6 +36,7 @@ namespace Institute.Model
         public int IntroVideoId { get; set; }
 
         //Navigation Property
+        public Video IntroVideo { get; set; }
         public ICollection<Lesson> Lessons { get; set; }
 
         public Course Course { get; set; }

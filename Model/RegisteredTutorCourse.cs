@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Institute.Model
 {
-    public class TutorCourse
+    public class RegisteredTutorCourse
     {
-        [Key]
         public int TutorId { get; set; }
 
         [Key]

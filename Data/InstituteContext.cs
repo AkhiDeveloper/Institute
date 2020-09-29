@@ -25,13 +25,16 @@ namespace Institute.Data
             modelBuilder.Entity<UserWatchedVideo>()
                 .HasKey(x => new { x.UserWatchedId, x.WatchedVideoId });
 
-            modelBuilder.Entity<TutorCourse>()
-                .HasKey(x => new { x.CourseId, x.TutorId });
-
             modelBuilder.Entity<UserTask>()
                 .HasOne(x => x.Checker)
                 .WithMany()
                 .HasForeignKey(x => x.CheckerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Lesson>()
+                .HasOne<Video>(x => x.TeachingVideo)
+                .WithMany()
+                .HasForeignKey(x => x.TeachingVideoId)
                 .OnDelete(DeleteBehavior.Restrict);
             
       
@@ -82,8 +85,8 @@ namespace Institute.Data
         
         //Main Table
         public DbSet<Course>  Courses { get; set; }
-        public DbSet<RejisteredCourse> RejisteredCourses { get; set; }
-        public DbSet<RequestedCourse> RequestedCourses { get; set; }
+        public DbSet<RegisteredTutorCourse> RegisteredTutorCourses { get; set; }
+        public DbSet<RequestedTutorCourse> RequestedTutorCourses { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Task> Tasks { get; set; }
@@ -117,7 +120,7 @@ namespace Institute.Data
         public DbSet<PendingEnrollment> PendingEnrollments { get; set; }
         public DbSet<TrialEnrollment> TrialEnrollments { get; set; }
         public DbSet<CourseApplication> CourseApplications { get; set; }
-        public DbSet<TutorCourse> TutorCourses { get; set; }
+        public DbSet<RequestedTutorCourse> TutorCourses { get; set; }
         public DbSet<TaskMaterial> TaskMaterials { get; set; }
 
     }

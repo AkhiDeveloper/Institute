@@ -165,6 +165,8 @@ namespace Institute.Migrations
 
                     b.HasIndex("CourseId");
 
+                    b.HasIndex("IntroVideoId");
+
                     b.ToTable("Chapters");
                 });
 
@@ -562,40 +564,53 @@ namespace Institute.Migrations
                     b.ToTable("QAs");
                 });
 
-            modelBuilder.Entity("Institute.Model.RejisteredCourse", b =>
+            modelBuilder.Entity("Institute.Model.RegisteredTutorCourse", b =>
                 {
                     b.Property<int>("CourseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CourseId1")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("share")
+                    b.Property<int>("TutorId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TutorShare")
                         .HasColumnType("decimal(4,2)");
 
                     b.HasKey("CourseId");
 
-                    b.ToTable("RejisteredCourses");
+                    b.HasIndex("CourseId1");
+
+                    b.HasIndex("TutorId");
+
+                    b.ToTable("RegisteredTutorCourses");
                 });
 
-            modelBuilder.Entity("Institute.Model.RequestedCourse", b =>
+            modelBuilder.Entity("Institute.Model.RequestedTutorCourse", b =>
                 {
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                    b.Property<string>("AdminComments")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsRejected")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("NumofEdites")
+                    b.Property<int>("NumberofReviews")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("RequestedShare")
+                    b.Property<int>("TutorId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TutorShare")
                         .HasColumnType("decimal(4,2)");
 
                     b.HasKey("CourseId");
 
-                    b.ToTable("RequestedCourses");
+                    b.HasIndex("TutorId");
+
+                    b.ToTable("RequestedTutorCourse");
                 });
 
             modelBuilder.Entity("Institute.Model.Student", b =>
@@ -720,24 +735,6 @@ namespace Institute.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tutors");
-                });
-
-            modelBuilder.Entity("Institute.Model.TutorCourse", b =>
-                {
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TutorId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TutorShare")
-                        .HasColumnType("decimal(4,2)");
-
-                    b.HasKey("CourseId", "TutorId");
-
-                    b.HasIndex("TutorId");
-
-                    b.ToTable("TutorCourses");
                 });
 
             modelBuilder.Entity("Institute.Model.UserGivenTest", b =>
@@ -987,6 +984,12 @@ namespace Institute.Migrations
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Institute.Model.Video", "IntroVideo")
+                        .WithMany()
+                        .HasForeignKey("IntroVideoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Institute.Model.ChapterTask", b =>
@@ -1110,7 +1113,7 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.Lesson", b =>
                 {
-                    b.HasOne("Institute.Model.Chapter", null)
+                    b.HasOne("Institute.Model.Chapter", "Chapter")
                         .WithMany("Lessons")
                         .HasForeignKey("ChapterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1119,7 +1122,7 @@ namespace Institute.Migrations
                     b.HasOne("Institute.Model.Video", "TeachingVideo")
                         .WithMany()
                         .HasForeignKey("TeachingVideoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -1181,20 +1184,32 @@ namespace Institute.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Institute.Model.RejisteredCourse", b =>
+            modelBuilder.Entity("Institute.Model.RegisteredTutorCourse", b =>
+                {
+                    b.HasOne("Institute.Model.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Institute.Model.Tutor", "Tutor")
+                        .WithMany()
+                        .HasForeignKey("TutorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Institute.Model.RequestedTutorCourse", b =>
                 {
                     b.HasOne("Institute.Model.Course", "CourseDetail")
                         .WithMany()
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("Institute.Model.RequestedCourse", b =>
-                {
-                    b.HasOne("Institute.Model.Course", "CourseDetail")
+                    b.HasOne("Institute.Model.Tutor", "Tutor")
                         .WithMany()
-                        .HasForeignKey("CourseId")
+                        .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1260,21 +1275,6 @@ namespace Institute.Migrations
                     b.HasOne("Institute.Model.ApplicationUser", "UserDetail")
                         .WithMany()
                         .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Institute.Model.TutorCourse", b =>
-                {
-                    b.HasOne("Institute.Model.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Institute.Model.Tutor", "Tutor")
-                        .WithMany()
-                        .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

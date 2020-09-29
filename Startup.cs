@@ -81,7 +81,8 @@ namespace Institute
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             //Dependency Injection for IInstituteRepo
-            services.AddScoped<IInstituteDataRepo, SqlInstituteData>() ;
+            //services.AddScoped<IInstituteDataRepo, SqlInstituteData>() ;
+            services.AddScoped<IInstituteDataRepoCRUD, DbContextData>();
 
         }
 

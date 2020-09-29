@@ -32,7 +32,7 @@ namespace Institute.Data
                 throw new ArgumentNullException(nameof(uploader));
             }
 
-            _context.TutorCourses.AddAsync(new TutorCourse
+            _context.TutorCourses.AddAsync(new RequestedTutorCourse
             {
                 TutorId = uploader.Id,
                 CourseId = refCourse.Id,
@@ -78,18 +78,7 @@ namespace Institute.Data
             //nothing
         }
 
-        public void LoadToRequestedCourse(Course refCourse)
-        {
-            var requestedCourseModel = new RequestedCourse()
-            {
-                CourseId = refCourse.Id,
-                Comment = "",
-                RequestedShare = _context.TutorCourses.
-                    FirstOrDefault(p=> p.CourseId == refCourse.Id).TutorShare,
-            };
-
-            _context.RequestedCourses.AddAsync(requestedCourseModel);
-        }
+        
 
         public void DeleteFromRequestedCourse(Course refCourse)
         {

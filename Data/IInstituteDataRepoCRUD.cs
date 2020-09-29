@@ -20,26 +20,14 @@ namespace Institute.Data
         void DeleteCourse(Course deletingCourse);
 
         //TutorCourse
-        void CreateTutorCourse(TutorCourse newtutorCourse);
-        Task<TutorCourse> GetTutorCourse(int tutorId, int courseId);
-        Task<IEnumerable<TutorCourse>> GetTutorCourseByTutorId(int tutorid);
-        Task<IEnumerable<TutorCourse>> GetTutorCourseByCourseId(int courseid);
-        void UpdateCourse(TutorCourse updatingtutorCourse);
-        void DeleteCourse(TutorCourse deletingtutorCourse);
+        void CreateTutorCourse(RequestedTutorCourse newtutorCourse);
+        Task<RequestedTutorCourse> GetTutorCourse(int tutorId, int courseId);
+        Task<IEnumerable<RequestedTutorCourse>> GetTutorCourseByTutorId(int tutorid);
+        Task<IEnumerable<RequestedTutorCourse>> GetTutorCourseByCourseId(int courseid);
+        void UpdateCourse(RequestedTutorCourse updatingtutorCourse);
+        void DeleteCourse(RequestedTutorCourse deletingtutorCourse);
 
-        //RequestedCourse
-        void CreateRequestedCourse(RequestedCourse newrequestedCourse);
-        Task<RequestedCourse> GetRequestedCourse(int courseId);
-        Task<IEnumerable<RequestedCourse>> GetAllRequestedCourses();
-        void UpdateCourse(RequestedCourse updatingrequestedCourse);
-        void DeleteCourse(RequestedCourse deletingrequestedCourse);
-
-        //RegisteredCourse
-        void CreateRegisteredCourse(RejisteredCourse newrregisteredCourse);
-        Task<RejisteredCourse> GetRegisteredCourse(int courseId);
-        Task<IEnumerable<RejisteredCourse>> GetAllRegisteredCourses();
-        void UpdateRegisteredCourse(RejisteredCourse updatingrejisteredCourse);
-        void DeleteRegisteredCourse(RejisteredCourse deletingrejisteredCourse);
+        
 
         //CourseTest
         void CreateCourseTest(CourseTest newcourseTest);

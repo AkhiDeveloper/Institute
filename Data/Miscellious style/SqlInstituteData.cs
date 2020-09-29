@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Institute.Data
 {
-    public partial class SqlInstituteData : IInstituteDataRepo
+    public partial class SqlInstituteData 
     {
         private readonly InstituteContext _context;
 
