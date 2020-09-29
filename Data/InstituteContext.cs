@@ -89,7 +89,7 @@ namespace Institute.Data
         public DbSet<RequestedTutorCourse> RequestedTutorCourses { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<Assignment> Tasks { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Video> Videos { get; set; }
@@ -105,10 +105,12 @@ namespace Institute.Data
 
 
         //Relational or Axuillart Tables
-        public DbSet<CourseTask> CourseTasks { get; set; }
-        public DbSet<ChapterTask> ChapterTasks { get; set; }
-        public DbSet<LessonTask> LessonTasks { get; set; }
-        public DbSet<CourseTest> CourseTests { get; set; }
+        public DbSet<CoursePreAssignment> CoursePreAssignments { get; set; }
+        public DbSet<CoursePostAssignment> CoursePostAssignments { get; set; }
+        public DbSet<ChapterAssignment> ChapterTasks { get; set; }
+        public DbSet<LessonAssignment> LessonTasks { get; set; }
+        public DbSet<CoursePreTest> CoursePreTests { get; set; }
+        public DbSet<CoursePostTest> CoursePostTests { get; set; }
         public DbSet<ChapterTest> ChapterTests { get; set; }
         public DbSet<LessonTest> LessonTests { get; set; }
         public DbSet<LessonMaterial> LessonMaterials { get; set; }

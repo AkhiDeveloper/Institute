@@ -10,94 +10,100 @@ namespace Institute.Data
     {
         Task<bool> SaveChanges();
 
+        //UserContext
+        Task<Tutor> GetTutor(int tutorid);
+
 
         //CourseContext
         //Course
-        void CreateCourse(Course newCourse);
-        Task<Course> GetCourse(int id);
-        Task<IEnumerable<Course>> GetAllCourses();
-        void UpdateCourse(Course updatingCourse);
-        void DeleteCourse(Course deletingCourse);
+        void CreateRequestedTutorCourse(RequestedTutorCourse tutorCourse);
 
-        //TutorCourse
-        void CreateTutorCourse(RequestedTutorCourse newtutorCourse);
-        Task<RequestedTutorCourse> GetTutorCourse(int tutorId, int courseId);
-        Task<IEnumerable<RequestedTutorCourse>> GetTutorCourseByTutorId(int tutorid);
-        Task<IEnumerable<RequestedTutorCourse>> GetTutorCourseByCourseId(int courseid);
-        void UpdateCourse(RequestedTutorCourse updatingtutorCourse);
-        void DeleteCourse(RequestedTutorCourse deletingtutorCourse);
+
+        //void CreateCourse(Course newCourse);
+        //Task<Course> GetCourse(int id);
+        //Task<IEnumerable<Course>> GetAllCourses();
+        //void UpdateCourse(Course updatingCourse);
+        //void DeleteCourse(Course deletingCourse);
+
+        ////TutorCourse
+        //void CreateTutorCourse(RequestedTutorCourse newtutorCourse);
+        //Task<RequestedTutorCourse> GetTutorCourse(int tutorId, int courseId);
+        //Task<IEnumerable<RequestedTutorCourse>> GetTutorCourseByTutorId(int tutorid);
+        //Task<IEnumerable<RequestedTutorCourse>> GetTutorCourseByCourseId(int courseid);
+        //void UpdateCourse(RequestedTutorCourse updatingtutorCourse);
+        //void DeleteCourse(RequestedTutorCourse deletingtutorCourse);
 
         
 
-        //CourseTest
-        void CreateCourseTest(CourseTest newcourseTest);
-        Task<CourseTest> GetCourseTest(int testid);
-        Task<IEnumerable<CourseTest>> GetAllCourseTests();
-        Task<IEnumerable<CourseTest>> GetCourseTestsByCourseId(int courseid);
-        void UpdateCourseTest(CourseTest updatingcourseTest);
-        void DeleteCourseTest(CourseTest deletingcourseTest);
+        ////CourseTest
+        //void CreateCourseTest(CourseTest newcourseTest);
+        //Task<CourseTest> GetCourseTest(int testid);
+        //Task<IEnumerable<CourseTest>> GetAllCourseTests();
+        //Task<IEnumerable<CourseTest>> GetCourseTestsByCourseId(int courseid);
+        //void UpdateCourseTest(CourseTest updatingcourseTest);
+        //void DeleteCourseTest(CourseTest deletingcourseTest);
 
-        //CourseTask
-        void CreateCourseTask(CourseTask newcourseTask);
-        Task<CourseTask> GetCourseTask(int taskid);
-        Task<IEnumerable<CourseTask>> GetAllCourseTasks();
-        Task<IEnumerable<CourseTask>> GetCourseTasksByCourseId(int courseid);
-        void UpdateCourseTask(CourseTask updatingCourseTask);
-        void DeleteCourseTask(CourseTask deletingCourseTask);
-
-
-
-        //ChapterContext
-        //Chapter
-        void CreateChapter(Chapter chapter);
-        Task<Chapter> GetChapter(int id);
-        Task<IEnumerable<Chapter>> GetAllChapters();
-        Task<IEnumerable<Chapter>> GetChaptersByCourseId(int courseId);
-        void UpdateChapter(Chapter updatingChapter);
-        void DeleteChapter(Chapter deletingchapter);
-
-        //ChapterTest
-        void CreateChapterTest(ChapterTest newChapterTest);
-        Task<ChapterTest> GetChapterTest(int testid);
-        Task<IEnumerable<ChapterTest>> GetAllChapterTests();
-        Task<IEnumerable<ChapterTest>> GetChapterTestsByChapterId(int Chapterid);
-        void UpdateChapterTest(ChapterTest updatingChapterTest);
-        void DeleteChapterTest(ChapterTest deletingChapterTest);
-
-        //ChapterTask
-        void CreateChapterTask(ChapterTask newChapterTask);
-        Task<ChapterTask> GetChapterTask(int taskid);
-        Task<IEnumerable<ChapterTask>> GetAllChapterTasks();
-        Task<IEnumerable<ChapterTask>> GetChapterTasksByChapterId(int Chapterid);
-        void UpdateChapterTask(ChapterTask updatingChapterTask);
-        void DeleteChapterTask(ChapterTask deletingChapterTask);
+        ////CourseTask
+        //void CreateCourseTask(CourseAssignment newcourseTask);
+        //Task<CourseAssignment> GetCourseTask(int taskid);
+        //Task<IEnumerable<CourseAssignment>> GetAllCourseTasks();
+        //Task<IEnumerable<CourseAssignment>> GetCourseTasksByCourseId(int courseid);
+        //void UpdateCourseTask(CourseAssignment updatingCourseTask);
+        //void DeleteCourseTask(CourseAssignment deletingCourseTask);
 
 
 
-        //LessonContext
-        //Lesson
-        void CreateLesson(Lesson Lesson);
-        Task<Lesson> GetLesson(int id);
-        Task<IEnumerable<Lesson>> GetAllLessons();
-        Task<IEnumerable<Lesson>> GetLessonsByChapterId(int chapterId);
-        void UpdateLesson(Lesson updatingLesson);
-        void DeleteLesson(Lesson deletingLesson);
+        ////ChapterContext
+        ////Chapter
+        //void CreateChapter(Chapter chapter);
+        //Task<Chapter> GetChapter(int id);
+        //Task<IEnumerable<Chapter>> GetAllChapters();
+        //Task<IEnumerable<Chapter>> GetChaptersByCourseId(int courseId);
+        //void UpdateChapter(Chapter updatingChapter);
+        //void DeleteChapter(Chapter deletingchapter);
 
-        //LessonTest
-        void CreateLessonTest(LessonTest newLessonTest);
-        Task<LessonTest> GetLessonTest(int testid);
-        Task<IEnumerable<LessonTest>> GetAllLessonTests();
-        Task<IEnumerable<LessonTest>> GetLessonTestsByLessonId(int Lessonid);
-        void UpdateLessonTest(LessonTest updatingLessonTest);
-        void DeleteLessonTest(LessonTest deletingLessonTest);
+        ////ChapterTest
+        //void CreateChapterTest(ChapterTest newChapterTest);
+        //Task<ChapterTest> GetChapterTest(int testid);
+        //Task<IEnumerable<ChapterTest>> GetAllChapterTests();
+        //Task<IEnumerable<ChapterTest>> GetChapterTestsByChapterId(int Chapterid);
+        //void UpdateChapterTest(ChapterTest updatingChapterTest);
+        //void DeleteChapterTest(ChapterTest deletingChapterTest);
 
-        //LessonTask
-        void CreateLessonTask(LessonTask newLessonTask);
-        Task<LessonTask> GetLessonTask(int taskid);
-        Task<IEnumerable<LessonTask>> GetAllLessonTasks();
-        Task<IEnumerable<LessonTask>> GetLessonTasksByLessonId(int Lessonid);
-        void UpdateLessonTask(LessonTask updatingLessonTask);
-        void DeleteLessonTask(LessonTask deletingLessonTask);
+        ////ChapterTask
+        //void CreateChapterTask(ChapterAssignment newChapterTask);
+        //Task<ChapterAssignment> GetChapterTask(int taskid);
+        //Task<IEnumerable<ChapterAssignment>> GetAllChapterTasks();
+        //Task<IEnumerable<ChapterAssignment>> GetChapterTasksByChapterId(int Chapterid);
+        //void UpdateChapterTask(ChapterAssignment updatingChapterTask);
+        //void DeleteChapterTask(ChapterAssignment deletingChapterTask);
+
+
+
+        ////LessonContext
+        ////Lesson
+        //void CreateLesson(Lesson Lesson);
+        //Task<Lesson> GetLesson(int id);
+        //Task<IEnumerable<Lesson>> GetAllLessons();
+        //Task<IEnumerable<Lesson>> GetLessonsByChapterId(int chapterId);
+        //void UpdateLesson(Lesson updatingLesson);
+        //void DeleteLesson(Lesson deletingLesson);
+
+        ////LessonTest
+        //void CreateLessonTest(LessonTest newLessonTest);
+        //Task<LessonTest> GetLessonTest(int testid);
+        //Task<IEnumerable<LessonTest>> GetAllLessonTests();
+        //Task<IEnumerable<LessonTest>> GetLessonTestsByLessonId(int Lessonid);
+        //void UpdateLessonTest(LessonTest updatingLessonTest);
+        //void DeleteLessonTest(LessonTest deletingLessonTest);
+
+        ////LessonTask
+        //void CreateLessonTask(LessonAssignment newLessonTask);
+        //Task<LessonAssignment> GetLessonTask(int taskid);
+        //Task<IEnumerable<LessonAssignment>> GetAllLessonTasks();
+        //Task<IEnumerable<LessonAssignment>> GetLessonTasksByLessonId(int Lessonid);
+        //void UpdateLessonTask(LessonAssignment updatingLessonTask);
+        //void DeleteLessonTask(LessonAssignment deletingLessonTask);
 
 
 

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AppTask = Institute.Model.Task;
+using AppTask = Institute.Model.Assignment;
 
 namespace Institute.Data
 {

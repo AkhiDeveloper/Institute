@@ -45,8 +45,12 @@ namespace Institute.Model
 
         public ICollection<Chapter> Chapters { get; set; }
 
-        public ICollection<CourseTest> Tests { get; set; }
+        public ICollection<CoursePreTest> PreTests { get; set; }
 
-        public ICollection<CourseTask> Tasks { get; set; }
+        public ICollection<CoursePostTest> PostTests { get; set; }
+
+        public ICollection<CoursePreAssignment> PreAssignments { get; set; }
+
+        public ICollection<CoursePostAssignment> PostAssignments { get; set; }
     }
 }

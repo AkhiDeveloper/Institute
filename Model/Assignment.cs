@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Institute.Model
 {
-    public class Task
+    public class Assignment
     {
         [Key]
         public int Id { get; set; }

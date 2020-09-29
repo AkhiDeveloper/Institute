@@ -36,7 +36,7 @@ namespace Institute.Model
         public int CheckerId { get; set; }
 
         //Navigation Property
-        public Task GivenTask { get; set; }
+        public Assignment GivenTask { get; set; }
         public ApplicationUser Performer { get; set; }
         public ApplicationUser Checker { get; set; }
     }

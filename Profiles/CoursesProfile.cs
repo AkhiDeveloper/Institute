@@ -17,7 +17,7 @@ namespace Institute.Profiles
             CreateMap<Course, CourseReadDTO>();
             CreateMap<Course, CourseUpdateDTO>();
             //DTO -> Source
-            CreateMap<CourseCreateDTO, Course>();
+            CreateMap<CourseRequestForm, Course>();
             CreateMap<CourseUpdateDTO, Course>();
 
             //Chapter DTOs

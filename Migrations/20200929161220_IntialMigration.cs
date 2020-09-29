@@ -562,7 +562,7 @@ namespace Institute.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseTasks",
+                name: "CoursePostAssignments",
                 columns: table => new
                 {
                     TaskId = table.Column<int>(nullable: false),
@@ -571,15 +571,15 @@ namespace Institute.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CourseTasks", x => x.TaskId);
+                    table.PrimaryKey("PK_CoursePostAssignments", x => x.TaskId);
                     table.ForeignKey(
-                        name: "FK_CourseTasks_Courses_RefCourseId",
+                        name: "FK_CoursePostAssignments_Courses_RefCourseId",
                         column: x => x.RefCourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CourseTasks_Tasks_TaskId",
+                        name: "FK_CoursePostAssignments_Tasks_TaskId",
                         column: x => x.TaskId,
                         principalTable: "Tasks",
                         principalColumn: "Id",
@@ -587,7 +587,7 @@ namespace Institute.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseTests",
+                name: "CoursePostTests",
                 columns: table => new
                 {
                     TestId = table.Column<int>(nullable: false),
@@ -596,15 +596,65 @@ namespace Institute.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CourseTests", x => x.TestId);
+                    table.PrimaryKey("PK_CoursePostTests", x => x.TestId);
                     table.ForeignKey(
-                        name: "FK_CourseTests_Courses_RefCourseId",
+                        name: "FK_CoursePostTests_Courses_RefCourseId",
                         column: x => x.RefCourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CourseTests_Tests_TestId",
+                        name: "FK_CoursePostTests_Tests_TestId",
+                        column: x => x.TestId,
+                        principalTable: "Tests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CoursePreAssignments",
+                columns: table => new
+                {
+                    TaskId = table.Column<int>(nullable: false),
+                    RefCourseId = table.Column<int>(nullable: false),
+                    SN = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CoursePreAssignments", x => x.TaskId);
+                    table.ForeignKey(
+                        name: "FK_CoursePreAssignments_Courses_RefCourseId",
+                        column: x => x.RefCourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CoursePreAssignments_Tasks_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "Tasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CoursePreTests",
+                columns: table => new
+                {
+                    TestId = table.Column<int>(nullable: false),
+                    RefCourseId = table.Column<int>(nullable: false),
+                    SN = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CoursePreTests", x => x.TestId);
+                    table.ForeignKey(
+                        name: "FK_CoursePreTests_Courses_RefCourseId",
+                        column: x => x.RefCourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CoursePreTests_Tests_TestId",
                         column: x => x.TestId,
                         principalTable: "Tests",
                         principalColumn: "Id",
@@ -907,11 +957,17 @@ namespace Institute.Migrations
                     FileId = table.Column<int>(nullable: false),
                     SN = table.Column<int>(nullable: false),
                     RefTaskId = table.Column<int>(nullable: true),
-                    TaskId = table.Column<int>(nullable: true)
+                    AssignmentId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TaskMaterials", x => x.FileId);
+                    table.ForeignKey(
+                        name: "FK_TaskMaterials_Tasks_AssignmentId",
+                        column: x => x.AssignmentId,
+                        principalTable: "Tasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_TaskMaterials_Files_FileId",
                         column: x => x.FileId,
@@ -922,12 +978,6 @@ namespace Institute.Migrations
                         name: "FK_TaskMaterials_Lessons_RefTaskId",
                         column: x => x.RefTaskId,
                         principalTable: "Lessons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TaskMaterials_Tasks_TaskId",
-                        column: x => x.TaskId,
-                        principalTable: "Tasks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -990,19 +1040,29 @@ namespace Institute.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CoursePostAssignments_RefCourseId",
+                table: "CoursePostAssignments",
+                column: "RefCourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CoursePostTests_RefCourseId",
+                table: "CoursePostTests",
+                column: "RefCourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CoursePreAssignments_RefCourseId",
+                table: "CoursePreAssignments",
+                column: "RefCourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CoursePreTests_RefCourseId",
+                table: "CoursePreTests",
+                column: "RefCourseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Courses_IntroVideoId",
                 table: "Courses",
                 column: "IntroVideoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CourseTasks_RefCourseId",
-                table: "CourseTasks",
-                column: "RefCourseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CourseTests_RefCourseId",
-                table: "CourseTests",
-                column: "RefCourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EnrollmentBills_EnrollmentId",
@@ -1077,14 +1137,14 @@ namespace Institute.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TaskMaterials_AssignmentId",
+                table: "TaskMaterials",
+                column: "AssignmentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TaskMaterials_RefTaskId",
                 table: "TaskMaterials",
                 column: "RefTaskId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TaskMaterials_TaskId",
-                table: "TaskMaterials",
-                column: "TaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestQAs_QAId1",
@@ -1163,10 +1223,16 @@ namespace Institute.Migrations
                 name: "CourseApplications");
 
             migrationBuilder.DropTable(
-                name: "CourseTasks");
+                name: "CoursePostAssignments");
 
             migrationBuilder.DropTable(
-                name: "CourseTests");
+                name: "CoursePostTests");
+
+            migrationBuilder.DropTable(
+                name: "CoursePreAssignments");
+
+            migrationBuilder.DropTable(
+                name: "CoursePreTests");
 
             migrationBuilder.DropTable(
                 name: "EnrollmentBills");

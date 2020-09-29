@@ -18,7 +18,7 @@ namespace Institute.Data
             throw new NotImplementedException();
         }
 
-        public void DeleteTest(Model.Task deleteTest)
+        public void DeleteTest(Model.Assignment deleteTest)
         {
             throw new NotImplementedException();
         }
@@ -28,7 +28,7 @@ namespace Institute.Data
             throw new NotImplementedException();
         }
 
-        public Task<Model.Task> GetTestById(int testid)
+        public Task<Model.Assignment> GetTestById(int testid)
         {
             throw new NotImplementedException();
         }

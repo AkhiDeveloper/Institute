@@ -7,8 +7,18 @@ using System.Threading.Tasks;
 
 namespace Institute.Data
 {
-    public class DbContextData
+    public partial class DbContextData 
     {
+        private readonly InstituteContext _context;
 
+        public DbContextData(InstituteContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<bool> SaveChanges()
+        {
+            return (await _context.SaveChangesAsync() >= 0);
+        }
     }
 }

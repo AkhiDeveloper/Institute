@@ -43,6 +43,6 @@ namespace Institute.Model
 
         public ICollection<ChapterTest> ChapterTests { get; set; }
 
-        public ICollection<ChapterTask> ChapterTasks { get; set; }
+        public ICollection<ChapterAssignment> ChapterTasks { get; set; }
     }
 }

@@ -22,20 +22,20 @@ namespace Institute.Controllers
     [ApiController]
     public class CoursesController : ControllerBase
     {
-        private readonly  IInstituteDataRepo _repository;
+        //private readonly  IInstituteDataRepo _repository;
         private readonly IInstituteDataRepoCRUD _dataRepoCRUD;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public CoursesController
             (
-            IInstituteDataRepo repository,
+            //IInstituteDataRepo repository,
             IInstituteDataRepoCRUD dataRepoCRUD,
             IMapper mapper,
             UserManager<ApplicationUser> userManager
             )
         {
-            _repository = repository;
+            //_repository = repository;
             _dataRepoCRUD = dataRepoCRUD;
             _mapper = mapper;
             _userManager = userManager;
@@ -131,7 +131,7 @@ namespace Institute.Controllers
         //    }
 
         //    return NotFound();
-        }
+        //}
 
 
 
@@ -140,12 +140,12 @@ namespace Institute.Controllers
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> AddNewCourse
-            (CourseCreateDTO newcourse)
+            ([FromBody]DTO.CourseRequestForm coursedetail)
         {
             //Getting User from HttpContext
             var username = User.FindFirst(ClaimTypes.Name).Value;
             var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _repository.GetTutorById(userModel.Id);
+            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
             if (tutorModel == null)
             {
                 return new BadRequestObjectResult(new
@@ -153,262 +153,245 @@ namespace Institute.Controllers
             }
 
             //Map DTO to Model
-            var courseModel = _mapper.Map<Course>(newcourse);
+            var courseModel = _mapper.Map<Course>(coursedetail);
 
             var tutorCourseModel = new RequestedTutorCourse()
             {
                 Tutor = tutorModel,
                 CourseDetail = courseModel,
-                TutorShare = newcourse.TutorShare,
+                TutorShare = coursedetail.Tutorshare,
             };
-            _dataRepoCRUD.CreateTutorCourse(tutorCourseModel);
+            _dataRepoCRUD.CreateRequestedTutorCourse(tutorCourseModel);
             await _dataRepoCRUD.SaveChanges();
 
-            //var requestedCourseModel = new RequestedCourse()
-            //{
-            //    CourseId = courseModel.Id,
-            //    RequestedShare = newcourse.TutorShare,
-            //    Comment = "",
-            //};
-            //_dataRepoCRUD.CreateRequestedCourse(requestedCourseModel);
-            await _dataRepoCRUD.SaveChanges();
-            //_repository.CreateCourse(courseModel);
-            //await _repository.SaveChanges();
-
-            //_repository.AssignCourse(tutorModel, courseModel,newcourse.TutorShare);
-            //await _repository.SaveChanges();
-
-            //_repository.LoadToRequestedCourse(courseModel);
-            //await _repository.SaveChanges();
-
-
+            return Ok(new {Message = "Sucessfully created your course. But other will only access it after approval from admin"});
             //Map Model to DTO
-            var courseReadDTO = _mapper.Map<CourseReadDTO>(courseModel);
+            //var courseReadDTO = _mapper.Map<CourseReadDTO>(courseModel);
 
-            return CreatedAtRoute(nameof(GetCourseDetail),
-                new { Id = courseModel.Id }, courseReadDTO);
+            //return CreatedAtRoute(nameof(GetCourseDetail),
+            //    new { Id = courseModel.Id }, courseReadDTO);
         }
 
 
-        [Authorize]
-        [HttpPost]
-        public async Task<ActionResult> AddChapter
-            (int courseId, ChapterCreateDTO chapter)
-        {
-            var chaptermodel = _mapper.Map<Chapter>(chapter);
+        //[Authorize]
+        //[HttpPost]
+        //public async Task<ActionResult> AddChapter
+        //    (int courseId, ChapterCreateDTO chapter)
+        //{
+        //    var chaptermodel = _mapper.Map<Chapter>(chapter);
 
-            //Getting User from HttpContext
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _repository.GetTutorById(userModel.Id);
-            if (tutorModel == null)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "Request not completed. User is not subscribed as Tutor." });
-            }
+        //    //Getting User from HttpContext
+        //    var username = User.FindFirst(ClaimTypes.Name).Value;
+        //    var userModel = await _userManager.FindByNameAsync(username);
+        //    var tutorModel = await _repository.GetTutorById(userModel.Id);
+        //    if (tutorModel == null)
+        //    {
+        //        return new BadRequestObjectResult(new
+        //        { Message = "Request not completed. User is not subscribed as Tutor." });
+        //    }
 
-            //Checking Correct Tutor
-            var tutorcoursemodel = await _dataRepoCRUD.
-                GetTutorCourseByCourseId(courseId);
-            var Autheticated = false;
-            foreach(var x in tutorcoursemodel)
-            {
-                if(x.TutorId == tutorModel.Id)
-                {
-                    Autheticated = true;
-                }            
-            }
-            if(Autheticated == false)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "You are not correct tutor." });
-            }
+        //    //Checking Correct Tutor
+        //    var tutorcoursemodel = await _dataRepoCRUD.
+        //        GetTutorCourseByCourseId(courseId);
+        //    var Autheticated = false;
+        //    foreach(var x in tutorcoursemodel)
+        //    {
+        //        if(x.TutorId == tutorModel.Id)
+        //        {
+        //            Autheticated = true;
+        //        }            
+        //    }
+        //    if(Autheticated == false)
+        //    {
+        //        return new BadRequestObjectResult(new
+        //        { Message = "You are not correct tutor." });
+        //    }
 
-            //Change to database
-            _dataRepoCRUD.CreateChapter(chaptermodel);
-            await _dataRepoCRUD.SaveChanges();
+        //    //Change to database
+        //    _dataRepoCRUD.CreateChapter(chaptermodel);
+        //    await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
-        [Authorize]
-        [HttpPost]
-        public async Task<ActionResult> AddLesson
-            (int chapterid, Lesson lesson)
-        {
-            var lessonmodel = _mapper.Map<Lesson>(lesson);
+        //[Authorize]
+        //[HttpPost]
+        //public async Task<ActionResult> AddLesson
+        //    (int chapterid, Lesson lesson)
+        //{
+        //    var lessonmodel = _mapper.Map<Lesson>(lesson);
 
-            //Getting User from HttpContext
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _repository.GetTutorById(userModel.Id);
-            if (tutorModel == null)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "Request not completed. User is not subscribed as Tutor." });
-            }
+        //    //Getting User from HttpContext
+        //    var username = User.FindFirst(ClaimTypes.Name).Value;
+        //    var userModel = await _userManager.FindByNameAsync(username);
+        //    var tutorModel = await _repository.GetTutorById(userModel.Id);
+        //    if (tutorModel == null)
+        //    {
+        //        return new BadRequestObjectResult(new
+        //        { Message = "Request not completed. User is not subscribed as Tutor." });
+        //    }
 
-            //Checking Correct Tutor
-            var chaptermodel = await _dataRepoCRUD.GetChapter(chapterid);
-            var tutorcoursemodel = await _dataRepoCRUD.
-                GetTutorCourseByCourseId(chaptermodel.CourseId);
-            var Autheticated = false;
-            foreach(var x in tutorcoursemodel)
-            {
-                if(x.TutorId == tutorModel.Id)
-                {
-                    Autheticated = true;
-                }            
-            }
-            if(Autheticated == false)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "You are not correct tutor." });
-            }
+        //    //Checking Correct Tutor
+        //    var chaptermodel = await _dataRepoCRUD.GetChapter(chapterid);
+        //    var tutorcoursemodel = await _dataRepoCRUD.
+        //        GetTutorCourseByCourseId(chaptermodel.CourseId);
+        //    var Autheticated = false;
+        //    foreach(var x in tutorcoursemodel)
+        //    {
+        //        if(x.TutorId == tutorModel.Id)
+        //        {
+        //            Autheticated = true;
+        //        }            
+        //    }
+        //    if(Autheticated == false)
+        //    {
+        //        return new BadRequestObjectResult(new
+        //        { Message = "You are not correct tutor." });
+        //    }
 
-            //Change to database
-            _dataRepoCRUD.CreateLesson(lessonmodel);
-            await _dataRepoCRUD.SaveChanges();
+        //    //Change to database
+        //    _dataRepoCRUD.CreateLesson(lessonmodel);
+        //    await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
 
-        [Authorize]
-        [HttpPost]
-        public async Task<ActionResult> AddCourseIntroVideo
-            ([FromRoute] int courseid, [FromBody] VideoCreateDTO video)
-        {
-            var videomodel = _mapper.Map<Video>(video);
+        //[Authorize]
+        //[HttpPost]
+        //public async Task<ActionResult> AddCourseIntroVideo
+        //    ([FromRoute] int courseid, [FromBody] VideoCreateDTO video)
+        //{
+        //    var videomodel = _mapper.Map<Video>(video);
 
-            var coursemodel = await _dataRepoCRUD.GetCourse(courseid);
-            coursemodel.IntroVideo = videomodel;
+        //    var coursemodel = await _dataRepoCRUD.GetCourse(courseid);
+        //    coursemodel.IntroVideo = videomodel;
 
-            _dataRepoCRUD.UpdateCourse(coursemodel);
-            await _dataRepoCRUD.SaveChanges();
+        //    _dataRepoCRUD.UpdateCourse(coursemodel);
+        //    await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
-        [Authorize]
-        [HttpPost]
-        public async Task<ActionResult> AddChapterIntroVideo
-            ([FromRoute] int chapterid, [FromBody] VideoCreateDTO video)
-        {
-            var videomodel = _mapper.Map<Video>(video);
+        //[Authorize]
+        //[HttpPost]
+        //public async Task<ActionResult> AddChapterIntroVideo
+        //    ([FromRoute] int chapterid, [FromBody] VideoCreateDTO video)
+        //{
+        //    var videomodel = _mapper.Map<Video>(video);
 
-            var chaptermodel = await _dataRepoCRUD.GetChapter(chapterid);
-            chaptermodel.IntroVideo = videomodel;
+        //    var chaptermodel = await _dataRepoCRUD.GetChapter(chapterid);
+        //    chaptermodel.IntroVideo = videomodel;
 
-            _dataRepoCRUD.UpdateChapter(chaptermodel);
-            await _dataRepoCRUD.SaveChanges();
+        //    _dataRepoCRUD.UpdateChapter(chaptermodel);
+        //    await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
-        [Authorize]
-        [HttpPost]
-        public async Task<ActionResult> AddLessonTeachingVideo
-            ([FromRoute] int lessonid, [FromBody] VideoCreateDTO video)
-        {
-            var videomodel = _mapper.Map<Video>(video);
+        //[Authorize]
+        //[HttpPost]
+        //public async Task<ActionResult> AddLessonTeachingVideo
+        //    ([FromRoute] int lessonid, [FromBody] VideoCreateDTO video)
+        //{
+        //    var videomodel = _mapper.Map<Video>(video);
 
-            var lessonmodel = await _dataRepoCRUD.GetLesson(lessonid);
-            lessonmodel.TeachingVideo = videomodel;
+        //    var lessonmodel = await _dataRepoCRUD.GetLesson(lessonid);
+        //    lessonmodel.TeachingVideo = videomodel;
 
-            _dataRepoCRUD.UpdateLesson(lessonmodel);
-            await _dataRepoCRUD.SaveChanges();
+        //    _dataRepoCRUD.UpdateLesson(lessonmodel);
+        //    await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
-        [Authorize]
-        [HttpPost("pretest/{courseid}")]
-        public async Task<ActionResult> AddCoursePreTest
-            ([FromRoute] int courseid, [FromBody] TestCreateDTO test)
-        {
-            var testmodel = _mapper.Map<Test>(test);
+        //[Authorize]
+        //[HttpPost("pretest/{courseid}")]
+        //public async Task<ActionResult> AddCoursePreTest
+        //    ([FromRoute] int courseid, [FromBody] TestCreateDTO test)
+        //{
+        //    var testmodel = _mapper.Map<Test>(test);
 
-            var coursemodel = await _dataRepoCRUD.GetCourse(courseid);
+        //    var coursemodel = await _dataRepoCRUD.GetCourse(courseid);
 
-            coursemodel.Tests = new List<CourseTest>();
+        //    coursemodel.Tests = new List<CourseTest>();
 
-            coursemodel.Tests.Add
-                (new CourseTest { TestDetail = testmodel });
+        //    coursemodel.Tests.Add
+        //        (new CourseTest { TestDetail = testmodel });
 
-            _dataRepoCRUD.UpdateCourse(coursemodel);
+        //    _dataRepoCRUD.UpdateCourse(coursemodel);
 
-            await _dataRepoCRUD.SaveChanges();
+        //    await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
         
 
 
-        //PUT api/courses/{id}
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCourse(int id,CourseUpdateDTO courseUpdate)
-        {
-            var courseolditem = await _repository.GetCourseById(id);
-            if(courseolditem==null)
-            {
-                return NotFound();
-            }
-            _mapper.Map(courseUpdate, courseolditem);
+        ////PUT api/courses/{id}
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult> UpdateCourse(int id,CourseUpdateDTO courseUpdate)
+        //{
+        //    var courseolditem = await _repository.GetCourseById(id);
+        //    if(courseolditem==null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    _mapper.Map(courseUpdate, courseolditem);
 
-            _repository.UpdateCourse(courseolditem);
+        //    _repository.UpdateCourse(courseolditem);
 
-            await _repository.SaveChanges();
+        //    await _repository.SaveChanges();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        //Patch api/courses/{id}
-        [HttpPatch("{id}")]
-        public async Task<ActionResult> PartialCourseUpdate
-            (int id, JsonPatchDocument<CourseUpdateDTO> patchDocument)
-        {
-            var courseolditem = await _repository.GetCourseById(id);
-            if (courseolditem == null)
-            {
-                return NotFound();
-            }
+        ////Patch api/courses/{id}
+        //[HttpPatch("{id}")]
+        //public async Task<ActionResult> PartialCourseUpdate
+        //    (int id, JsonPatchDocument<CourseUpdateDTO> patchDocument)
+        //{
+        //    var courseolditem = await _repository.GetCourseById(id);
+        //    if (courseolditem == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var courseToPatch = _mapper.Map<CourseUpdateDTO>(courseolditem);
+        //    var courseToPatch = _mapper.Map<CourseUpdateDTO>(courseolditem);
 
-            //Update specific attributes
-            patchDocument.ApplyTo(courseToPatch, ModelState);
+        //    //Update specific attributes
+        //    patchDocument.ApplyTo(courseToPatch, ModelState);
 
-            if(!TryValidateModel(courseToPatch))
-            {
-                return ValidationProblem(ModelState);
-            }
+        //    if(!TryValidateModel(courseToPatch))
+        //    {
+        //        return ValidationProblem(ModelState);
+        //    }
 
-            _mapper.Map(courseToPatch, courseolditem);
+        //    _mapper.Map(courseToPatch, courseolditem);
 
-            _repository.UpdateCourse(courseolditem);
+        //    _repository.UpdateCourse(courseolditem);
 
-            await _repository.SaveChanges();
+        //    await _repository.SaveChanges();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        //Delete api/courses/{id}
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteCourse(int id)
-        {
-            var courseitem = await _repository.GetCourseById(id);
-            if (courseitem == null)
-            {
-                return NotFound();
-            }
+        ////Delete api/courses/{id}
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult> DeleteCourse(int id)
+        //{
+        //    var courseitem = await _repository.GetCourseById(id);
+        //    if (courseitem == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _repository.DeleteCourse(courseitem);
-            await _repository.SaveChanges();
+        //    _repository.DeleteCourse(courseitem);
+        //    await _repository.SaveChanges();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Institute.Model
 {
-    public class CourseTask
+    public class CoursePostAssignment
     {
         [Key]
         [ForeignKey("TaskDetail")]
@@ -22,7 +22,7 @@ namespace Institute.Model
         
         //public int TaskDetailId { get; set; } 
 
-        public Task TaskDetail { get; set; }
+        public Assignment TaskDetail { get; set; }
 
         public Course RefCourse { get; set; }
     }

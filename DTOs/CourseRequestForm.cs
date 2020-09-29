@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Institute.DTOs
 {
-    public class CourseCreateDTO
+    public class CourseRequestForm
     {
         [Required]
         [StringLength(50, MinimumLength = 3)]
@@ -31,7 +31,6 @@ namespace Institute.DTOs
         public string? Requriements { get; set; }
 #nullable disable
 
-        [DefaultValue(0)]
-        public int TutorShare { get; set; }
+        public decimal Tutorshare;
     }
 }

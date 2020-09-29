@@ -40,7 +40,7 @@ namespace Institute.Model
 
         public ICollection<LessonTest> Tests { get; set; }
 
-        public ICollection<LessonTask> Tasks { get; set; }
+        public ICollection<LessonAssignment> Tasks { get; set; }
 
         //public ICollection<LessonTopic> LessonTopics { get; set; }
     }
