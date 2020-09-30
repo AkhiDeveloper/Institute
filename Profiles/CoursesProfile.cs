@@ -23,7 +23,7 @@ namespace Institute.Profiles
             //Chapter DTOs
             CreateMap<Chapter, ChapterReadDTO>();
             CreateMap<Chapter, ChapterUpdateDTO>();
-            CreateMap<ChapterCreateDTO, Chapter>();
+            CreateMap<ChapterCreateForm, Chapter>();
             CreateMap<ChapterUpdateDTO, Chapter>();
         }
     }

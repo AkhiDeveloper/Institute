@@ -114,7 +114,7 @@ namespace Institute.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<ChapterReadDTO>> AddChapter
-            (ChapterCreateDTO newchapter, int targetCourseId)
+            (ChapterCreateForm newchapter, int targetCourseId)
         {
             var chaptermodel = _mapper.Map<Chapter>(newchapter);
             var targetCourse = await _repository.GetCourseById(targetCourseId);

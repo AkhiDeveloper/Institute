@@ -33,7 +33,7 @@ namespace Institute.Model
         [DefaultValue("You had not mentioned any objectives.")]
         public string Objectives { get; set; }
 
-        public int IntroVideoId { get; set; }
+        public int? IntroVideoId { get; set; }
 
         //Navigation Property
         public Video IntroVideo { get; set; }

@@ -1,0 +1,20 @@
+﻿using Institute.Model;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Institute.Data
+{
+    public partial class DbContextData
+    {
+        public async Task<Course> GetCourse(int courseid)
+        {
+            var result = await _context.Courses
+                .FirstOrDefaultAsync(x => x.Id == courseid);
+               
+            return result;
+        }
+    }
+}

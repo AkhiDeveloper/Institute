@@ -15,8 +15,16 @@ namespace Institute.Data
 
 
         //CourseContext
-        //Course
+        //TutorCourse
         void CreateRequestedTutorCourse(RequestedTutorCourse tutorCourse);
+
+        Task<RequestedTutorCourse> GetRequestedTutorCourse(int courseid);
+
+        //Course
+        Task<Course> GetCourse(int courseid);
+
+        //Chapter
+        void CreateChapter(Chapter chapter);
 
 
         //void CreateCourse(Course newCourse);

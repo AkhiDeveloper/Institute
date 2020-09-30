@@ -173,46 +173,39 @@ namespace Institute.Controllers
         }
 
 
-        //[Authorize]
-        //[HttpPost]
-        //public async Task<ActionResult> AddChapter
-        //    (int courseId, ChapterCreateDTO chapter)
-        //{
-        //    var chaptermodel = _mapper.Map<Chapter>(chapter);
+        [Authorize]
+        [HttpPost("{courseid}/chapter")]
+        public async Task<ActionResult> AddCourseChapter
+            (int courseId, DTO.ChapterCreateForm chapter)
+        {
+            //Getting User from HttpContext
+            var username = User.FindFirst(ClaimTypes.Name).Value;
+            var userModel = await _userManager.FindByNameAsync(username);
+            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
+            if (tutorModel == null)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "Request not completed. User is not subscribed as Tutor." });
+            }
 
-        //    //Getting User from HttpContext
-        //    var username = User.FindFirst(ClaimTypes.Name).Value;
-        //    var userModel = await _userManager.FindByNameAsync(username);
-        //    var tutorModel = await _repository.GetTutorById(userModel.Id);
-        //    if (tutorModel == null)
-        //    {
-        //        return new BadRequestObjectResult(new
-        //        { Message = "Request not completed. User is not subscribed as Tutor." });
-        //    }
+            //Checking Correct Tutor
+            var tutorcoursemodel = await _dataRepoCRUD.
+                GetRequestedTutorCourse(courseId);
+            if (tutorcoursemodel.TutorId != tutorModel.Id)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "You are not correct tutor." });
+            }
 
-        //    //Checking Correct Tutor
-        //    var tutorcoursemodel = await _dataRepoCRUD.
-        //        GetTutorCourseByCourseId(courseId);
-        //    var Autheticated = false;
-        //    foreach(var x in tutorcoursemodel)
-        //    {
-        //        if(x.TutorId == tutorModel.Id)
-        //        {
-        //            Autheticated = true;
-        //        }            
-        //    }
-        //    if(Autheticated == false)
-        //    {
-        //        return new BadRequestObjectResult(new
-        //        { Message = "You are not correct tutor." });
-        //    }
+            //Change to database
+            var chaptermodel = _mapper.Map<Chapter>(chapter);
+            var coursemodel =await _dataRepoCRUD.GetCourse(courseId);
+            chaptermodel.Course = coursemodel;
+            _dataRepoCRUD.CreateChapter(chaptermodel);
+            await _dataRepoCRUD.SaveChanges();
 
-        //    //Change to database
-        //    _dataRepoCRUD.CreateChapter(chaptermodel);
-        //    await _dataRepoCRUD.SaveChanges();
-
-        //    return Ok();
-        //}
+            return Ok();
+        }
 
         //[Authorize]
         //[HttpPost]
@@ -326,7 +319,7 @@ namespace Institute.Controllers
         //    return Ok();
         //}
 
-        
+
 
 
         ////PUT api/courses/{id}

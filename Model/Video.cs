@@ -13,7 +13,6 @@ namespace Institute.Model
         [ForeignKey("FileDetail")]
         public int FileId { get; set; }
 
-        [Required]
         public File FileDetail { get; set; }
 
         [Required]
