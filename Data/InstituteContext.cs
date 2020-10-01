@@ -36,8 +36,31 @@ namespace Institute.Data
                 .WithMany()
                 .HasForeignKey(x => x.TeachingVideoId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
-      
+
+            modelBuilder.Entity<Chapter>()
+                .HasIndex(x => x.SN)
+                .IsUnique();
+
+            modelBuilder.Entity<Lesson>()
+                .HasIndex(x => x.SN)
+                .IsUnique();
+
+            modelBuilder.Entity<CoursePreTest>()
+                .HasIndex(x => x.SN)
+                .IsUnique();
+
+            modelBuilder.Entity<CoursePostTest>()
+                .HasIndex(x => x.SN)
+                .IsUnique();
+
+            modelBuilder.Entity<CoursePreAssignment>()
+                .HasIndex(x => x.SN)
+                .IsUnique();
+
+            modelBuilder.Entity<CoursePostAssignment>()
+                .HasIndex(x => x.SN)
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
 
             //Changing Table Names

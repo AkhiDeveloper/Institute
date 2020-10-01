@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace Institute.DTOs
     public class ChapterCreateForm
     {
         [Required]
+        [Index(IsUnique = true)]
         [Range(1, 50)]
         public int SN { get; set; }
 

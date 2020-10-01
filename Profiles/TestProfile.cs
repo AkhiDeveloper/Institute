@@ -12,7 +12,7 @@ namespace Institute.Profiles
     {
         public TestProfile()
         {
-            CreateMap<TestCreateDTO, Test>();
+            CreateMap<TestCreateForm, Test>();
         }
     }
 }

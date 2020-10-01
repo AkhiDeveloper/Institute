@@ -7,8 +7,18 @@ using System.Threading.Tasks;
 
 namespace Institute.Data
 {
-    public partial class DbContextData
+    public partial class DbContextData 
     {
+        public async void CreateCoursePreTest(CoursePreTest coursePreTest)
+        {
+            await _context.CoursePreTests.AddAsync(coursePreTest);
+        }
+
+        public async void CreateCoursePostTest(CoursePostTest coursePostTest)
+        {
+            await _context.CoursePostTests.AddAsync(coursePostTest);
+        }
+
         public async Task<Course> GetCourse(int courseid)
         {
             var result = await _context.Courses

@@ -14,7 +14,6 @@ namespace Institute.Model
 
         public int CourseId { get; set; }
 
-        
         [Required]
         [Range(1,50)]
         public int SN { get; set; }

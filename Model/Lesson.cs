@@ -27,7 +27,7 @@ namespace Institute.Model
         [StringLength(150, MinimumLength = 10)]
         public string Goal { get; set; }
 
-        public int TeachingVideoId { get; set; }
+        public int? TeachingVideoId { get; set; }
 
         
         [DefaultValue("False")]

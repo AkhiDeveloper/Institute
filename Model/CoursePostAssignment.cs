@@ -17,9 +17,10 @@ namespace Institute.Model
         public int RefCourseId { get; set; }
 
         [Required]
+        [Index(IsUnique = true)]
         public int SN { get; set; }
 
-        
+
         //public int TaskDetailId { get; set; } 
 
         public Assignment TaskDetail { get; set; }

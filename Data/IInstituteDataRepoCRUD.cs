@@ -22,10 +22,15 @@ namespace Institute.Data
 
         //Course
         Task<Course> GetCourse(int courseid);
+        void CreateCoursePreTest(CoursePreTest coursePreTest);
+        void CreateCoursePostTest(CoursePostTest coursePostTest);
 
         //Chapter
         void CreateChapter(Chapter chapter);
+        Task<Chapter> GetChapterBySN(int courseid, int chapterSN);
 
+        //Lesson
+        void CreateLesson(Lesson lesson);
 
         //void CreateCourse(Course newCourse);
         //Task<Course> GetCourse(int id);

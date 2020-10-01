@@ -184,6 +184,9 @@ namespace Institute.Migrations
 
                     b.HasIndex("IntroVideoId");
 
+                    b.HasIndex("SN")
+                        .IsUnique();
+
                     b.ToTable("Chapters");
                 });
 
@@ -328,6 +331,9 @@ namespace Institute.Migrations
 
                     b.HasIndex("RefCourseId");
 
+                    b.HasIndex("SN")
+                        .IsUnique();
+
                     b.ToTable("CoursePostAssignments");
                 });
 
@@ -345,6 +351,9 @@ namespace Institute.Migrations
                     b.HasKey("TestId");
 
                     b.HasIndex("RefCourseId");
+
+                    b.HasIndex("SN")
+                        .IsUnique();
 
                     b.ToTable("CoursePostTests");
                 });
@@ -364,6 +373,9 @@ namespace Institute.Migrations
 
                     b.HasIndex("RefCourseId");
 
+                    b.HasIndex("SN")
+                        .IsUnique();
+
                     b.ToTable("CoursePreAssignments");
                 });
 
@@ -381,6 +393,9 @@ namespace Institute.Migrations
                     b.HasKey("TestId");
 
                     b.HasIndex("RefCourseId");
+
+                    b.HasIndex("SN")
+                        .IsUnique();
 
                     b.ToTable("CoursePreTests");
                 });
@@ -472,7 +487,7 @@ namespace Institute.Migrations
                     b.Property<int>("SN")
                         .HasColumnType("int");
 
-                    b.Property<int>("TeachingVideoId")
+                    b.Property<int?>("TeachingVideoId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -483,6 +498,9 @@ namespace Institute.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChapterId");
+
+                    b.HasIndex("SN")
+                        .IsUnique();
 
                     b.HasIndex("TeachingVideoId");
 
@@ -1186,8 +1204,7 @@ namespace Institute.Migrations
                     b.HasOne("Institute.Model.Video", "TeachingVideo")
                         .WithMany()
                         .HasForeignKey("TeachingVideoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Institute.Model.LessonAssignment", b =>
