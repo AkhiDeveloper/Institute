@@ -370,7 +370,7 @@ namespace Institute.Controllers
                 { Message = "You are not correct tutor." });
             }
 
-            //Creating Database
+            //Creating Data
             var testmodel = _mapper.Map<Test>(test);
             var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
             if (coursemodel == null)
@@ -389,6 +389,98 @@ namespace Institute.Controllers
 
             return Ok();
         }
+
+        [Authorize]
+        [HttpPost("{courseId}/preassignment")]
+        public async Task<IActionResult> AddCoursePreAssignment(
+            [FromRoute]int courseId,
+            [FromBody] DTO.AssignmentCreateForm assignmentform)
+        {
+            //Getting User from HttpContext
+            var username = User.FindFirst(ClaimTypes.Name).Value;
+            var userModel = await _userManager.FindByNameAsync(username);
+            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
+            if (tutorModel == null)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "Request not completed. User is not subscribed as Tutor." });
+            }
+
+            //Checking Correct Tutor
+            var tutorcoursemodel = await _dataRepoCRUD.
+                GetRequestedTutorCourse(courseId);
+            if (tutorcoursemodel.TutorId != tutorModel.Id)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "You are not correct tutor." });
+            }
+
+            //Creating Data
+            var assignmentmodel = _mapper.Map<Assignment>(assignmentform);
+            var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
+            if (coursemodel == null)
+            {
+                return new NotFoundObjectResult(new
+                { Message = "Request not completed. Course not found." });
+            }
+
+            var courseassignment = new CoursePreAssignment()
+            {
+                RefCourse = coursemodel,
+                AssignmentDetail = assignmentmodel,
+            };
+            _mapper.Map(assignmentform, courseassignment);
+            _dataRepoCRUD.CreateCoursePreAssignment(courseassignment);
+            await _dataRepoCRUD.SaveChanges();
+            return Ok();
+        }
+
+
+        [Authorize]
+        [HttpPost("{courseId}/postassignment")]
+        public async Task<IActionResult> AddCoursePostAssignment(
+            [FromRoute] int courseId,
+            [FromBody] DTO.AssignmentCreateForm assignmentform)
+        {
+            //Getting User from HttpContext
+            var username = User.FindFirst(ClaimTypes.Name).Value;
+            var userModel = await _userManager.FindByNameAsync(username);
+            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
+            if (tutorModel == null)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "Request not completed. User is not subscribed as Tutor." });
+            }
+
+            //Checking Correct Tutor
+            var tutorcoursemodel = await _dataRepoCRUD.
+                GetRequestedTutorCourse(courseId);
+            if (tutorcoursemodel.TutorId != tutorModel.Id)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "You are not correct tutor." });
+            }
+
+            //Creating Data
+            var assignmentmodel = _mapper.Map<Assignment>(assignmentform);
+            var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
+            if (coursemodel == null)
+            {
+                return new NotFoundObjectResult(new
+                { Message = "Request not completed. Course not found." });
+            }
+
+            var courseassignment = new CoursePostAssignment()
+            {
+                RefCourse = coursemodel,
+                AssignmentDetail = assignmentmodel,
+            };
+            _mapper.Map(assignmentform, courseassignment);
+            _dataRepoCRUD.CreateCoursePostAssignment(courseassignment);
+            await _dataRepoCRUD.SaveChanges();
+            return Ok();
+        }
+
 
 
 

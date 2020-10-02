@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Institute.Data;
 using Institute.Model;
+using Institute.Repository.FileManager;
 using Institute.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -83,6 +84,7 @@ namespace Institute
             //Dependency Injection for IInstituteRepo
             //services.AddScoped<IInstituteDataRepo, SqlInstituteData>() ;
             services.AddScoped<IInstituteDataRepoCRUD, DbContextData>();
+            services.AddScoped<IFileManager, DefaultFileManager>();
 
         }
 
@@ -97,6 +99,8 @@ namespace Institute
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseStaticFiles();
 
             app.UseAuthentication();
 

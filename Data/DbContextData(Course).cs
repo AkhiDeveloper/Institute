@@ -19,6 +19,18 @@ namespace Institute.Data
             await _context.CoursePostTests.AddAsync(coursePostTest);
         }
 
+        public async void CreateCoursePreAssignment
+            (CoursePreAssignment coursePreAssignment)
+        {
+            await _context.CoursePreAssignments.AddAsync(coursePreAssignment);
+        }
+
+        public async void CreateCoursePostAssignment
+            (CoursePostAssignment coursePostAssignment)
+        {
+            await _context.CoursePostAssignments.AddAsync(coursePostAssignment);
+        }
+
         public async Task<Course> GetCourse(int courseid)
         {
             var result = await _context.Courses

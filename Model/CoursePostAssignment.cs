@@ -10,8 +10,8 @@ namespace Institute.Model
     public class CoursePostAssignment
     {
         [Key]
-        [ForeignKey("TaskDetail")]
-        public int TaskId { get; set; }
+        [ForeignKey("AssignmentDetail")]
+        public int AssignmentId { get; set; }
 
         [Required]
         public int RefCourseId { get; set; }
@@ -23,7 +23,7 @@ namespace Institute.Model
 
         //public int TaskDetailId { get; set; } 
 
-        public Assignment TaskDetail { get; set; }
+        public Assignment AssignmentDetail { get; set; }
 
         public Course RefCourse { get; set; }
     }

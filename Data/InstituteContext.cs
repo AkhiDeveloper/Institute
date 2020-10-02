@@ -38,27 +38,27 @@ namespace Institute.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Chapter>()
-                .HasIndex(x => x.SN)
+                .HasIndex(x => new { x.Id, x.SN})
                 .IsUnique();
 
             modelBuilder.Entity<Lesson>()
-                .HasIndex(x => x.SN)
+                .HasIndex(x => new { x.Id, x.SN })
                 .IsUnique();
 
             modelBuilder.Entity<CoursePreTest>()
-                .HasIndex(x => x.SN)
+                .HasIndex(x => new { x.RefCourseId, x.SN })
                 .IsUnique();
 
             modelBuilder.Entity<CoursePostTest>()
-                .HasIndex(x => x.SN)
+                .HasIndex(x => new { x.RefCourseId, x.SN })
                 .IsUnique();
 
             modelBuilder.Entity<CoursePreAssignment>()
-                .HasIndex(x => x.SN)
+                .HasIndex(x => new { x.RefCourseId, x.SN })
                 .IsUnique();
 
             modelBuilder.Entity<CoursePostAssignment>()
-                .HasIndex(x => x.SN)
+                .HasIndex(x => new { x.RefCourseId, x.SN })
                 .IsUnique();
 
             base.OnModelCreating(modelBuilder);

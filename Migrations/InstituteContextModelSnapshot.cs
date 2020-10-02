@@ -184,7 +184,7 @@ namespace Institute.Migrations
 
                     b.HasIndex("IntroVideoId");
 
-                    b.HasIndex("SN")
+                    b.HasIndex("Id", "SN")
                         .IsUnique();
 
                     b.ToTable("Chapters");
@@ -318,7 +318,7 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.CoursePostAssignment", b =>
                 {
-                    b.Property<int>("TaskId")
+                    b.Property<int>("AssignmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("RefCourseId")
@@ -327,11 +327,9 @@ namespace Institute.Migrations
                     b.Property<int>("SN")
                         .HasColumnType("int");
 
-                    b.HasKey("TaskId");
+                    b.HasKey("AssignmentId");
 
-                    b.HasIndex("RefCourseId");
-
-                    b.HasIndex("SN")
+                    b.HasIndex("RefCourseId", "SN")
                         .IsUnique();
 
                     b.ToTable("CoursePostAssignments");
@@ -350,9 +348,7 @@ namespace Institute.Migrations
 
                     b.HasKey("TestId");
 
-                    b.HasIndex("RefCourseId");
-
-                    b.HasIndex("SN")
+                    b.HasIndex("RefCourseId", "SN")
                         .IsUnique();
 
                     b.ToTable("CoursePostTests");
@@ -360,7 +356,7 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.CoursePreAssignment", b =>
                 {
-                    b.Property<int>("TaskId")
+                    b.Property<int>("AssignmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("RefCourseId")
@@ -369,11 +365,9 @@ namespace Institute.Migrations
                     b.Property<int>("SN")
                         .HasColumnType("int");
 
-                    b.HasKey("TaskId");
+                    b.HasKey("AssignmentId");
 
-                    b.HasIndex("RefCourseId");
-
-                    b.HasIndex("SN")
+                    b.HasIndex("RefCourseId", "SN")
                         .IsUnique();
 
                     b.ToTable("CoursePreAssignments");
@@ -392,9 +386,7 @@ namespace Institute.Migrations
 
                     b.HasKey("TestId");
 
-                    b.HasIndex("RefCourseId");
-
-                    b.HasIndex("SN")
+                    b.HasIndex("RefCourseId", "SN")
                         .IsUnique();
 
                     b.ToTable("CoursePreTests");
@@ -499,10 +491,10 @@ namespace Institute.Migrations
 
                     b.HasIndex("ChapterId");
 
-                    b.HasIndex("SN")
-                        .IsUnique();
-
                     b.HasIndex("TeachingVideoId");
+
+                    b.HasIndex("Id", "SN")
+                        .IsUnique();
 
                     b.ToTable("Lessons");
                 });
@@ -1111,15 +1103,15 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.CoursePostAssignment", b =>
                 {
-                    b.HasOne("Institute.Model.Course", "RefCourse")
-                        .WithMany("PostAssignments")
-                        .HasForeignKey("RefCourseId")
+                    b.HasOne("Institute.Model.Assignment", "AssignmentDetail")
+                        .WithMany()
+                        .HasForeignKey("AssignmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Institute.Model.Assignment", "TaskDetail")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
+                    b.HasOne("Institute.Model.Course", "RefCourse")
+                        .WithMany("PostAssignments")
+                        .HasForeignKey("RefCourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1141,15 +1133,15 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.CoursePreAssignment", b =>
                 {
-                    b.HasOne("Institute.Model.Course", "RefCourse")
-                        .WithMany("PreAssignments")
-                        .HasForeignKey("RefCourseId")
+                    b.HasOne("Institute.Model.Assignment", "AssignmentDetail")
+                        .WithMany()
+                        .HasForeignKey("AssignmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Institute.Model.Assignment", "TaskDetail")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
+                    b.HasOne("Institute.Model.Course", "RefCourse")
+                        .WithMany("PreAssignments")
+                        .HasForeignKey("RefCourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

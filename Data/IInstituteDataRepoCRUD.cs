@@ -24,6 +24,8 @@ namespace Institute.Data
         Task<Course> GetCourse(int courseid);
         void CreateCoursePreTest(CoursePreTest coursePreTest);
         void CreateCoursePostTest(CoursePostTest coursePostTest);
+        void CreateCoursePreAssignment(CoursePreAssignment coursePreAssignment);
+        void CreateCoursePostAssignment(CoursePostAssignment coursePostAssignment);
 
         //Chapter
         void CreateChapter(Chapter chapter);
