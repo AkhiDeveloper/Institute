@@ -21,9 +21,6 @@ namespace Institute.Model
         public FileType Type { get; set; }
 
         [Required]
-        public string Format { get; set; }
-
-        [Required]
         [DataType(DataType.Url)]
         public string FileUrl { get; set; }
 
@@ -31,5 +28,20 @@ namespace Institute.Model
         [DataType(DataType.DateTime)]
         [Column(TypeName ="DateTime")]
         public DateTime UploadDateTime { get; set; }
+
+        [NotMapped]
+        public string Format
+        {
+            get
+            {
+                var splits = FileName.Split(",");
+                return splits[splits.Length - 1];
+            }
+        }
+
+        public File()
+        {
+            UploadDateTime = DateTime.Now;
+        }
     }
 }

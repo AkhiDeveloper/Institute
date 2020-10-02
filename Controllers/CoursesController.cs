@@ -15,6 +15,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+using System.Threading;
+using Institute.Repository.FileManager;
+
 
 namespace Institute.Controllers
 {
@@ -26,19 +29,22 @@ namespace Institute.Controllers
         private readonly IInstituteDataRepoCRUD _dataRepoCRUD;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IFileManager _fileManager;
 
         public CoursesController
             (
             //IInstituteDataRepo repository,
             IInstituteDataRepoCRUD dataRepoCRUD,
             IMapper mapper,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            IFileManager fileManager
             )
         {
             //_repository = repository;
             _dataRepoCRUD = dataRepoCRUD;
             _mapper = mapper;
             _userManager = userManager;
+            _fileManager = fileManager;
         }
         
 
@@ -252,21 +258,74 @@ namespace Institute.Controllers
         }
 
 
-        //[Authorize]
-        //[HttpPost]
-        //public async Task<ActionResult> AddCourseIntroVideo
-        //    ([FromRoute] int courseid, [FromBody] VideoCreateDTO video)
-        //{
-        //    var videomodel = _mapper.Map<Video>(video);
+        [Authorize]
+        [HttpPost("introvideo/{courseId}")]
+        public async Task<ActionResult> AddCourseIntroVideo
+            (int courseId,
+            IFormFile uploadingfile,
+            CancellationToken cancellationToken)
+        {
+            //Getting User from HttpContext
+            var username = User.FindFirst(ClaimTypes.Name).Value;
+            var userModel = await _userManager.FindByNameAsync(username);
+            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
+            if (tutorModel == null)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "Request not completed. User is not subscribed as Tutor." });
+            }
 
-        //    var coursemodel = await _dataRepoCRUD.GetCourse(courseid);
-        //    coursemodel.IntroVideo = videomodel;
+            //Checking Correct Tutor
+            var tutorcoursemodel = await _dataRepoCRUD.
+                GetRequestedTutorCourse(courseId);
+            if (tutorcoursemodel.TutorId != tutorModel.Id)
+            {
+                return new BadRequestObjectResult(new
+                { Message = "You are not correct tutor." });
+            }
 
-        //    _dataRepoCRUD.UpdateCourse(coursemodel);
-        //    await _dataRepoCRUD.SaveChanges();
+            //Creating relative file path
+            if (uploadingfile == null)
+            {
+                return BadRequest(new
+                {
+                    Message = "Uploaded File not found."
+                });
+            }
 
-        //    return Ok();
-        //}
+            string folder = System.IO.Path.Combine(courseId.ToString(), "Videos");
+            var filepath = await _fileManager.SaveFileToDefaultFolder(folder, uploadingfile);
+
+            var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
+            if (coursemodel.IntroVideoId.HasValue)
+            {
+                return BadRequest(new
+                {
+                    Message = "Already Intro Video is uploaded."
+                });
+            }
+
+            var filemodel = new File()
+            {
+                FileName = coursemodel.Title + "_" + "IntroVideo",
+                Type = FileType.Video,
+                FileUrl = filepath,
+            };
+
+            var videomodel = new Video()
+            {
+                FileDetail = filemodel,
+            };
+
+            //_dataRepoCRUD.CreateVideo(videomodel);
+            await _dataRepoCRUD.SaveChanges();
+
+            coursemodel.IntroVideo = videomodel;
+            await _dataRepoCRUD.SaveChanges();
+
+            return Ok();
+
+        }
 
         //[Authorize]
         //[HttpPost]

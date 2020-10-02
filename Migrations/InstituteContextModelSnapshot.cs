@@ -433,10 +433,6 @@ namespace Institute.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Format")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
@@ -866,9 +862,6 @@ namespace Institute.Migrations
                 {
                     b.Property<int>("FileId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("VideoDuration")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("FileId");
 

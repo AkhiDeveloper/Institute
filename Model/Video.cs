@@ -15,6 +15,7 @@ namespace Institute.Model
 
         public File FileDetail { get; set; }
 
+        [NotMapped]
         [Required]
         [DataType(DataType.Duration)]
         public DateTime VideoDuration { get; set; }
