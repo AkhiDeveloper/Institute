@@ -53,9 +53,9 @@ namespace Institute.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("setrole/{username}")]
-        public async Task<IActionResult> SetRole
-            (string username, string role)
+        [HttpPost("setastutor/{username}")]
+        public async Task<IActionResult> SetasTutor
+            (string username)
         {
             var user = await _userManager.FindByNameAsync(username);
             if(user == null)
@@ -65,13 +65,14 @@ namespace Institute.Controllers
                     Message = "User not found",
                 });
             }
-            if (role == null)
+
+            var role = "Tutor";
+
+            _dataRepoCRUD.CreateTutor(new Tutor
             {
-                return BadRequest(new
-                {
-                    Message = "Invalid role",
-                });
-            }
+                UserDetail = user
+            });
+            await _dataRepoCRUD.SaveChanges();
 
             await _userManager.AddToRoleAsync(user, role);
             return Ok();
