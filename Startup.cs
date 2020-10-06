@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Institute.CustomAuthorization;
 using Institute.Data;
 using Institute.Model;
 using Institute.Repository.FileManager;
 using Institute.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +45,7 @@ namespace Institute
            GetConnectionString("InstituteConnection")));
 
             //Conecting User to the Data Context
-            services.AddIdentity<ApplicationUser, IdentityRole<int>>
+            services.AddIdentity<ApplicationUser, IdentityRole<string>>
                 (options => options.SignIn.RequireConfirmedAccount = true)
                .AddEntityFrameworkStores<InstituteContext>();
 
@@ -59,9 +62,12 @@ namespace Institute
             {
                 opts.RequireHttpsMetadata = false;
                 opts.SaveToken = true;
-                var jwtSection = Configuration.GetSection("JwtBearerTokenSetting");
-                var jwtBearerTokenSettings = jwtSection.Get<JwtBearerTokenSetting>();
-                opts.TokenValidationParameters = new TokenValidationParameters()
+                var jwtSection = Configuration
+                    .GetSection("JwtBearerTokenSetting");
+                var jwtBearerTokenSettings = jwtSection
+                    .Get<JwtBearerTokenSetting>();
+                opts.TokenValidationParameters = 
+                    new TokenValidationParameters()
                 {
                     ValidateIssuer = true,
                     ValidIssuer = jwtBearerTokenSettings.Issuer,
@@ -74,6 +80,15 @@ namespace Institute
                 };
             });
 
+            //Adding Custom Authorization
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy("TutorCourseCheck", policy =>
+                {
+                    policy.Requirements.Add(new TutorCourseRequriements());
+                });
+            });
+
             //Adding Cntrollers
             services.AddControllers().AddNewtonsoftJson(s => 
             { s.SerializerSettings.ContractResolver 
@@ -82,9 +97,16 @@ namespace Institute
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             //Dependency Injection for IInstituteRepo
-            //services.AddScoped<IInstituteDataRepo, SqlInstituteData>() ;
             services.AddScoped<IInstituteDataRepoCRUD, DbContextData>();
             services.AddScoped<IFileManager, DefaultFileManager>();
+            services.AddScoped
+                <IAuthorizationHandler, TutorCourseAuthorizationHandler>();
+
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = int.MaxValue; // In case of multipart
+            });
 
         }
 

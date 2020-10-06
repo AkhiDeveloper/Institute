@@ -11,7 +11,7 @@ namespace Institute.Model
     {
         [Key]
         [ForeignKey("UserDetail")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         //Navigation Property
         public ApplicationUser UserDetail { get; set; }

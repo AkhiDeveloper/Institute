@@ -11,7 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Institute.Data
 {
-    public class InstituteContext : IdentityDbContext<ApplicationUser,IdentityRole<int>, int>
+    public class InstituteContext : IdentityDbContext<ApplicationUser,IdentityRole<string>, string>
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -69,35 +69,37 @@ namespace Institute.Data
                 b.ToTable("AppUsers");
             });
 
-            modelBuilder.Entity<IdentityUserClaim<int>>(b =>
+            modelBuilder.Entity<IdentityUserClaim<string>>(b =>
             {
                 b.ToTable("UserClaims");
             });
 
-            modelBuilder.Entity<IdentityUserLogin<int>>(b =>
+            modelBuilder.Entity<IdentityUserLogin<string>>(b =>
             {
                 b.ToTable("UserLogins");
             });
 
-            modelBuilder.Entity<IdentityUserToken<int>>(b =>
+            modelBuilder.Entity<IdentityUserToken<string>>(b =>
             {
                 b.ToTable("UserTokens");
             });
 
-            modelBuilder.Entity<IdentityRole<int>>(b =>
+            modelBuilder.Entity<IdentityRole<string>>(b =>
             {
                 b.ToTable("Roles");
             });
 
-            modelBuilder.Entity<IdentityRoleClaim<int>>(b =>
+            modelBuilder.Entity<IdentityRoleClaim<string>>(b =>
             {
                 b.ToTable("RoleClaims");
             });
 
-            modelBuilder.Entity<IdentityUserRole<int>>(b =>
+            modelBuilder.Entity<IdentityUserRole<string>>(b =>
             {
                 b.ToTable("UserRoles");
             });
+
+            
         }
 
         public InstituteContext(DbContextOptions<InstituteContext> opt) 

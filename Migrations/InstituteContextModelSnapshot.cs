@@ -21,8 +21,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.Admin", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -54,10 +54,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.ApplicationUser", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -242,11 +240,14 @@ namespace Institute.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("StudentId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId1");
 
                     b.ToTable("ConfirmedEnrollments");
                 });
@@ -298,8 +299,8 @@ namespace Institute.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AplicantId")
-                        .HasColumnType("int");
+                    b.Property<string>("AplicantId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ApplicantId")
                         .HasColumnType("int");
@@ -593,11 +594,14 @@ namespace Institute.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("StudentId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId1");
 
                     b.ToTable("PendingEnrollments");
                 });
@@ -633,8 +637,8 @@ namespace Institute.Migrations
                     b.Property<int>("CourseId1")
                         .HasColumnType("int");
 
-                    b.Property<int>("TutorId")
-                        .HasColumnType("int");
+                    b.Property<string>("TutorId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("TutorShare")
                         .HasColumnType("decimal(4,2)");
@@ -659,8 +663,8 @@ namespace Institute.Migrations
                     b.Property<int>("NumberofReviews")
                         .HasColumnType("int");
 
-                    b.Property<int>("TutorId")
-                        .HasColumnType("int");
+                    b.Property<string>("TutorId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("TutorShare")
                         .HasColumnType("decimal(4,2)");
@@ -674,8 +678,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.Student", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -760,19 +764,22 @@ namespace Institute.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("StudentId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId1");
 
                     b.ToTable("TrialEnrollments");
                 });
 
             modelBuilder.Entity("Institute.Model.Tutor", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -796,17 +803,22 @@ namespace Institute.Migrations
                     b.Property<int>("FacedQsns")
                         .HasColumnType("int");
 
+                    b.Property<string>("PerformerId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("PerformerId", "ConductedTestId");
 
                     b.HasIndex("ConductedTestId");
+
+                    b.HasIndex("PerformerId1");
 
                     b.ToTable("UserGivenTests");
                 });
 
             modelBuilder.Entity("Institute.Model.UserTask", b =>
                 {
-                    b.Property<int>("PerformerId")
-                        .HasColumnType("int");
+                    b.Property<string>("PerformerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("GivenTaskId")
                         .HasColumnType("int");
@@ -814,8 +826,8 @@ namespace Institute.Migrations
                     b.Property<bool>("Checked")
                         .HasColumnType("bit");
 
-                    b.Property<int>("CheckerId")
-                        .HasColumnType("int");
+                    b.Property<string>("CheckerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Comments")
                         .IsRequired()
@@ -848,10 +860,15 @@ namespace Institute.Migrations
                     b.Property<int>("NumofTimeCompletlyWatched")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserWatchedId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<TimeSpan>("WatchedDuration")
                         .HasColumnType("time");
 
                     b.HasKey("UserWatchedId", "WatchedVideoId");
+
+                    b.HasIndex("UserWatchedId1");
 
                     b.HasIndex("WatchedVideoId");
 
@@ -868,12 +885,10 @@ namespace Institute.Migrations
                     b.ToTable("Videos");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<string>", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -897,7 +912,7 @@ namespace Institute.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -910,8 +925,9 @@ namespace Institute.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -920,7 +936,7 @@ namespace Institute.Migrations
                     b.ToTable("RoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -933,8 +949,9 @@ namespace Institute.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -943,7 +960,7 @@ namespace Institute.Migrations
                     b.ToTable("UserClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -954,8 +971,9 @@ namespace Institute.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -964,13 +982,13 @@ namespace Institute.Migrations
                     b.ToTable("UserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -979,10 +997,10 @@ namespace Institute.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -1069,9 +1087,7 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StudentId1");
                 });
 
             modelBuilder.Entity("Institute.Model.Course", b =>
@@ -1245,9 +1261,7 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StudentId1");
                 });
 
             modelBuilder.Entity("Institute.Model.RegisteredTutorCourse", b =>
@@ -1260,9 +1274,7 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.Tutor", "Tutor")
                         .WithMany()
-                        .HasForeignKey("TutorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TutorId");
                 });
 
             modelBuilder.Entity("Institute.Model.RequestedTutorCourse", b =>
@@ -1275,9 +1287,7 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.Tutor", "Tutor")
                         .WithMany()
-                        .HasForeignKey("TutorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TutorId");
                 });
 
             modelBuilder.Entity("Institute.Model.Student", b =>
@@ -1331,9 +1341,7 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StudentId1");
                 });
 
             modelBuilder.Entity("Institute.Model.Tutor", b =>
@@ -1355,9 +1363,7 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.ApplicationUser", "Performer")
                         .WithMany()
-                        .HasForeignKey("PerformerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PerformerId1");
                 });
 
             modelBuilder.Entity("Institute.Model.UserTask", b =>
@@ -1365,8 +1371,7 @@ namespace Institute.Migrations
                     b.HasOne("Institute.Model.ApplicationUser", "Checker")
                         .WithMany()
                         .HasForeignKey("CheckerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Institute.Model.Assignment", "GivenTask")
                         .WithMany()
@@ -1385,9 +1390,7 @@ namespace Institute.Migrations
                 {
                     b.HasOne("Institute.Model.ApplicationUser", "UserWatched")
                         .WithMany()
-                        .HasForeignKey("UserWatchedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserWatchedId1");
 
                     b.HasOne("Institute.Model.Video", "WatchedVideo")
                         .WithMany()
@@ -1405,16 +1408,16 @@ namespace Institute.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("Institute.Model.ApplicationUser", null)
                         .WithMany()
@@ -1423,7 +1426,7 @@ namespace Institute.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("Institute.Model.ApplicationUser", null)
                         .WithMany()
@@ -1432,9 +1435,9 @@ namespace Institute.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1447,7 +1450,7 @@ namespace Institute.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.HasOne("Institute.Model.ApplicationUser", null)
                         .WithMany()

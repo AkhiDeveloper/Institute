@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Institute.Data
 {
-    public partial class DbContextData : IInstituteDataRepoCRUD
+    public partial class DbContextData 
     {
         private readonly InstituteContext _context;
 

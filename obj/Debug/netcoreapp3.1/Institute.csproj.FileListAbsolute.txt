@@ -227,11 +227,11 @@ D:\Coding\Institute\Institute\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Ident
 D:\Coding\Institute\Institute\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
 D:\Coding\Institute\Institute\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll
 D:\Coding\Institute\Institute\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-D:\Coding\Institute\Institute\obj\Debug\netcoreapp3.1\Institute.csproj.CoreCompileInputs.cache
-D:\Coding\Institute\Institute\obj\Debug\netcoreapp3.1\Institute.MvcApplicationPartsAssemblyInfo.cache
 D:\Coding\Institute\Institute\bin\Debug\netcoreapp3.1\EntityFramework.SqlServer.dll
 D:\Coding\Institute\Institute\bin\Debug\netcoreapp3.1\EntityFramework.dll
 D:\Coding\Institute\Institute\bin\Debug\netcoreapp3.1\System.CodeDom.dll
 D:\Coding\Institute\Institute\bin\Debug\netcoreapp3.1\System.Data.SqlClient.dll
 D:\Coding\Institute\Institute\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 D:\Coding\Institute\Institute\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Coding\Institute\Institute\obj\Debug\netcoreapp3.1\Institute.csproj.CoreCompileInputs.cache
+D:\Coding\Institute\Institute\obj\Debug\netcoreapp3.1\Institute.MvcApplicationPartsAssemblyInfo.cache

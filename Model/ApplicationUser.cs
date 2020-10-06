@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Institute.Model
 {
-    public class ApplicationUser : IdentityUser<int>
+    public class ApplicationUser : IdentityUser
     {
         [StringLength(20,MinimumLength = 2)]
         [AllowNull]

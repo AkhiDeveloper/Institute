@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace Institute.Controllers
 {
@@ -28,7 +29,7 @@ namespace Institute.Controllers
         private readonly IMapper _mapper;
 
         public AuthController
-            (UserManager<ApplicationUser> userManager, 
+            (UserManager<ApplicationUser> userManager,
             IOptions<JwtBearerTokenSetting> jwtsettingoptions,
             IMapper mapper)
         {
@@ -43,11 +44,14 @@ namespace Institute.Controllers
         {
             if (!ModelState.IsValid || user == null)
             {
-                return new BadRequestObjectResult(new { Message = "You sent wrong data model" });
+                return new BadRequestObjectResult(new 
+                { Message = "You sent wrong data model" });
             }
 
-            var appUser = new ApplicationUser() { UserName = user.Email, Email = user.Email };
+            var appUser = new ApplicationUser() 
+                { UserName = user.Email, Email = user.Email };
             var result = await _userManager.CreateAsync(appUser, user.Password);
+            await _userManager.AddToRoleAsync(appUser, "User");
 
             if (!result.Succeeded)
             {
@@ -62,6 +66,7 @@ namespace Institute.Controllers
 
             return Ok(new { Message = "User Reigstration Successful" });
         }
+        
 
         [HttpPost]
         [Route("Login")]
@@ -76,18 +81,17 @@ namespace Institute.Controllers
                 return new BadRequestObjectResult(new { Message = "Login failed" });
             }
 
-            var token = GenerateToken(userModel);
-            return Ok(new { Token = token, Message = "Success" });
-        }
+            var userroles = await _userManager.GetRolesAsync(userModel);
+            if(userroles == null)
+            {
+                return BadRequest(new
+                {
+                    Message = "Any role of user is not recognized. Please reregister yourself or contact admin."
+                });
+            }
 
-        [Authorize]
-        [HttpGet]
-        [Route("Detail")]
-        public async Task<ActionResult<ApplicationUser>> GetLoginUser()
-        {
-            var userName = User.FindFirst(ClaimTypes.Name).Value;
-            var userDetail = await _userManager.FindByNameAsync(userName);
-            return Ok(userDetail);
+            var token = GenerateToken(userModel,userroles);
+            return Ok(new { Token = token, Message = "Success" });
         }
 
         private async Task<ApplicationUser> ValidateUser(UserLogin credentials)
@@ -103,26 +107,43 @@ namespace Institute.Controllers
         }
 
 
-        private object GenerateToken(ApplicationUser appUser)
+        private object GenerateToken(ApplicationUser appUser,IList<string> roles)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = _jwttokensetting.SecurityKey;
+            //Creating claims list
+            var roleclaims = new List<Claim>();
+            //Adding role claims
+            foreach(var role in roles)
+            {
+                roleclaims.Add(new Claim
+                    (ClaimTypes.Role, role));
+            }
+            //Adding General Claims
+            roleclaims.AddRange(new Claim[]
+                {
+                    new Claim
+                        ("Id", appUser.Id.ToString()),
+                    new Claim
+                        (ClaimTypes.Name, appUser.UserName.ToString()),
+                    new Claim
+                        (ClaimTypes.Email, appUser.Email),
+                });
 
+            //Creating token discriptor
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim("Id",appUser.Id.ToString()),
-                    new Claim(ClaimTypes.Name, appUser.UserName.ToString()),
-                    new Claim(ClaimTypes.Email, appUser.Email),
-                }),
+                Subject = new ClaimsIdentity(roleclaims),
 
-                Expires = DateTime.UtcNow.AddSeconds(_jwttokensetting.ExpiryTimeInSeconds),
-                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
-                Audience = _jwttokensetting.Audience,
+                Expires = DateTime.UtcNow.AddSeconds
+                    (_jwttokensetting.ExpiryTimeInSeconds),
+                SigningCredentials = new SigningCredentials
+                    (_jwttokensetting.SecurityKey, 
+                SecurityAlgorithms.HmacSha256Signature),
+                    Audience = _jwttokensetting.Audience,
                 Issuer = _jwttokensetting.Issuer
             };
 
+            //creating token
+            var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }

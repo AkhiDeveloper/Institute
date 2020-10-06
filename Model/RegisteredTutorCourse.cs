@@ -9,7 +9,7 @@ namespace Institute.Model
 {
     public class RegisteredTutorCourse
     {
-        public int TutorId { get; set; }
+        public string TutorId { get; set; }
 
         [Key]
         public int CourseId { get; set; }

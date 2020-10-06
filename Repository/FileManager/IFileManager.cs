@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Institute.Model;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace Institute.Repository.FileManager
         Task<string> SaveFile(IFormFile uploadingfile);
         Task<string> SaveFile(string folder, IFormFile uploadingfile);
         Task<string> SaveFileToDefaultFolder(IFormFile uploadingfile);
-        Task<string> SaveFileToDefaultFolder(string subfolder, IFormFile uploadingfile); 
+        Task<string> SaveFileToDefaultFolder(string subfolder, IFormFile uploadingfile);
     }
 }

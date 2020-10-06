@@ -14,7 +14,7 @@ namespace Institute.Model
         [ForeignKey("CourseDetail")]
         public int CourseId { get; set; }
 
-        public int TutorId { get; set; }
+        public string TutorId { get; set; }
 
         [Required]
         [Column(TypeName ="decimal(4,2)")]

@@ -10,7 +10,7 @@ namespace Institute.Model
     public class UserTask
     {
         [Key]
-        public int PerformerId { get; set; }
+        public string PerformerId { get; set; }
 
         [Key]
         public int GivenTaskId { get; set; }
@@ -33,7 +33,7 @@ namespace Institute.Model
         [DefaultValue(false)]
         public bool Passed { get; set; }
 
-        public int CheckerId { get; set; }
+        public string CheckerId { get; set; }
 
         //Navigation Property
         public Assignment GivenTask { get; set; }

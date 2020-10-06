@@ -1,4 +1,5 @@
 ﻿using Institute.Model;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Institute.Data
         Task<bool> SaveChanges();
 
         //UserContext
-        Task<Tutor> GetTutor(int tutorid);
+        Task<Tutor> GetTutor(string tutorid);
 
 
         //CourseContext
@@ -34,6 +35,11 @@ namespace Institute.Data
         //Lesson
         void CreateLesson(Lesson lesson);
 
+        //User
+        void CreateTutor(Tutor tutor);
+        void CreateRoles(ICollection<IdentityRole> roles);
+        void CreateRole(IdentityRole role);
+
         //void CreateCourse(Course newCourse);
         //Task<Course> GetCourse(int id);
         //Task<IEnumerable<Course>> GetAllCourses();
@@ -48,7 +54,7 @@ namespace Institute.Data
         //void UpdateCourse(RequestedTutorCourse updatingtutorCourse);
         //void DeleteCourse(RequestedTutorCourse deletingtutorCourse);
 
-        
+
 
         ////CourseTest
         //void CreateCourseTest(CourseTest newcourseTest);

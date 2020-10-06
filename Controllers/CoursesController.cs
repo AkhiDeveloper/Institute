@@ -13,11 +13,8 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using System.Threading;
 using Institute.Repository.FileManager;
-
 
 namespace Institute.Controllers
 {
@@ -25,7 +22,6 @@ namespace Institute.Controllers
     [ApiController]
     public class CoursesController : ControllerBase
     {
-        //private readonly  IInstituteDataRepo _repository;
         private readonly IInstituteDataRepoCRUD _dataRepoCRUD;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -33,137 +29,36 @@ namespace Institute.Controllers
 
         public CoursesController
             (
-            //IInstituteDataRepo repository,
             IInstituteDataRepoCRUD dataRepoCRUD,
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
             IFileManager fileManager
             )
         {
-            //_repository = repository;
             _dataRepoCRUD = dataRepoCRUD;
             _mapper = mapper;
             _userManager = userManager;
             _fileManager = fileManager;
         }
-        
-
-
-        //General
-        //get api/courses
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<CourseReadDTO>>> 
-        //    SearchCourse()
-        //{
-        //    //var courseitems = await _dataRepoCRUD.GetAllRegisteredCourses();
-
-        //    //if (courseitems != null)
-        //    //{
-        //    //    return Ok(_mapper.Map<IEnumerable<CourseReadDTO>>(courseitems));
-        //    //}
-        //    return NotFound();
-        //}
-
-
-        //get api/courses/{searchtext}
-        //[HttpGet("{searchtext}")]
-        //public async Task<ActionResult<IEnumerable<CourseReadDTO>>> 
-        //    SearchCourse(string searchtext)
-        //{
-        //    //var rejistercoursesmodel =await _dataRepoCRUD.GetAllRegisteredCourses();
-
-        //    //var allcourses = new List<Course>();
-        //    //foreach(var x in rejistercoursesmodel)
-        //    //{
-        //    //    allcourses.Add(await _dataRepoCRUD.GetCourse(x.CourseId));
-        //    //}
-
-        //    //var searchedcourse = from x in allcourses
-        //    //                     where x.Title.Contains(searchtext)
-        //    //                     select x;
-
-        //    //if(searchedcourse != null)
-        //    //{
-        //    //    return Ok(_mapper.Map<IEnumerable<CourseReadDTO>>(searchedcourse));
-        //    //}
-        //    return NotFound(new { Message = "No course found for this keyword." });
-        //}
-
-
-        //get api/courses/{id}
-        //[HttpGet("{id}",Name ="GetCourseDetail")]
-        //public async Task<ActionResult<CourseReadDTO>> GetCourseDetail(int id)
-        //{
-        //    var courseitem = await _dataRepoCRUD.GetCourse(id);
-
-        //    if (courseitem != null)
-        //    {
-        //        return Ok(_mapper.Map<CourseReadDTO>(courseitem));
-        //    }
-        //    return NotFound();
-        //}
-
-
-        //get api/course/{courseId}/Chapter
-        //[HttpGet("/{courseId}/chapter")]
-        //public async Task<ActionResult<ChapterReadDTO>> GetChapters
-        //    (int courseId)
-        //{
-        //    var chaptersmodel = await _dataRepoCRUD
-        //        .GetChaptersByCourseId(courseId);
-
-        //    if(chaptersmodel == null)
-        //    {
-        //        return Ok
-        //            (_mapper.Map<IEnumerable<ChapterReadDTO>>
-        //            (chaptersmodel));
-        //    }
-
-        //    return NotFound();
-        //}
-
-
-        //get api/course/chapter/{chapterid}/lesson
-        //[HttpGet("/chapter/{chapterid}/lesson")]
-        //public async Task<ActionResult<Lesson>> GetLessons
-        //    (int chapterid)
-        //{
-        //    var lessonsmodel = await _dataRepoCRUD
-        //        .GetLessonsByChapterId(chapterid);
-
-        //    if(lessonsmodel != null)
-        //    {
-        //        return Ok(_mapper.Map<IEnumerable<Lesson>>(lessonsmodel));
-        //    }
-
-        //    return NotFound();
-        //}
 
 
 
         //Tutor
         //get api/courses
-        [Authorize]
+        [Authorize(Roles = "Tutor")]
         [HttpPost]
         public async Task<ActionResult> AddNewCourse
             ([FromBody]DTO.CourseRequestForm coursedetail)
         {
-            //Getting User from HttpContext
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
-            if (tutorModel == null)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "Request not completed. User is not subscribed as Tutor." });
-            }
-
+           
             //Map DTO to Model
             var courseModel = _mapper.Map<Course>(coursedetail);
+            var userModel = await _userManager.FindByNameAsync
+                (User.FindFirstValue(ClaimTypes.Name));
 
             var tutorCourseModel = new RequestedTutorCourse()
             {
-                Tutor = tutorModel,
+                TutorId = userModel.Id,
                 CourseDetail = courseModel,
                 TutorShare = coursedetail.Tutorshare,
             };
@@ -179,30 +74,12 @@ namespace Institute.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
         [HttpPost("{courseid}/chapter")]
         public async Task<ActionResult> AddCourseChapter
             (int courseId, DTO.ChapterCreateForm chapter)
         {
-            //Getting User from HttpContext
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
-            if (tutorModel == null)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "Request not completed. User is not subscribed as Tutor." });
-            }
-
-            //Checking Correct Tutor
-            var tutorcoursemodel = await _dataRepoCRUD.
-                GetRequestedTutorCourse(courseId);
-            if (tutorcoursemodel.TutorId != tutorModel.Id)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "You are not correct tutor." });
-            }
-
             //Change to database
             var chaptermodel = _mapper.Map<Chapter>(chapter);
             var coursemodel =await _dataRepoCRUD.GetCourse(courseId);
@@ -213,32 +90,15 @@ namespace Institute.Controllers
             return Ok();
         }
 
-        [Authorize]
-        [HttpPost("{courseId}/Chapter/{chapterSN}/Lesson")]
+
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy ="TutorCourseCheck")]
+        [HttpPost("{courseid}/Chapter/{chapterSN}/Lesson")]
         public async Task<ActionResult> AddLesson
             (int courseId, 
             int chapterSN, 
             [FromBody]DTO.LessonCreateForm lesson)
         {
-            //Getting User from HttpContext
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
-            if (tutorModel == null)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "Request not completed. User is not subscribed as Tutor." });
-            }
-
-            //Checking Correct Tutor
-            var tutorcoursemodel = await _dataRepoCRUD.
-                GetRequestedTutorCourse(courseId);
-            if (tutorcoursemodel.TutorId != tutorModel.Id)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "You are not correct tutor." });
-            }
-
             //Change to database
             var lessonmodel = _mapper.Map<Lesson>(lesson);
             var chaptermodel = await _dataRepoCRUD.GetChapterBySN
@@ -258,44 +118,15 @@ namespace Institute.Controllers
         }
 
 
-        [Authorize]
-        [HttpPost("introvideo/{courseId}")]
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
+        [HttpPost("introvideo/{courseid}")]
         public async Task<ActionResult> AddCourseIntroVideo
             (int courseId,
             IFormFile uploadingfile,
             CancellationToken cancellationToken)
         {
-            //Getting User from HttpContext
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
-            if (tutorModel == null)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "Request not completed. User is not subscribed as Tutor." });
-            }
-
-            //Checking Correct Tutor
-            var tutorcoursemodel = await _dataRepoCRUD.
-                GetRequestedTutorCourse(courseId);
-            if (tutorcoursemodel.TutorId != tutorModel.Id)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "You are not correct tutor." });
-            }
-
-            //Creating relative file path
-            if (uploadingfile == null)
-            {
-                return BadRequest(new
-                {
-                    Message = "Uploaded File not found."
-                });
-            }
-
-            string folder = System.IO.Path.Combine(courseId.ToString(), "Videos");
-            var filepath = await _fileManager.SaveFileToDefaultFolder(folder, uploadingfile);
-
+            //Checking already exist introvideo
             var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
             if (coursemodel.IntroVideoId.HasValue)
             {
@@ -305,6 +136,23 @@ namespace Institute.Controllers
                 });
             }
 
+            //Checking send file
+            if (uploadingfile == null)
+            {
+                return BadRequest(new
+                {
+                    Message = "Uploading File not found."
+                });
+            }
+
+            //Creating folder
+            string folder = System.IO.Path.Combine
+                ("Course",courseId.ToString(), "Videos");
+            //Saving file to server
+            var filepath = await _fileManager.SaveFileToDefaultFolder
+                (folder, uploadingfile);
+            
+            //Creating filedatab model
             var filemodel = new File()
             {
                 FileName = coursemodel.Title + "_" + "IntroVideo",
@@ -312,14 +160,13 @@ namespace Institute.Controllers
                 FileUrl = filepath,
             };
 
+            //Creating video data model
             var videomodel = new Video()
             {
                 FileDetail = filemodel,
             };
 
-            //_dataRepoCRUD.CreateVideo(videomodel);
-            await _dataRepoCRUD.SaveChanges();
-
+            //Saving updates
             coursemodel.IntroVideo = videomodel;
             await _dataRepoCRUD.SaveChanges();
 
@@ -327,63 +174,14 @@ namespace Institute.Controllers
 
         }
 
-        //[Authorize]
-        //[HttpPost]
-        //public async Task<ActionResult> AddChapterIntroVideo
-        //    ([FromRoute] int chapterid, [FromBody] VideoCreateDTO video)
-        //{
-        //    var videomodel = _mapper.Map<Video>(video);
 
-        //    var chaptermodel = await _dataRepoCRUD.GetChapter(chapterid);
-        //    chaptermodel.IntroVideo = videomodel;
-
-        //    _dataRepoCRUD.UpdateChapter(chaptermodel);
-        //    await _dataRepoCRUD.SaveChanges();
-
-        //    return Ok();
-        //}
-
-        //[Authorize]
-        //[HttpPost]
-        //public async Task<ActionResult> AddLessonTeachingVideo
-        //    ([FromRoute] int lessonid, [FromBody] VideoCreateDTO video)
-        //{
-        //    var videomodel = _mapper.Map<Video>(video);
-
-        //    var lessonmodel = await _dataRepoCRUD.GetLesson(lessonid);
-        //    lessonmodel.TeachingVideo = videomodel;
-
-        //    _dataRepoCRUD.UpdateLesson(lessonmodel);
-        //    await _dataRepoCRUD.SaveChanges();
-
-        //    return Ok();
-        //}
-
-        [Authorize]
-        [HttpPost("{courseId}/pretest")]
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
+        [HttpPost("{courseid}/pretest")]
         public async Task<ActionResult> AddCoursePreTest
             ([FromRoute] int courseId, 
             [FromBody] DTO.TestCreateForm test)
         {
-            //Getting User from HttpContext
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
-            if (tutorModel == null)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "Request not completed. User is not subscribed as Tutor." });
-            }
-
-            //Checking Correct Tutor
-            var tutorcoursemodel = await _dataRepoCRUD.
-                GetRequestedTutorCourse(courseId);
-            if (tutorcoursemodel.TutorId != tutorModel.Id)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "You are not correct tutor." });
-            }
-
             //Creating Database
             var testmodel = _mapper.Map<Test>(test);
             var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
@@ -404,31 +202,14 @@ namespace Institute.Controllers
             return Ok();
         }
 
-        [Authorize]
-        [HttpPost("{courseId}/posttest")]
+
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
+        [HttpPost("{courseid}/posttest")]
         public async Task<ActionResult> AddCoursePostTest
             ([FromRoute] int courseId,
             [FromBody] DTO.TestCreateForm test)
         {
-            //Getting User from HttpContext
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
-            if (tutorModel == null)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "Request not completed. User is not subscribed as Tutor." });
-            }
-
-            //Checking Correct Tutor
-            var tutorcoursemodel = await _dataRepoCRUD.
-                GetRequestedTutorCourse(courseId);
-            if (tutorcoursemodel.TutorId != tutorModel.Id)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "You are not correct tutor." });
-            }
-
             //Creating Data
             var testmodel = _mapper.Map<Test>(test);
             var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
@@ -449,31 +230,14 @@ namespace Institute.Controllers
             return Ok();
         }
 
-        [Authorize]
-        [HttpPost("{courseId}/preassignment")]
+
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
+        [HttpPost("{courseid}/preassignment")]
         public async Task<IActionResult> AddCoursePreAssignment(
             [FromRoute]int courseId,
             [FromBody] DTO.AssignmentCreateForm assignmentform)
         {
-            //Getting User from HttpContext
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
-            if (tutorModel == null)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "Request not completed. User is not subscribed as Tutor." });
-            }
-
-            //Checking Correct Tutor
-            var tutorcoursemodel = await _dataRepoCRUD.
-                GetRequestedTutorCourse(courseId);
-            if (tutorcoursemodel.TutorId != tutorModel.Id)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "You are not correct tutor." });
-            }
-
             //Creating Data
             var assignmentmodel = _mapper.Map<Assignment>(assignmentform);
             var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
@@ -495,31 +259,13 @@ namespace Institute.Controllers
         }
 
 
-        [Authorize]
-        [HttpPost("{courseId}/postassignment")]
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
+        [HttpPost("{courseid}/postassignment")]
         public async Task<IActionResult> AddCoursePostAssignment(
             [FromRoute] int courseId,
             [FromBody] DTO.AssignmentCreateForm assignmentform)
         {
-            //Getting User from HttpContext
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            var userModel = await _userManager.FindByNameAsync(username);
-            var tutorModel = await _dataRepoCRUD.GetTutor(userModel.Id);
-            if (tutorModel == null)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "Request not completed. User is not subscribed as Tutor." });
-            }
-
-            //Checking Correct Tutor
-            var tutorcoursemodel = await _dataRepoCRUD.
-                GetRequestedTutorCourse(courseId);
-            if (tutorcoursemodel.TutorId != tutorModel.Id)
-            {
-                return new BadRequestObjectResult(new
-                { Message = "You are not correct tutor." });
-            }
-
             //Creating Data
             var assignmentmodel = _mapper.Map<Assignment>(assignmentform);
             var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
