@@ -11,7 +11,7 @@ namespace Institute.Model
     {
         [Key]
         [ForeignKey("FileDetail")]
-        public int FileId { get; set; }
+        public string FileId { get; set; }
 
         public File FileDetail { get; set; }
 

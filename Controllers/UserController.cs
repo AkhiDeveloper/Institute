@@ -52,12 +52,14 @@ namespace Institute.Controllers
             return Ok(rolemodel);
         }
 
+
         [Authorize(Roles = "Admin")]
         [HttpPost("setastutor/{username}")]
         public async Task<IActionResult> SetasTutor
             (string username)
         {
             var user = await _userManager.FindByNameAsync(username);
+
             if(user == null)
             {
                 return BadRequest(new
@@ -67,16 +69,28 @@ namespace Institute.Controllers
             }
 
             var role = "Tutor";
+            var result = await _userManager.AddToRoleAsync(user, role);
+
+            if (!result.Succeeded)
+            {
+                var dictionary = new ModelStateDictionary();
+                foreach (IdentityError error in result.Errors)
+                {
+                    dictionary.AddModelError(error.Code, error.Description);
+                }
+
+                return new BadRequestObjectResult(new 
+                { Message = "Role Creation Failed", Errors = dictionary });
+            }
 
             _dataRepoCRUD.CreateTutor(new Tutor
             {
                 UserDetail = user
             });
             await _dataRepoCRUD.SaveChanges();
-
-            await _userManager.AddToRoleAsync(user, role);
             return Ok();
         }
+
 
         [AllowAnonymous]
         [HttpPost("initialize")]

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Institute.Data
 {
-    public partial class DbContextData 
+    public partial class DbContextData : IInstituteDataRepoCRUD
     {
         public async void CreateCoursePreTest(CoursePreTest coursePreTest)
         {
@@ -31,12 +31,17 @@ namespace Institute.Data
             await _context.CoursePostAssignments.AddAsync(coursePostAssignment);
         }
 
-        public async Task<Course> GetCourse(int courseid)
+        public async Task<Course> GetCourse(string coursecode)
         {
             var result = await _context.Courses
-                .FirstOrDefaultAsync(x => x.Id == courseid);
+                .FirstOrDefaultAsync(x => x.code == coursecode);
                
             return result;
+        }
+
+        public async void CreateCourse(Course courseModel)
+        {
+            await _context.Courses.AddAsync(courseModel);
         }
     }
 }

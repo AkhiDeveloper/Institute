@@ -16,7 +16,7 @@ namespace Institute.Data
 
        
 
-        public async Task<Chapter> GetChapterBySN(int courseid, int chapterSN)
+        public async Task<Chapter> GetChapterBySN(string courseid, int chapterSN)
         {
             var result = await _context.Chapters
                 .Where(x => x.CourseId == courseid)

@@ -10,10 +10,12 @@ namespace Institute.Model
 {
     public class RequestedTutorCourse
     {
+        [Required]
         [Key]
         [ForeignKey("CourseDetail")]
-        public int CourseId { get; set; }
+        public string CourseId { get; set; }
 
+        [Required]
         public string TutorId { get; set; }
 
         [Required]

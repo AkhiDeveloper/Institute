@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 //using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace Institute.Data
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           
             //Creating Composite Key
             modelBuilder.Entity<UserTask>()
                 .HasKey(o => new { o.PerformerId, o.GivenTaskId });
@@ -37,12 +39,16 @@ namespace Institute.Data
                 .HasForeignKey(x => x.TeachingVideoId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Course>()
+                .HasIndex(x => x.code)
+                .IsUnique();
+
             modelBuilder.Entity<Chapter>()
-                .HasIndex(x => new { x.Id, x.SN})
+                .HasIndex(x => new { x.CourseId, x.SN})
                 .IsUnique();
 
             modelBuilder.Entity<Lesson>()
-                .HasIndex(x => new { x.Id, x.SN })
+                .HasIndex(x => new { x.ChapterId, x.SN })
                 .IsUnique();
 
             modelBuilder.Entity<CoursePreTest>()
@@ -132,12 +138,12 @@ namespace Institute.Data
         //Relational or Axuillart Tables
         public DbSet<CoursePreAssignment> CoursePreAssignments { get; set; }
         public DbSet<CoursePostAssignment> CoursePostAssignments { get; set; }
-        public DbSet<ChapterAssignment> ChapterTasks { get; set; }
-        public DbSet<LessonAssignment> LessonTasks { get; set; }
+        public DbSet<ChapterPostAssignment> ChapterTasks { get; set; }
+        public DbSet<LessonPreAssignment> LessonTasks { get; set; }
         public DbSet<CoursePreTest> CoursePreTests { get; set; }
         public DbSet<CoursePostTest> CoursePostTests { get; set; }
-        public DbSet<ChapterTest> ChapterTests { get; set; }
-        public DbSet<LessonTest> LessonTests { get; set; }
+        public DbSet<ChapterPreTest> ChapterTests { get; set; }
+        public DbSet<LessonPreTest> LessonTests { get; set; }
         public DbSet<LessonMaterial> LessonMaterials { get; set; }
         public DbSet<TestQA> TestQAs { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }

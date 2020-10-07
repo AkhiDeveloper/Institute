@@ -15,6 +15,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using System.Threading;
 using Institute.Repository.FileManager;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace Institute.Controllers
 {
@@ -51,21 +52,33 @@ namespace Institute.Controllers
             ([FromBody]DTO.CourseRequestForm coursedetail)
         {
            
-            //Map DTO to Model
+            //Creating Course
             var courseModel = _mapper.Map<Course>(coursedetail);
+            //_dataRepoCRUD.CreateCourse(courseModel);
+
+            //Finding Tutor
             var userModel = await _userManager.FindByNameAsync
                 (User.FindFirstValue(ClaimTypes.Name));
+            var tutormodel = await _dataRepoCRUD.GetTutor(userModel.Id);
+            if(tutormodel == null)
+            {
+                return BadRequest(new
+                {
+                    Message = "Unable to fetch tutor data"
+                });
+            }
 
+            //Creating RequestedTutorcourse
             var tutorCourseModel = new RequestedTutorCourse()
             {
-                TutorId = userModel.Id,
+                TutorId = tutormodel.Id,
                 CourseDetail = courseModel,
                 TutorShare = coursedetail.Tutorshare,
             };
             _dataRepoCRUD.CreateRequestedTutorCourse(tutorCourseModel);
             await _dataRepoCRUD.SaveChanges();
 
-            return Ok(new {Message = "Sucessfully created your course. But other will only access it after approval from admin"});
+            return Ok(new {Message = "Sucessfully created your course. But other will only access it after approval from admin", tutorCourseModel});
             //Map Model to DTO
             //var courseReadDTO = _mapper.Map<CourseReadDTO>(courseModel);
 
@@ -76,29 +89,33 @@ namespace Institute.Controllers
 
         [Authorize(Roles = "Tutor")]
         [Authorize(Policy = "TutorCourseCheck")]
-        [HttpPost("{courseid}/chapter")]
+        [HttpPost("{coursecode}/chapter")]
         public async Task<ActionResult> AddCourseChapter
-            (int courseId, DTO.ChapterCreateForm chapter)
+            (string coursecode, DTO.ChapterCreateForm chapter)
         {
             //Change to database
             var chaptermodel = _mapper.Map<Chapter>(chapter);
-            var coursemodel =await _dataRepoCRUD.GetCourse(courseId);
-            chaptermodel.Course = coursemodel;
+            var coursemodel =await _dataRepoCRUD.GetCourse(coursecode);
+            chaptermodel.CourseId = coursemodel.Id;
             _dataRepoCRUD.CreateChapter(chaptermodel);
             await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
+            return Ok(chaptermodel);
         }
 
 
         [Authorize(Roles = "Tutor")]
         [Authorize(Policy ="TutorCourseCheck")]
-        [HttpPost("{courseid}/Chapter/{chapterSN}/Lesson")]
+        [HttpPost("{coursecode}/Chapter/{chapterSN}/Lesson")]
         public async Task<ActionResult> AddLesson
-            (int courseId, 
+            (string coursecode, 
             int chapterSN, 
             [FromBody]DTO.LessonCreateForm lesson)
         {
+            //Getting course id
+            var course = await _dataRepoCRUD.GetCourse(coursecode);
+            var courseId = course.Id;
+
             //Change to database
             var lessonmodel = _mapper.Map<Lesson>(lesson);
             var chaptermodel = await _dataRepoCRUD.GetChapterBySN
@@ -114,21 +131,21 @@ namespace Institute.Controllers
             _dataRepoCRUD.CreateLesson(lessonmodel);
             await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
+            return Ok(lessonmodel);
         }
 
 
         [Authorize(Roles = "Tutor")]
         [Authorize(Policy = "TutorCourseCheck")]
-        [HttpPost("introvideo/{courseid}")]
+        [HttpPost("introvideo/{coursecode}")]
         public async Task<ActionResult> AddCourseIntroVideo
-            (int courseId,
+            (string coursecode,
             IFormFile uploadingfile,
             CancellationToken cancellationToken)
         {
             //Checking already exist introvideo
-            var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
-            if (coursemodel.IntroVideoId.HasValue)
+            var coursemodel = await _dataRepoCRUD.GetCourse(coursecode);
+            if (!string.IsNullOrWhiteSpace(coursemodel.IntroVideoId))
             {
                 return BadRequest(new
                 {
@@ -136,7 +153,7 @@ namespace Institute.Controllers
                 });
             }
 
-            //Checking send file
+            //Checking recived file
             if (uploadingfile == null)
             {
                 return BadRequest(new
@@ -147,7 +164,7 @@ namespace Institute.Controllers
 
             //Creating folder
             string folder = System.IO.Path.Combine
-                ("Course",courseId.ToString(), "Videos");
+                ("Course",coursecode, "Videos");
             //Saving file to server
             var filepath = await _fileManager.SaveFileToDefaultFolder
                 (folder, uploadingfile);
@@ -170,21 +187,21 @@ namespace Institute.Controllers
             coursemodel.IntroVideo = videomodel;
             await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
+            return Ok(videomodel);
 
         }
 
 
         [Authorize(Roles = "Tutor")]
         [Authorize(Policy = "TutorCourseCheck")]
-        [HttpPost("{courseid}/pretest")]
+        [HttpPost("{coursecode}/pretest")]
         public async Task<ActionResult> AddCoursePreTest
-            ([FromRoute] int courseId, 
+            ([FromRoute] string coursecode, 
             [FromBody] DTO.TestCreateForm test)
         {
             //Creating Database
             var testmodel = _mapper.Map<Test>(test);
-            var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
+            var coursemodel = await _dataRepoCRUD.GetCourse(coursecode);
             if(coursemodel == null)
             {
                 return new NotFoundObjectResult(new
@@ -199,20 +216,20 @@ namespace Institute.Controllers
             _dataRepoCRUD.CreateCoursePreTest(coursepretestmodel);
             await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
+            return Ok(testmodel);
         }
 
 
         [Authorize(Roles = "Tutor")]
         [Authorize(Policy = "TutorCourseCheck")]
-        [HttpPost("{courseid}/posttest")]
+        [HttpPost("{coursecode}/posttest")]
         public async Task<ActionResult> AddCoursePostTest
-            ([FromRoute] int courseId,
+            ([FromRoute] string coursecode,
             [FromBody] DTO.TestCreateForm test)
         {
             //Creating Data
             var testmodel = _mapper.Map<Test>(test);
-            var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
+            var coursemodel = await _dataRepoCRUD.GetCourse(coursecode);
             if (coursemodel == null)
             {
                 return new NotFoundObjectResult(new
@@ -227,20 +244,20 @@ namespace Institute.Controllers
             _dataRepoCRUD.CreateCoursePostTest(courseposttestmodel);
             await _dataRepoCRUD.SaveChanges();
 
-            return Ok();
+            return Ok(testmodel);
         }
 
 
         [Authorize(Roles = "Tutor")]
         [Authorize(Policy = "TutorCourseCheck")]
-        [HttpPost("{courseid}/preassignment")]
+        [HttpPost("{coursecode}/preassignment")]
         public async Task<IActionResult> AddCoursePreAssignment(
-            [FromRoute]int courseId,
+            [FromRoute]string coursecode,
             [FromBody] DTO.AssignmentCreateForm assignmentform)
         {
             //Creating Data
             var assignmentmodel = _mapper.Map<Assignment>(assignmentform);
-            var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
+            var coursemodel = await _dataRepoCRUD.GetCourse(coursecode);
             if (coursemodel == null)
             {
                 return new NotFoundObjectResult(new
@@ -255,20 +272,20 @@ namespace Institute.Controllers
             _mapper.Map(assignmentform, courseassignment);
             _dataRepoCRUD.CreateCoursePreAssignment(courseassignment);
             await _dataRepoCRUD.SaveChanges();
-            return Ok();
+            return Ok(courseassignment);
         }
 
 
         [Authorize(Roles = "Tutor")]
         [Authorize(Policy = "TutorCourseCheck")]
-        [HttpPost("{courseid}/postassignment")]
+        [HttpPost("{coursecode}/postassignment")]
         public async Task<IActionResult> AddCoursePostAssignment(
-            [FromRoute] int courseId,
+            [FromRoute] string coursecode,
             [FromBody] DTO.AssignmentCreateForm assignmentform)
         {
             //Creating Data
             var assignmentmodel = _mapper.Map<Assignment>(assignmentform);
-            var coursemodel = await _dataRepoCRUD.GetCourse(courseId);
+            var coursemodel = await _dataRepoCRUD.GetCourse(coursecode);
             if (coursemodel == null)
             {
                 return new NotFoundObjectResult(new
@@ -283,7 +300,7 @@ namespace Institute.Controllers
             _mapper.Map(assignmentform, courseassignment);
             _dataRepoCRUD.CreateCoursePostAssignment(courseassignment);
             await _dataRepoCRUD.SaveChanges();
-            return Ok();
+            return Ok(courseassignment);
         }
 
 

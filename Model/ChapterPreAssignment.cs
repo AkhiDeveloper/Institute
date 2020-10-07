@@ -7,25 +7,21 @@ using System.Threading.Tasks;
 
 namespace Institute.Model
 {
-    public class CoursePreAssignment
+    public class ChapterPreAssignment
     {
         [Key]
-        [ForeignKey("AssignmentDetail")]
-        public int AssignmentId { get; set; }
+        [ForeignKey("TaskDetail")]
+        public int TaskId { get; set; }
 
         [Required]
-        [ForeignKey("RefCourse")]
-        public string RefCourseId { get; set; }
+        public string RefChapterId { get; set; }
 
         [Required]
-        [Index(IsUnique = true)]
         public int SN { get; set; }
 
-
-        //public int TaskDetailId { get; set; } 
-
+        //Navigation Property
         public Assignment AssignmentDetail { get; set; }
 
-        public Course RefCourse { get; set; }
+        public Chapter RefChapter { get; set; }
     }
 }

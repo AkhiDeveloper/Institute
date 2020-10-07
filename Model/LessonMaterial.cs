@@ -11,12 +11,12 @@ namespace Institute.Model
     {
         [Key]
         [ForeignKey("FileDetail")]
-        public int FileId { get; set; }
+        public string FileId { get; set; }
 
         [Required]
         public int SN { get; set; }
 
-        public int? RefLessonId { get; set; }
+        public string RefLessonId { get; set; }
 
         //Navigation Property
         public File FileDetail { get; set; }

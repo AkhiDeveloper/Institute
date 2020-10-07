@@ -11,8 +11,9 @@ namespace Institute.Model
 {
     public class Course
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [StringLength(50, MinimumLength = 3)]
@@ -37,20 +38,23 @@ namespace Institute.Model
         [StringLength(200,MinimumLength = 5)]
         public string Requriements { get; set; }
 
-        public int? IntroVideoId { get; set; }
+        public string IntroVideoId { get; set; }
+
+        [Required]
+        public string code { get; set; }
 
         
         //Navigation Property
         public Video IntroVideo { get; set; }
 
-        public ICollection<Chapter> Chapters { get; set; }
+        //public ICollection<Chapter> Chapters { get; set; }
 
         public ICollection<CoursePreTest> PreTests { get; set; }
 
         public ICollection<CoursePostTest> PostTests { get; set; }
 
-        public ICollection<CoursePreAssignment> PreAssignments { get; set; }
+        //public ICollection<CoursePreAssignment> PreAssignments { get; set; }
 
-        public ICollection<CoursePostAssignment> PostAssignments { get; set; }
+        //public ICollection<CoursePostAssignment> PostAssignments { get; set; }
     }
 }

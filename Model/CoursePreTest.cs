@@ -14,7 +14,8 @@ namespace Institute.Model
         public int TestId { get; set; }
 
         [Required]
-        public int RefCourseId { get; set; }
+        [ForeignKey("RefCourse")]
+        public string RefCourseId { get; set; }
 
         [Required]
         [Index(IsUnique = true)]

@@ -11,6 +11,8 @@ namespace Institute.DTOs
     public class CourseRequestForm
     {
         [Required]
+        public string code { get; set; }
+        [Required]
         [StringLength(50, MinimumLength = 3)]
         public string Title { get; set; }
 #nullable enable

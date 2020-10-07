@@ -9,10 +9,12 @@ namespace Institute.Model
 {
     public class RegisteredTutorCourse
     {
+        [Required]
         public string TutorId { get; set; }
 
+        [Required]
         [Key]
-        public int CourseId { get; set; }
+        public string CourseId { get; set; }
 
         [Required]
         [Column(TypeName ="decimal(4,2)")]

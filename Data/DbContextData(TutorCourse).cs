@@ -15,7 +15,7 @@ namespace Institute.Data
             await _context.RequestedTutorCourses.AddAsync(tutorCourse);
         }
 
-        public async Task<RequestedTutorCourse> GetRequestedTutorCourse(int courseid)
+        public async Task<RequestedTutorCourse> GetRequestedTutorCourse(string courseid)
         {
             var result = await _context.RequestedTutorCourses
                 .Include(x => x.CourseDetail)

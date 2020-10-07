@@ -19,10 +19,11 @@ namespace Institute.Data
         //TutorCourse
         void CreateRequestedTutorCourse(RequestedTutorCourse tutorCourse);
 
-        Task<RequestedTutorCourse> GetRequestedTutorCourse(int courseid);
+        Task<RequestedTutorCourse> GetRequestedTutorCourse(string courseid);
 
         //Course
-        Task<Course> GetCourse(int courseid);
+        void CreateCourse(Course courseModel);
+        Task<Course> GetCourse(string coursecode);
         void CreateCoursePreTest(CoursePreTest coursePreTest);
         void CreateCoursePostTest(CoursePostTest coursePostTest);
         void CreateCoursePreAssignment(CoursePreAssignment coursePreAssignment);
@@ -30,7 +31,7 @@ namespace Institute.Data
 
         //Chapter
         void CreateChapter(Chapter chapter);
-        Task<Chapter> GetChapterBySN(int courseid, int chapterSN);
+        Task<Chapter> GetChapterBySN(string courseid, int chapterSN);
 
         //Lesson
         void CreateLesson(Lesson lesson);
@@ -39,6 +40,7 @@ namespace Institute.Data
         void CreateTutor(Tutor tutor);
         void CreateRoles(ICollection<IdentityRole> roles);
         void CreateRole(IdentityRole role);
+        
 
         //void CreateCourse(Course newCourse);
         //Task<Course> GetCourse(int id);

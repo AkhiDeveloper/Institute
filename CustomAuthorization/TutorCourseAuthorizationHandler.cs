@@ -41,18 +41,27 @@ namespace Institute.CustomAuthorization
                 .HttpContext
                 .Request
                 .RouteValues;
-            object rawcourseId;
-            routeValue.TryGetValue("courseId", out rawcourseId);
-            if(rawcourseId == null)
+            object rawcoursecode;
+            routeValue.TryGetValue("coursecode", out rawcoursecode);
+            if(rawcoursecode == null)
+            {
+                var querystring = _httpContextAccessor
+                    .HttpContext
+                    .Request
+                    .Query;
+                rawcoursecode = querystring["coursecode"];
+            }
+            var coursecode = rawcoursecode.ToString();
+            var course = _instituteData.GetCourse(coursecode).Result;
+            if(course == null)
             {
                 return Task.CompletedTask;
             }
-            var courseid = Int32.Parse(rawcourseId.ToString());
-
+            var coureid = course.Id;
 
             //Checking association
             var tutorcoursemodel = _instituteData.
-                GetRequestedTutorCourse(courseid).Result;
+                GetRequestedTutorCourse(coureid).Result;
             if (tutorcoursemodel == null)
             {
                 return Task.CompletedTask;

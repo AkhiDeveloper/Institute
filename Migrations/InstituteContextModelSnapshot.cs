@@ -148,21 +148,20 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.Chapter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
+                    b.Property<string>("CourseId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Goal")
                         .IsRequired()
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
 
-                    b.Property<int?>("IntroVideoId")
-                        .HasColumnType("int");
+                    b.Property<string>("IntroVideoId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Objectives")
                         .HasColumnType("nvarchar(200)")
@@ -178,41 +177,94 @@ namespace Institute.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
-
                     b.HasIndex("IntroVideoId");
 
-                    b.HasIndex("Id", "SN")
-                        .IsUnique();
+                    b.HasIndex("CourseId", "SN")
+                        .IsUnique()
+                        .HasFilter("[CourseId] IS NOT NULL");
 
                     b.ToTable("Chapters");
                 });
 
-            modelBuilder.Entity("Institute.Model.ChapterAssignment", b =>
+            modelBuilder.Entity("Institute.Model.ChapterPostAssignment", b =>
                 {
                     b.Property<int>("TaskId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AssignmentDetailId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RefChapterId")
-                        .HasColumnType("int");
+                    b.Property<string>("RefChapterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SN")
                         .HasColumnType("int");
 
                     b.HasKey("TaskId");
 
+                    b.HasIndex("AssignmentDetailId");
+
                     b.HasIndex("RefChapterId");
 
                     b.ToTable("ChapterTasks");
                 });
 
-            modelBuilder.Entity("Institute.Model.ChapterTest", b =>
+            modelBuilder.Entity("Institute.Model.ChapterPostTest", b =>
                 {
                     b.Property<int>("TestId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RefChapterId")
+                    b.Property<string>("RefChapterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SN")
                         .HasColumnType("int");
+
+                    b.HasKey("TestId");
+
+                    b.HasIndex("RefChapterId");
+
+                    b.ToTable("ChapterPostTest");
+                });
+
+            modelBuilder.Entity("Institute.Model.ChapterPreAssignment", b =>
+                {
+                    b.Property<int>("TaskId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AssignmentDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RefChapterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SN")
+                        .HasColumnType("int");
+
+                    b.HasKey("TaskId");
+
+                    b.HasIndex("AssignmentDetailId");
+
+                    b.HasIndex("RefChapterId");
+
+                    b.ToTable("ChapterPreAssignment");
+                });
+
+            modelBuilder.Entity("Institute.Model.ChapterPreTest", b =>
+                {
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RefChapterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SN")
                         .HasColumnType("int");
@@ -237,6 +289,9 @@ namespace Institute.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CourseId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
@@ -245,7 +300,7 @@ namespace Institute.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("CourseId1");
 
                     b.HasIndex("StudentId1");
 
@@ -254,10 +309,9 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.Course", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Fee")
                         .HasColumnType("money");
@@ -267,8 +321,8 @@ namespace Institute.Migrations
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
 
-                    b.Property<int?>("IntroVideoId")
-                        .HasColumnType("int");
+                    b.Property<string>("IntroVideoId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Objectives")
                         .IsRequired()
@@ -285,9 +339,16 @@ namespace Institute.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<string>("code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IntroVideoId");
+
+                    b.HasIndex("code")
+                        .IsUnique();
 
                     b.ToTable("Courses");
                 });
@@ -308,11 +369,14 @@ namespace Institute.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CourseId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AplicantId");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("CourseId1");
 
                     b.ToTable("CourseApplications");
                 });
@@ -322,8 +386,9 @@ namespace Institute.Migrations
                     b.Property<int>("AssignmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RefCourseId")
-                        .HasColumnType("int");
+                    b.Property<string>("RefCourseId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SN")
                         .HasColumnType("int");
@@ -341,8 +406,9 @@ namespace Institute.Migrations
                     b.Property<int>("TestId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RefCourseId")
-                        .HasColumnType("int");
+                    b.Property<string>("RefCourseId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SN")
                         .HasColumnType("int");
@@ -360,8 +426,9 @@ namespace Institute.Migrations
                     b.Property<int>("AssignmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RefCourseId")
-                        .HasColumnType("int");
+                    b.Property<string>("RefCourseId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SN")
                         .HasColumnType("int");
@@ -379,8 +446,9 @@ namespace Institute.Migrations
                     b.Property<int>("TestId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RefCourseId")
-                        .HasColumnType("int");
+                    b.Property<string>("RefCourseId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SN")
                         .HasColumnType("int");
@@ -420,10 +488,9 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.File", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FileName")
                         .IsRequired()
@@ -447,8 +514,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.Image", b =>
                 {
-                    b.Property<int>("FileId")
-                        .HasColumnType("int");
+                    b.Property<string>("FileId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("FileId");
 
@@ -457,13 +524,12 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.Lesson", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ChapterId")
-                        .HasColumnType("int");
+                    b.Property<string>("ChapterId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Goal")
                         .IsRequired()
@@ -476,8 +542,8 @@ namespace Institute.Migrations
                     b.Property<int>("SN")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TeachingVideoId")
-                        .HasColumnType("int");
+                    b.Property<string>("TeachingVideoId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -486,41 +552,22 @@ namespace Institute.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChapterId");
-
                     b.HasIndex("TeachingVideoId");
 
-                    b.HasIndex("Id", "SN")
-                        .IsUnique();
+                    b.HasIndex("ChapterId", "SN")
+                        .IsUnique()
+                        .HasFilter("[ChapterId] IS NOT NULL");
 
                     b.ToTable("Lessons");
                 });
 
-            modelBuilder.Entity("Institute.Model.LessonAssignment", b =>
-                {
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RefLessonId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SN")
-                        .HasColumnType("int");
-
-                    b.HasKey("TaskId");
-
-                    b.HasIndex("RefLessonId");
-
-                    b.ToTable("LessonTasks");
-                });
-
             modelBuilder.Entity("Institute.Model.LessonMaterial", b =>
                 {
-                    b.Property<int>("FileId")
-                        .HasColumnType("int");
+                    b.Property<string>("FileId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("RefLessonId")
-                        .HasColumnType("int");
+                    b.Property<string>("RefLessonId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SN")
                         .HasColumnType("int");
@@ -532,13 +579,71 @@ namespace Institute.Migrations
                     b.ToTable("LessonMaterials");
                 });
 
-            modelBuilder.Entity("Institute.Model.LessonTest", b =>
+            modelBuilder.Entity("Institute.Model.LessonPostAssignment", b =>
+                {
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RefLessonId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SN")
+                        .HasColumnType("int");
+
+                    b.HasKey("TaskId");
+
+                    b.HasIndex("RefLessonId");
+
+                    b.ToTable("LessonPostAssignment");
+                });
+
+            modelBuilder.Entity("Institute.Model.LessonPostTest", b =>
                 {
                     b.Property<int>("TestId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RefLessonId")
+                    b.Property<string>("RefLessonId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SN")
                         .HasColumnType("int");
+
+                    b.HasKey("TestId");
+
+                    b.HasIndex("RefLessonId");
+
+                    b.ToTable("LessonPostTest");
+                });
+
+            modelBuilder.Entity("Institute.Model.LessonPreAssignment", b =>
+                {
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RefLessonId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SN")
+                        .HasColumnType("int");
+
+                    b.HasKey("TaskId");
+
+                    b.HasIndex("RefLessonId");
+
+                    b.ToTable("LessonTasks");
+                });
+
+            modelBuilder.Entity("Institute.Model.LessonPreTest", b =>
+                {
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RefLessonId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SN")
                         .HasColumnType("int");
@@ -591,6 +696,9 @@ namespace Institute.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CourseId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
@@ -599,7 +707,7 @@ namespace Institute.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("CourseId1");
 
                     b.HasIndex("StudentId1");
 
@@ -629,15 +737,15 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.RegisteredTutorCourse", b =>
                 {
-                    b.Property<int>("CourseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("CourseId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CourseId1")
-                        .HasColumnType("int");
+                    b.Property<string>("CourseId1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("TutorId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("TutorShare")
@@ -654,8 +762,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.RequestedTutorCourse", b =>
                 {
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
+                    b.Property<string>("CourseId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AdminComments")
                         .HasColumnType("nvarchar(max)");
@@ -664,6 +772,7 @@ namespace Institute.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("TutorId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("TutorShare")
@@ -688,14 +797,17 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.TaskMaterial", b =>
                 {
-                    b.Property<int>("FileId")
-                        .HasColumnType("int");
+                    b.Property<string>("FileId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("AssignmentId")
                         .HasColumnType("int");
 
                     b.Property<int?>("RefTaskId")
                         .HasColumnType("int");
+
+                    b.Property<string>("RefTaskId1")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SN")
                         .HasColumnType("int");
@@ -704,7 +816,7 @@ namespace Institute.Migrations
 
                     b.HasIndex("AssignmentId");
 
-                    b.HasIndex("RefTaskId");
+                    b.HasIndex("RefTaskId1");
 
                     b.ToTable("TaskMaterials");
                 });
@@ -761,6 +873,9 @@ namespace Institute.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CourseId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
@@ -769,7 +884,7 @@ namespace Institute.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("CourseId1");
 
                     b.HasIndex("StudentId1");
 
@@ -866,19 +981,23 @@ namespace Institute.Migrations
                     b.Property<TimeSpan>("WatchedDuration")
                         .HasColumnType("time");
 
+                    b.Property<string>("WatchedVideoFileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("UserWatchedId", "WatchedVideoId");
 
                     b.HasIndex("UserWatchedId1");
 
-                    b.HasIndex("WatchedVideoId");
+                    b.HasIndex("WatchedVideoFileId");
 
                     b.ToTable("UserWatchedVideos");
                 });
 
             modelBuilder.Entity("Institute.Model.Video", b =>
                 {
-                    b.Property<int>("FileId")
-                        .HasColumnType("int");
+                    b.Property<string>("FileId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("FileId");
 
@@ -1037,35 +1156,59 @@ namespace Institute.Migrations
             modelBuilder.Entity("Institute.Model.Chapter", b =>
                 {
                     b.HasOne("Institute.Model.Course", "Course")
-                        .WithMany("Chapters")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("CourseId");
 
                     b.HasOne("Institute.Model.Video", "IntroVideo")
                         .WithMany()
                         .HasForeignKey("IntroVideoId");
                 });
 
-            modelBuilder.Entity("Institute.Model.ChapterAssignment", b =>
+            modelBuilder.Entity("Institute.Model.ChapterPostAssignment", b =>
                 {
-                    b.HasOne("Institute.Model.Chapter", "RefChapter")
-                        .WithMany("ChapterTasks")
-                        .HasForeignKey("RefChapterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Institute.Model.Assignment", "TaskDetail")
+                    b.HasOne("Institute.Model.Assignment", "AssignmentDetail")
                         .WithMany()
-                        .HasForeignKey("TaskId")
+                        .HasForeignKey("AssignmentDetailId");
+
+                    b.HasOne("Institute.Model.Chapter", "RefChapter")
+                        .WithMany("ChapterPostTasks")
+                        .HasForeignKey("RefChapterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Institute.Model.ChapterTest", b =>
+            modelBuilder.Entity("Institute.Model.ChapterPostTest", b =>
                 {
                     b.HasOne("Institute.Model.Chapter", "RefChapter")
-                        .WithMany("ChapterTests")
+                        .WithMany("ChapterPostTests")
+                        .HasForeignKey("RefChapterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Institute.Model.Test", "TestDetail")
+                        .WithMany()
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Institute.Model.ChapterPreAssignment", b =>
+                {
+                    b.HasOne("Institute.Model.Assignment", "AssignmentDetail")
+                        .WithMany()
+                        .HasForeignKey("AssignmentDetailId");
+
+                    b.HasOne("Institute.Model.Chapter", "RefChapter")
+                        .WithMany("ChapterPreAssignments")
+                        .HasForeignKey("RefChapterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Institute.Model.ChapterPreTest", b =>
+                {
+                    b.HasOne("Institute.Model.Chapter", "RefChapter")
+                        .WithMany("ChapterPreTests")
                         .HasForeignKey("RefChapterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1081,9 +1224,7 @@ namespace Institute.Migrations
                 {
                     b.HasOne("Institute.Model.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId1");
 
                     b.HasOne("Institute.Model.Student", "Student")
                         .WithMany()
@@ -1105,9 +1246,7 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId1");
                 });
 
             modelBuilder.Entity("Institute.Model.CoursePostAssignment", b =>
@@ -1119,7 +1258,7 @@ namespace Institute.Migrations
                         .IsRequired();
 
                     b.HasOne("Institute.Model.Course", "RefCourse")
-                        .WithMany("PostAssignments")
+                        .WithMany()
                         .HasForeignKey("RefCourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1149,7 +1288,7 @@ namespace Institute.Migrations
                         .IsRequired();
 
                     b.HasOne("Institute.Model.Course", "RefCourse")
-                        .WithMany("PreAssignments")
+                        .WithMany()
                         .HasForeignKey("RefCourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1197,30 +1336,13 @@ namespace Institute.Migrations
             modelBuilder.Entity("Institute.Model.Lesson", b =>
                 {
                     b.HasOne("Institute.Model.Chapter", "Chapter")
-                        .WithMany("Lessons")
-                        .HasForeignKey("ChapterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("ChapterId");
 
                     b.HasOne("Institute.Model.Video", "TeachingVideo")
                         .WithMany()
                         .HasForeignKey("TeachingVideoId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Institute.Model.LessonAssignment", b =>
-                {
-                    b.HasOne("Institute.Model.Lesson", "RefLesson")
-                        .WithMany("Tasks")
-                        .HasForeignKey("RefLessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Institute.Model.Assignment", "TaskDetail")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Institute.Model.LessonMaterial", b =>
@@ -1236,10 +1358,55 @@ namespace Institute.Migrations
                         .HasForeignKey("RefLessonId");
                 });
 
-            modelBuilder.Entity("Institute.Model.LessonTest", b =>
+            modelBuilder.Entity("Institute.Model.LessonPostAssignment", b =>
                 {
                     b.HasOne("Institute.Model.Lesson", "RefLesson")
-                        .WithMany("Tests")
+                        .WithMany("PostAssignments")
+                        .HasForeignKey("RefLessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Institute.Model.Assignment", "TaskDetail")
+                        .WithMany()
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Institute.Model.LessonPostTest", b =>
+                {
+                    b.HasOne("Institute.Model.Lesson", "RefLesson")
+                        .WithMany("PostTests")
+                        .HasForeignKey("RefLessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Institute.Model.Test", "TestDetail")
+                        .WithMany()
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Institute.Model.LessonPreAssignment", b =>
+                {
+                    b.HasOne("Institute.Model.Lesson", "RefLesson")
+                        .WithMany("PreAssignments")
+                        .HasForeignKey("RefLessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Institute.Model.Assignment", "TaskDetail")
+                        .WithMany()
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Institute.Model.LessonPreTest", b =>
+                {
+                    b.HasOne("Institute.Model.Lesson", "RefLesson")
+                        .WithMany("PreTests")
                         .HasForeignKey("RefLessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1255,9 +1422,7 @@ namespace Institute.Migrations
                 {
                     b.HasOne("Institute.Model.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId1");
 
                     b.HasOne("Institute.Model.Student", "Student")
                         .WithMany()
@@ -1274,7 +1439,9 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.Tutor", "Tutor")
                         .WithMany()
-                        .HasForeignKey("TutorId");
+                        .HasForeignKey("TutorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Institute.Model.RequestedTutorCourse", b =>
@@ -1287,7 +1454,9 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.Tutor", "Tutor")
                         .WithMany()
-                        .HasForeignKey("TutorId");
+                        .HasForeignKey("TutorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Institute.Model.Student", b =>
@@ -1313,7 +1482,7 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.Lesson", "RefTask")
                         .WithMany()
-                        .HasForeignKey("RefTaskId");
+                        .HasForeignKey("RefTaskId1");
                 });
 
             modelBuilder.Entity("Institute.Model.TestQA", b =>
@@ -1335,9 +1504,7 @@ namespace Institute.Migrations
                 {
                     b.HasOne("Institute.Model.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId1");
 
                     b.HasOne("Institute.Model.Student", "Student")
                         .WithMany()
@@ -1394,7 +1561,7 @@ namespace Institute.Migrations
 
                     b.HasOne("Institute.Model.Video", "WatchedVideo")
                         .WithMany()
-                        .HasForeignKey("WatchedVideoId")
+                        .HasForeignKey("WatchedVideoFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

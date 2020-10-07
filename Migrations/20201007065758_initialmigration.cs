@@ -8,21 +8,7 @@ namespace Institute.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AspNetRoles",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "AppUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
@@ -46,15 +32,14 @@ namespace Institute.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.PrimaryKey("PK_AppUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Files",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(nullable: false),
                     FileName = table.Column<string>(maxLength: 50, nullable: false),
                     Type = table.Column<int>(nullable: false),
                     FileUrl = table.Column<string>(nullable: false),
@@ -97,6 +82,20 @@ namespace Institute.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tasks",
                 columns: table => new
                 {
@@ -123,27 +122,6 @@ namespace Institute.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Admins",
                 columns: table => new
                 {
@@ -153,94 +131,9 @@ namespace Institute.Migrations
                 {
                     table.PrimaryKey("PK_Admins", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Admins_AspNetUsers_Id",
+                        name: "FK_Admins_AppUsers_Id",
                         column: x => x.Id,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
-                    ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -255,9 +148,9 @@ namespace Institute.Migrations
                 {
                     table.PrimaryKey("PK_Students", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Students_AspNetUsers_Id",
+                        name: "FK_Students_AppUsers_Id",
                         column: x => x.Id,
-                        principalTable: "AspNetUsers",
+                        principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -272,9 +165,70 @@ namespace Institute.Migrations
                 {
                     table.PrimaryKey("PK_Tutors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tutors_AspNetUsers_Id",
+                        name: "FK_Tutors_AppUsers_Id",
                         column: x => x.Id,
-                        principalTable: "AspNetUsers",
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserClaims_AppUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_UserLogins_AppUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_UserTokens_AppUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -283,7 +237,7 @@ namespace Institute.Migrations
                 name: "Images",
                 columns: table => new
                 {
-                    FileId = table.Column<int>(nullable: false)
+                    FileId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -300,7 +254,7 @@ namespace Institute.Migrations
                 name: "Videos",
                 columns: table => new
                 {
-                    FileId = table.Column<int>(nullable: false)
+                    FileId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -335,6 +289,51 @@ namespace Institute.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleClaims_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRoles_AppUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserTasks",
                 columns: table => new
                 {
@@ -350,9 +349,9 @@ namespace Institute.Migrations
                 {
                     table.PrimaryKey("PK_UserTasks", x => new { x.PerformerId, x.GivenTaskId });
                     table.ForeignKey(
-                        name: "FK_UserTasks_AspNetUsers_CheckerId",
+                        name: "FK_UserTasks_AppUsers_CheckerId",
                         column: x => x.CheckerId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -362,9 +361,9 @@ namespace Institute.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserTasks_AspNetUsers_PerformerId",
+                        name: "FK_UserTasks_AppUsers_PerformerId",
                         column: x => x.PerformerId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -417,9 +416,9 @@ namespace Institute.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserGivenTests_AspNetUsers_PerformerId1",
+                        name: "FK_UserGivenTests_AppUsers_PerformerId1",
                         column: x => x.PerformerId1,
-                        principalTable: "AspNetUsers",
+                        principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -428,14 +427,14 @@ namespace Institute.Migrations
                 name: "Courses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(nullable: false),
                     Title = table.Column<string>(maxLength: 50, nullable: false),
                     Fee = table.Column<decimal>(type: "money", nullable: false),
                     Goals = table.Column<string>(maxLength: 150, nullable: false),
                     Objectives = table.Column<string>(maxLength: 200, nullable: false),
                     Requriements = table.Column<string>(maxLength: 200, nullable: false),
-                    IntroVideoId = table.Column<int>(nullable: true)
+                    IntroVideoId = table.Column<string>(nullable: true),
+                    code = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -456,20 +455,21 @@ namespace Institute.Migrations
                     WatchedVideoId = table.Column<int>(nullable: false),
                     WatchedDuration = table.Column<TimeSpan>(nullable: false),
                     NumofTimeCompletlyWatched = table.Column<int>(nullable: false),
-                    UserWatchedId1 = table.Column<string>(nullable: true)
+                    UserWatchedId1 = table.Column<string>(nullable: true),
+                    WatchedVideoFileId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserWatchedVideos", x => new { x.UserWatchedId, x.WatchedVideoId });
                     table.ForeignKey(
-                        name: "FK_UserWatchedVideos_AspNetUsers_UserWatchedId1",
+                        name: "FK_UserWatchedVideos_AppUsers_UserWatchedId1",
                         column: x => x.UserWatchedId1,
-                        principalTable: "AspNetUsers",
+                        principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserWatchedVideos_Videos_WatchedVideoId",
-                        column: x => x.WatchedVideoId,
+                        name: "FK_UserWatchedVideos_Videos_WatchedVideoFileId",
+                        column: x => x.WatchedVideoFileId,
                         principalTable: "Videos",
                         principalColumn: "FileId",
                         onDelete: ReferentialAction.Cascade);
@@ -479,14 +479,13 @@ namespace Institute.Migrations
                 name: "Chapters",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CourseId = table.Column<int>(nullable: false),
+                    Id = table.Column<string>(nullable: false),
+                    CourseId = table.Column<string>(nullable: true),
                     SN = table.Column<int>(nullable: false),
                     Title = table.Column<string>(maxLength: 50, nullable: false),
                     Goal = table.Column<string>(maxLength: 150, nullable: false),
                     Objectives = table.Column<string>(maxLength: 200, nullable: true),
-                    IntroVideoId = table.Column<int>(nullable: true)
+                    IntroVideoId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -496,7 +495,7 @@ namespace Institute.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Chapters_Videos_IntroVideoId",
                         column: x => x.IntroVideoId,
@@ -514,17 +513,18 @@ namespace Institute.Migrations
                     CourseId = table.Column<int>(nullable: false),
                     StudentId = table.Column<int>(nullable: false),
                     Completed = table.Column<bool>(nullable: false),
+                    CourseId1 = table.Column<string>(nullable: true),
                     StudentId1 = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ConfirmedEnrollments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ConfirmedEnrollments_Courses_CourseId",
-                        column: x => x.CourseId,
+                        name: "FK_ConfirmedEnrollments_Courses_CourseId1",
+                        column: x => x.CourseId1,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ConfirmedEnrollments_Students_StudentId1",
                         column: x => x.StudentId1,
@@ -541,6 +541,7 @@ namespace Institute.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CourseId = table.Column<int>(nullable: false),
                     ApplicantId = table.Column<int>(nullable: false),
+                    CourseId1 = table.Column<string>(nullable: true),
                     AplicantId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -553,11 +554,11 @@ namespace Institute.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CourseApplications_Courses_CourseId",
-                        column: x => x.CourseId,
+                        name: "FK_CourseApplications_Courses_CourseId1",
+                        column: x => x.CourseId1,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -565,7 +566,7 @@ namespace Institute.Migrations
                 columns: table => new
                 {
                     AssignmentId = table.Column<int>(nullable: false),
-                    RefCourseId = table.Column<int>(nullable: false),
+                    RefCourseId = table.Column<string>(nullable: false),
                     SN = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -590,7 +591,7 @@ namespace Institute.Migrations
                 columns: table => new
                 {
                     TestId = table.Column<int>(nullable: false),
-                    RefCourseId = table.Column<int>(nullable: false),
+                    RefCourseId = table.Column<string>(nullable: false),
                     SN = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -615,7 +616,7 @@ namespace Institute.Migrations
                 columns: table => new
                 {
                     AssignmentId = table.Column<int>(nullable: false),
-                    RefCourseId = table.Column<int>(nullable: false),
+                    RefCourseId = table.Column<string>(nullable: false),
                     SN = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -640,7 +641,7 @@ namespace Institute.Migrations
                 columns: table => new
                 {
                     TestId = table.Column<int>(nullable: false),
-                    RefCourseId = table.Column<int>(nullable: false),
+                    RefCourseId = table.Column<string>(nullable: false),
                     SN = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -669,17 +670,18 @@ namespace Institute.Migrations
                     CourseId = table.Column<int>(nullable: false),
                     StudentId = table.Column<int>(nullable: false),
                     CourseAccesss = table.Column<bool>(nullable: false),
+                    CourseId1 = table.Column<string>(nullable: true),
                     StudentId1 = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PendingEnrollments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PendingEnrollments_Courses_CourseId",
-                        column: x => x.CourseId,
+                        name: "FK_PendingEnrollments_Courses_CourseId1",
+                        column: x => x.CourseId1,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PendingEnrollments_Students_StudentId1",
                         column: x => x.StudentId1,
@@ -692,11 +694,10 @@ namespace Institute.Migrations
                 name: "RegisteredTutorCourses",
                 columns: table => new
                 {
-                    CourseId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TutorId = table.Column<string>(nullable: true),
+                    CourseId = table.Column<string>(nullable: false),
+                    TutorId = table.Column<string>(nullable: false),
                     TutorShare = table.Column<decimal>(type: "decimal(4,2)", nullable: false),
-                    CourseId1 = table.Column<int>(nullable: false)
+                    CourseId1 = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -712,15 +713,15 @@ namespace Institute.Migrations
                         column: x => x.TutorId,
                         principalTable: "Tutors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "RequestedTutorCourse",
                 columns: table => new
                 {
-                    CourseId = table.Column<int>(nullable: false),
-                    TutorId = table.Column<string>(nullable: true),
+                    CourseId = table.Column<string>(nullable: false),
+                    TutorId = table.Column<string>(nullable: false),
                     TutorShare = table.Column<decimal>(type: "decimal(4,2)", nullable: false),
                     NumberofReviews = table.Column<int>(nullable: false),
                     AdminComments = table.Column<string>(nullable: true)
@@ -739,7 +740,7 @@ namespace Institute.Migrations
                         column: x => x.TutorId,
                         principalTable: "Tutors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -750,17 +751,18 @@ namespace Institute.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CourseId = table.Column<int>(nullable: false),
                     StudentId = table.Column<int>(nullable: false),
+                    CourseId1 = table.Column<string>(nullable: true),
                     StudentId1 = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TrialEnrollments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TrialEnrollments_Courses_CourseId",
-                        column: x => x.CourseId,
+                        name: "FK_TrialEnrollments_Courses_CourseId1",
+                        column: x => x.CourseId1,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_TrialEnrollments_Students_StudentId1",
                         column: x => x.StudentId1,
@@ -770,26 +772,80 @@ namespace Institute.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ChapterTasks",
+                name: "ChapterPostTest",
                 columns: table => new
                 {
-                    TaskId = table.Column<int>(nullable: false),
-                    RefChapterId = table.Column<int>(nullable: false),
+                    TestId = table.Column<int>(nullable: false),
+                    RefChapterId = table.Column<string>(nullable: false),
                     SN = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChapterTasks", x => x.TaskId);
+                    table.PrimaryKey("PK_ChapterPostTest", x => x.TestId);
                     table.ForeignKey(
-                        name: "FK_ChapterTasks_Chapters_RefChapterId",
+                        name: "FK_ChapterPostTest_Chapters_RefChapterId",
                         column: x => x.RefChapterId,
                         principalTable: "Chapters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ChapterTasks_Tasks_TaskId",
-                        column: x => x.TaskId,
+                        name: "FK_ChapterPostTest_Tests_TestId",
+                        column: x => x.TestId,
+                        principalTable: "Tests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChapterPreAssignment",
+                columns: table => new
+                {
+                    TaskId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RefChapterId = table.Column<string>(nullable: false),
+                    SN = table.Column<int>(nullable: false),
+                    AssignmentDetailId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChapterPreAssignment", x => x.TaskId);
+                    table.ForeignKey(
+                        name: "FK_ChapterPreAssignment_Tasks_AssignmentDetailId",
+                        column: x => x.AssignmentDetailId,
                         principalTable: "Tasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ChapterPreAssignment_Chapters_RefChapterId",
+                        column: x => x.RefChapterId,
+                        principalTable: "Chapters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChapterTasks",
+                columns: table => new
+                {
+                    TaskId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RefChapterId = table.Column<string>(nullable: false),
+                    SN = table.Column<int>(nullable: false),
+                    AssignmentDetailId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChapterTasks", x => x.TaskId);
+                    table.ForeignKey(
+                        name: "FK_ChapterTasks_Tasks_AssignmentDetailId",
+                        column: x => x.AssignmentDetailId,
+                        principalTable: "Tasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ChapterTasks_Chapters_RefChapterId",
+                        column: x => x.RefChapterId,
+                        principalTable: "Chapters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -799,7 +855,7 @@ namespace Institute.Migrations
                 columns: table => new
                 {
                     TestId = table.Column<int>(nullable: false),
-                    RefChapterId = table.Column<int>(nullable: false),
+                    RefChapterId = table.Column<string>(nullable: false),
                     SN = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -823,13 +879,12 @@ namespace Institute.Migrations
                 name: "Lessons",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ChapterId = table.Column<int>(nullable: false),
+                    Id = table.Column<string>(nullable: false),
+                    ChapterId = table.Column<string>(nullable: true),
                     SN = table.Column<int>(nullable: false),
                     Title = table.Column<string>(maxLength: 50, nullable: false),
                     Goal = table.Column<string>(maxLength: 150, nullable: false),
-                    TeachingVideoId = table.Column<int>(nullable: true),
+                    TeachingVideoId = table.Column<string>(nullable: true),
                     IsFree = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -840,7 +895,7 @@ namespace Institute.Migrations
                         column: x => x.ChapterId,
                         principalTable: "Chapters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Lessons_Videos_TeachingVideoId",
                         column: x => x.TeachingVideoId,
@@ -880,9 +935,9 @@ namespace Institute.Migrations
                 name: "LessonMaterials",
                 columns: table => new
                 {
-                    FileId = table.Column<int>(nullable: false),
+                    FileId = table.Column<string>(nullable: false),
                     SN = table.Column<int>(nullable: false),
-                    RefLessonId = table.Column<int>(nullable: true)
+                    RefLessonId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -902,11 +957,61 @@ namespace Institute.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LessonPostAssignment",
+                columns: table => new
+                {
+                    TaskId = table.Column<int>(nullable: false),
+                    RefLessonId = table.Column<string>(nullable: false),
+                    SN = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LessonPostAssignment", x => x.TaskId);
+                    table.ForeignKey(
+                        name: "FK_LessonPostAssignment_Lessons_RefLessonId",
+                        column: x => x.RefLessonId,
+                        principalTable: "Lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LessonPostAssignment_Tasks_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "Tasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LessonPostTest",
+                columns: table => new
+                {
+                    TestId = table.Column<int>(nullable: false),
+                    RefLessonId = table.Column<string>(nullable: false),
+                    SN = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LessonPostTest", x => x.TestId);
+                    table.ForeignKey(
+                        name: "FK_LessonPostTest_Lessons_RefLessonId",
+                        column: x => x.RefLessonId,
+                        principalTable: "Lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LessonPostTest_Tests_TestId",
+                        column: x => x.TestId,
+                        principalTable: "Tests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LessonTasks",
                 columns: table => new
                 {
                     TaskId = table.Column<int>(nullable: false),
-                    RefLessonId = table.Column<int>(nullable: false),
+                    RefLessonId = table.Column<string>(nullable: false),
                     SN = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -931,7 +1036,7 @@ namespace Institute.Migrations
                 columns: table => new
                 {
                     TestId = table.Column<int>(nullable: false),
-                    RefLessonId = table.Column<int>(nullable: false),
+                    RefLessonId = table.Column<string>(nullable: false),
                     SN = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -955,9 +1060,10 @@ namespace Institute.Migrations
                 name: "TaskMaterials",
                 columns: table => new
                 {
-                    FileId = table.Column<int>(nullable: false),
+                    FileId = table.Column<string>(nullable: false),
                     SN = table.Column<int>(nullable: false),
                     RefTaskId = table.Column<int>(nullable: true),
+                    RefTaskId1 = table.Column<string>(nullable: true),
                     AssignmentId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -976,8 +1082,8 @@ namespace Institute.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TaskMaterials_Lessons_RefTaskId",
-                        column: x => x.RefTaskId,
+                        name: "FK_TaskMaterials_Lessons_RefTaskId1",
+                        column: x => x.RefTaskId1,
                         principalTable: "Lessons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -989,48 +1095,31 @@ namespace Institute.Migrations
                 column: "RefQsnId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles",
-                column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_RoleId",
-                table: "AspNetUserRoles",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                table: "AspNetUsers",
+                table: "AppUsers",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                table: "AspNetUsers",
+                table: "AppUsers",
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chapters_CourseId",
-                table: "Chapters",
-                column: "CourseId");
+                name: "IX_ChapterPostTest_RefChapterId",
+                table: "ChapterPostTest",
+                column: "RefChapterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChapterPreAssignment_AssignmentDetailId",
+                table: "ChapterPreAssignment",
+                column: "AssignmentDetailId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChapterPreAssignment_RefChapterId",
+                table: "ChapterPreAssignment",
+                column: "RefChapterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Chapters_IntroVideoId",
@@ -1038,10 +1127,16 @@ namespace Institute.Migrations
                 column: "IntroVideoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chapters_Id_SN",
+                name: "IX_Chapters_CourseId_SN",
                 table: "Chapters",
-                columns: new[] { "Id", "SN" },
-                unique: true);
+                columns: new[] { "CourseId", "SN" },
+                unique: true,
+                filter: "[CourseId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChapterTasks_AssignmentDetailId",
+                table: "ChapterTasks",
+                column: "AssignmentDetailId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChapterTasks_RefChapterId",
@@ -1054,9 +1149,9 @@ namespace Institute.Migrations
                 column: "RefChapterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConfirmedEnrollments_CourseId",
+                name: "IX_ConfirmedEnrollments_CourseId1",
                 table: "ConfirmedEnrollments",
-                column: "CourseId");
+                column: "CourseId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ConfirmedEnrollments_StudentId1",
@@ -1069,9 +1164,9 @@ namespace Institute.Migrations
                 column: "AplicantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CourseApplications_CourseId",
+                name: "IX_CourseApplications_CourseId1",
                 table: "CourseApplications",
-                column: "CourseId");
+                column: "CourseId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CoursePostAssignments_RefCourseId_SN",
@@ -1103,6 +1198,12 @@ namespace Institute.Migrations
                 column: "IntroVideoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Courses_code",
+                table: "Courses",
+                column: "code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EnrollmentBills_EnrollmentId",
                 table: "EnrollmentBills",
                 column: "EnrollmentId");
@@ -1118,9 +1219,14 @@ namespace Institute.Migrations
                 column: "RefLessonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lessons_ChapterId",
-                table: "Lessons",
-                column: "ChapterId");
+                name: "IX_LessonPostAssignment_RefLessonId",
+                table: "LessonPostAssignment",
+                column: "RefLessonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LessonPostTest_RefLessonId",
+                table: "LessonPostTest",
+                column: "RefLessonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lessons_TeachingVideoId",
@@ -1128,10 +1234,11 @@ namespace Institute.Migrations
                 column: "TeachingVideoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lessons_Id_SN",
+                name: "IX_Lessons_ChapterId_SN",
                 table: "Lessons",
-                columns: new[] { "Id", "SN" },
-                unique: true);
+                columns: new[] { "ChapterId", "SN" },
+                unique: true,
+                filter: "[ChapterId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LessonTasks_RefLessonId",
@@ -1144,9 +1251,9 @@ namespace Institute.Migrations
                 column: "RefLessonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PendingEnrollments_CourseId",
+                name: "IX_PendingEnrollments_CourseId1",
                 table: "PendingEnrollments",
-                column: "CourseId");
+                column: "CourseId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PendingEnrollments_StudentId1",
@@ -1169,14 +1276,26 @@ namespace Institute.Migrations
                 column: "TutorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoleClaims_RoleId",
+                table: "RoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "Roles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TaskMaterials_AssignmentId",
                 table: "TaskMaterials",
                 column: "AssignmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TaskMaterials_RefTaskId",
+                name: "IX_TaskMaterials_RefTaskId1",
                 table: "TaskMaterials",
-                column: "RefTaskId");
+                column: "RefTaskId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestQAs_QAId1",
@@ -1189,14 +1308,19 @@ namespace Institute.Migrations
                 column: "RefTestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TrialEnrollments_CourseId",
+                name: "IX_TrialEnrollments_CourseId1",
                 table: "TrialEnrollments",
-                column: "CourseId");
+                column: "CourseId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TrialEnrollments_StudentId1",
                 table: "TrialEnrollments",
                 column: "StudentId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserClaims_UserId",
+                table: "UserClaims",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserGivenTests_ConductedTestId",
@@ -1207,6 +1331,16 @@ namespace Institute.Migrations
                 name: "IX_UserGivenTests_PerformerId1",
                 table: "UserGivenTests",
                 column: "PerformerId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLogins_UserId",
+                table: "UserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_RoleId",
+                table: "UserRoles",
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserTasks_CheckerId",
@@ -1224,9 +1358,9 @@ namespace Institute.Migrations
                 column: "UserWatchedId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserWatchedVideos_WatchedVideoId",
+                name: "IX_UserWatchedVideos_WatchedVideoFileId",
                 table: "UserWatchedVideos",
-                column: "WatchedVideoId");
+                column: "WatchedVideoFileId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -1238,19 +1372,10 @@ namespace Institute.Migrations
                 name: "Answers");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+                name: "ChapterPostTest");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
+                name: "ChapterPreAssignment");
 
             migrationBuilder.DropTable(
                 name: "ChapterTasks");
@@ -1286,6 +1411,12 @@ namespace Institute.Migrations
                 name: "LessonMaterials");
 
             migrationBuilder.DropTable(
+                name: "LessonPostAssignment");
+
+            migrationBuilder.DropTable(
+                name: "LessonPostTest");
+
+            migrationBuilder.DropTable(
                 name: "LessonTasks");
 
             migrationBuilder.DropTable(
@@ -1298,6 +1429,9 @@ namespace Institute.Migrations
                 name: "RequestedTutorCourse");
 
             migrationBuilder.DropTable(
+                name: "RoleClaims");
+
+            migrationBuilder.DropTable(
                 name: "TaskMaterials");
 
             migrationBuilder.DropTable(
@@ -1307,16 +1441,25 @@ namespace Institute.Migrations
                 name: "TrialEnrollments");
 
             migrationBuilder.DropTable(
+                name: "UserClaims");
+
+            migrationBuilder.DropTable(
                 name: "UserGivenTests");
+
+            migrationBuilder.DropTable(
+                name: "UserLogins");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "UserTasks");
 
             migrationBuilder.DropTable(
-                name: "UserWatchedVideos");
+                name: "UserTokens");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "UserWatchedVideos");
 
             migrationBuilder.DropTable(
                 name: "PendingEnrollments");
@@ -1337,6 +1480,9 @@ namespace Institute.Migrations
                 name: "Tests");
 
             migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
                 name: "Tasks");
 
             migrationBuilder.DropTable(
@@ -1346,7 +1492,7 @@ namespace Institute.Migrations
                 name: "Chapters");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "AppUsers");
 
             migrationBuilder.DropTable(
                 name: "Courses");

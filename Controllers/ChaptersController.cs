@@ -37,17 +37,21 @@ namespace Institute.Controllers
         //Tutor
         [Authorize(Roles = "Tutor")]
         [Authorize(Policy = "TutorCourseCheck")]
-        [HttpPost("addintrovideo/{courseid}/{chaptersn}")]
+        [HttpPost("addintrovideo/{coursecode}/{chaptersn}")]
         public async Task<IActionResult> PostIntroVideo(
-            int courseId,
+            string coursecode,
             int chapterSN,
             IFormFile uploadingfile,
             CancellationToken cancellationToken)
         {
+            //Getting course id
+            var course = await _datarepository.GetCourse(coursecode);
+            var courseId = course.Id;
+
             //Checking already exist introvideo
             var chaptermodel = await _datarepository
                 .GetChapterBySN(courseId, chapterSN);
-            if(chaptermodel.IntroVideoId.HasValue)
+            if(!string.IsNullOrWhiteSpace(chaptermodel.IntroVideoId))
             {
                 return BadRequest(new
                 {
@@ -66,7 +70,8 @@ namespace Institute.Controllers
 
             //Creating folder
             string folder = System.IO.Path.Combine
-                ("Courses", courseId.ToString(), "Chapters","Video");
+                ("Courses", coursecode, 
+                "Chapters",chaptermodel.SN.ToString(),"Video");
             //Saving file to server
             var filepath = await _fileManager.SaveFileToDefaultFolder
                 (folder, uploadingfile);
@@ -74,7 +79,8 @@ namespace Institute.Controllers
             //Creating filedata model
             var filemodel = new File()
             {
-                FileName = chaptermodel.Title + "_" + "IntroVideo",
+                FileName = (coursecode+"_"+ 
+                    chaptermodel.SN.ToString()+ "_" + "IntroVideo"),
                 Type = FileType.Video,
                 FileUrl = filepath,
             };
@@ -89,7 +95,7 @@ namespace Institute.Controllers
             chaptermodel.IntroVideo = videomodel;
             await _datarepository.SaveChanges();
 
-            return Ok();
+            return Ok(videomodel);
 
         }
 

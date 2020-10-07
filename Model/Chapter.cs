@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,10 +10,11 @@ namespace Institute.Model
 {
     public class Chapter
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
-        public int CourseId { get; set; }
+        public string CourseId { get; set; }
 
         [Required]
         [Range(1,50)]
@@ -32,16 +34,18 @@ namespace Institute.Model
         [DefaultValue("You had not mentioned any objectives.")]
         public string Objectives { get; set; }
 
-        public int? IntroVideoId { get; set; }
+        [ForeignKey("IntroVideo")]
+        public string IntroVideoId { get; set; }
+
+
 
         //Navigation Property
         public Video IntroVideo { get; set; }
-        public ICollection<Lesson> Lessons { get; set; }
-
+        //public ICollection<Lesson> Lessons { get; set; }
         public Course Course { get; set; }
-
-        public ICollection<ChapterTest> ChapterTests { get; set; }
-
-        public ICollection<ChapterAssignment> ChapterTasks { get; set; }
+        public ICollection<ChapterPreTest> ChapterPreTests { get; set; }
+        public ICollection<ChapterPostTest> ChapterPostTests { get; set; }
+        public ICollection<ChapterPreAssignment> ChapterPreAssignments { get; set; }
+        public ICollection<ChapterPostAssignment> ChapterPostTasks { get; set; }
     }
 }

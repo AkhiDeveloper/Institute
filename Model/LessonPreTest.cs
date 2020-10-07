@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Institute.Model
 {
-    public class LessonTest
+    public class LessonPreTest
     {
         [Key]
         [ForeignKey("TestDetail")]
         public int TestId { get; set; }
 
         [Required]
-        public int RefLessonId { get; set; }
+        public string RefLessonId { get; set; }
 
         [Required]
         public int SN { get; set; }

@@ -10,8 +10,9 @@ namespace Institute.Model
     public enum FileType { Text,Image,Document,Video}
     public class File
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [StringLength(50,MinimumLength = 1)]
