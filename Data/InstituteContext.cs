@@ -67,6 +67,38 @@ namespace Institute.Data
                 .HasIndex(x => new { x.RefCourseId, x.SN })
                 .IsUnique();
 
+            modelBuilder.Entity<ChapterPreTest>()
+                .HasIndex(x => new { x.RefChapterId, x.SN })
+                .IsUnique();
+
+            modelBuilder.Entity<ChapterPostTest>()
+                .HasIndex(x => new { x.RefChapterId, x.SN })
+                .IsUnique();
+
+            modelBuilder.Entity<ChapterPreAssignment>()
+                .HasIndex(x => new { x.RefChapterId, x.SN })
+                .IsUnique();
+
+            modelBuilder.Entity<ChapterPostAssignment>()
+                .HasIndex(x => new { x.SN, x.RefChapterId })
+                .IsUnique();
+
+            modelBuilder.Entity<LessonPreTest>()
+                .HasIndex(x => new { x.RefLessonId, x.SN })
+                .IsUnique();
+
+            modelBuilder.Entity<LessonPostTest>()
+                .HasIndex(x => new { x.RefLessonId, x.SN })
+                .IsUnique();
+
+            modelBuilder.Entity<LessonPreAssignment>()
+                .HasIndex(x => new { x.RefLessonId, x.SN })
+                .IsUnique();
+
+            modelBuilder.Entity<LessonPostAssignment>()
+                .HasIndex(x => new { x.SN, x.RefLessonId })
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
 
             //Changing Table Names
@@ -138,12 +170,16 @@ namespace Institute.Data
         //Relational or Axuillart Tables
         public DbSet<CoursePreAssignment> CoursePreAssignments { get; set; }
         public DbSet<CoursePostAssignment> CoursePostAssignments { get; set; }
-        public DbSet<ChapterPostAssignment> ChapterTasks { get; set; }
-        public DbSet<LessonPreAssignment> LessonTasks { get; set; }
+        public DbSet<ChapterPreAssignment> ChapterPreAssignments { get; set; }
+        public DbSet<ChapterPostAssignment> ChapterPostAssignments { get; set; }
+        public DbSet<LessonPostAssignment> LessonPostAssignments { get; set; }
+        public DbSet<LessonPreAssignment> LessonPreAssignments { get; set; }
         public DbSet<CoursePreTest> CoursePreTests { get; set; }
         public DbSet<CoursePostTest> CoursePostTests { get; set; }
-        public DbSet<ChapterPreTest> ChapterTests { get; set; }
-        public DbSet<LessonPreTest> LessonTests { get; set; }
+        public DbSet<ChapterPreTest> ChapterPreTests { get; set; }
+        public DbSet<ChapterPostTest> ChapterPostTests { get; set; }
+        public DbSet<LessonPreTest> LessonPreTests { get; set; }
+        public DbSet<LessonPostTest> LessonPostTests { get; set; }
         public DbSet<LessonMaterial> LessonMaterials { get; set; }
         public DbSet<TestQA> TestQAs { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }

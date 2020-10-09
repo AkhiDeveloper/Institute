@@ -113,11 +113,12 @@ namespace Institute.Controllers
             [FromBody]DTO.LessonCreateForm lesson)
         {
             //Getting course id
-            var course = await _dataRepoCRUD.GetCourse(coursecode);
-            var courseId = course.Id;
+            var coursetask = _dataRepoCRUD.GetCourse(coursecode);
 
             //Change to database
             var lessonmodel = _mapper.Map<Lesson>(lesson);
+            var course = await coursetask;
+            var courseId = course.Id;
             var chaptermodel = await _dataRepoCRUD.GetChapterBySN
                 (courseId, chapterSN);
             if(chaptermodel == null)

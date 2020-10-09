@@ -209,7 +209,10 @@ namespace Institute.Migrations
 
                     b.HasIndex("RefChapterId");
 
-                    b.ToTable("ChapterTasks");
+                    b.HasIndex("SN", "RefChapterId")
+                        .IsUnique();
+
+                    b.ToTable("ChapterPostAssignments");
                 });
 
             modelBuilder.Entity("Institute.Model.ChapterPostTest", b =>
@@ -226,9 +229,10 @@ namespace Institute.Migrations
 
                     b.HasKey("TestId");
 
-                    b.HasIndex("RefChapterId");
+                    b.HasIndex("RefChapterId", "SN")
+                        .IsUnique();
 
-                    b.ToTable("ChapterPostTest");
+                    b.ToTable("ChapterPostTests");
                 });
 
             modelBuilder.Entity("Institute.Model.ChapterPreAssignment", b =>
@@ -252,9 +256,10 @@ namespace Institute.Migrations
 
                     b.HasIndex("AssignmentDetailId");
 
-                    b.HasIndex("RefChapterId");
+                    b.HasIndex("RefChapterId", "SN")
+                        .IsUnique();
 
-                    b.ToTable("ChapterPreAssignment");
+                    b.ToTable("ChapterPreAssignments");
                 });
 
             modelBuilder.Entity("Institute.Model.ChapterPreTest", b =>
@@ -271,9 +276,10 @@ namespace Institute.Migrations
 
                     b.HasKey("TestId");
 
-                    b.HasIndex("RefChapterId");
+                    b.HasIndex("RefChapterId", "SN")
+                        .IsUnique();
 
-                    b.ToTable("ChapterTests");
+                    b.ToTable("ChapterPreTests");
                 });
 
             modelBuilder.Entity("Institute.Model.ConfirmedEnrollment", b =>
@@ -595,7 +601,10 @@ namespace Institute.Migrations
 
                     b.HasIndex("RefLessonId");
 
-                    b.ToTable("LessonPostAssignment");
+                    b.HasIndex("SN", "RefLessonId")
+                        .IsUnique();
+
+                    b.ToTable("LessonPostAssignments");
                 });
 
             modelBuilder.Entity("Institute.Model.LessonPostTest", b =>
@@ -612,9 +621,10 @@ namespace Institute.Migrations
 
                     b.HasKey("TestId");
 
-                    b.HasIndex("RefLessonId");
+                    b.HasIndex("RefLessonId", "SN")
+                        .IsUnique();
 
-                    b.ToTable("LessonPostTest");
+                    b.ToTable("LessonPostTests");
                 });
 
             modelBuilder.Entity("Institute.Model.LessonPreAssignment", b =>
@@ -631,9 +641,10 @@ namespace Institute.Migrations
 
                     b.HasKey("TaskId");
 
-                    b.HasIndex("RefLessonId");
+                    b.HasIndex("RefLessonId", "SN")
+                        .IsUnique();
 
-                    b.ToTable("LessonTasks");
+                    b.ToTable("LessonPreAssignments");
                 });
 
             modelBuilder.Entity("Institute.Model.LessonPreTest", b =>
@@ -650,9 +661,10 @@ namespace Institute.Migrations
 
                     b.HasKey("TestId");
 
-                    b.HasIndex("RefLessonId");
+                    b.HasIndex("RefLessonId", "SN")
+                        .IsUnique();
 
-                    b.ToTable("LessonTests");
+                    b.ToTable("LessonPreTests");
                 });
 
             modelBuilder.Entity("Institute.Model.Payment", b =>
@@ -1180,7 +1192,7 @@ namespace Institute.Migrations
             modelBuilder.Entity("Institute.Model.ChapterPostTest", b =>
                 {
                     b.HasOne("Institute.Model.Chapter", "RefChapter")
-                        .WithMany("ChapterPostTests")
+                        .WithMany()
                         .HasForeignKey("RefChapterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1208,7 +1220,7 @@ namespace Institute.Migrations
             modelBuilder.Entity("Institute.Model.ChapterPreTest", b =>
                 {
                     b.HasOne("Institute.Model.Chapter", "RefChapter")
-                        .WithMany("ChapterPreTests")
+                        .WithMany()
                         .HasForeignKey("RefChapterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

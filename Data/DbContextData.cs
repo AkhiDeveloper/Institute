@@ -1,4 +1,5 @@
 ﻿using Institute.Model;
+using Institute.Settings;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace Institute.Data
         public async Task<bool> SaveChanges()
         {
             return (await _context.SaveChangesAsync() >= 0);
+            
         }
     }
 }

@@ -55,6 +55,8 @@ namespace Institute
             //Configuring JwtBearerTokenSetting Depency injection to the se
             services.Configure<JwtBearerTokenSetting>
                 (Configuration.GetSection("JwtBearerTokenSetting"));
+            services.Configure<NativeUser>
+                (Configuration.GetSection("NativeUserData"));
             
             //adding authentication schemes to the services
             services.AddAuthentication(options => 

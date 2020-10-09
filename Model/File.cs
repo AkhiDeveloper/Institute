@@ -35,7 +35,7 @@ namespace Institute.Model
         {
             get
             {
-                var splits = FileName.Split(",");
+                var splits = FileName.Split(".");
                 return splits[splits.Length - 1];
             }
         }

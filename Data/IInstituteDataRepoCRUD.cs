@@ -30,17 +30,42 @@ namespace Institute.Data
         void CreateCoursePostAssignment(CoursePostAssignment coursePostAssignment);
 
         //Chapter
-        void CreateChapter(Chapter chapter);
-        Task<Chapter> GetChapterBySN(string courseid, int chapterSN);
+        void CreateChapter
+            (Chapter chapter);
+        Task<Chapter> GetChapterBySN
+            (string courseid, int chapterSN);
+        void CreateChapterPreTest
+            (ChapterPreTest chapterpretestmodel);
+        void CreateChapterPostTest
+            (ChapterPostTest chapterposttest);
+        void CreateChapterPreAssignment
+            (ChapterPreAssignment chapterpreassignment);
+        void CreateChapterPostAssignment
+            (ChapterPostAssignment chapterpostassignment);
 
         //Lesson
         void CreateLesson(Lesson lesson);
+        Task<Lesson> GetLessonBySN(string chapterid, int lessonSN);
+        Task<Lesson> GetLesson(string id);
+        void CreateLessonPreTest
+            (LessonPreTest lessonpretest);
+        void CreateLessonPostTest
+            (LessonPostTest lessonPostTest);
+        void CreateLessonPreAssignment
+            (LessonPreAssignment lessonPreAssignment);
+        void CreateLessonPostAssignment
+            (LessonPostAssignment lessonPostAssignment);
+
 
         //User
         void CreateTutor(Tutor tutor);
         void CreateRoles(ICollection<IdentityRole> roles);
         void CreateRole(IdentityRole role);
         
+
+
+
+
 
         //void CreateCourse(Course newCourse);
         //Task<Course> GetCourse(int id);

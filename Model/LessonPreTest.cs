@@ -13,6 +13,7 @@ namespace Institute.Model
         [ForeignKey("TestDetail")]
         public int TestId { get; set; }
 
+        [ForeignKey("RefLesson")]
         [Required]
         public string RefLessonId { get; set; }
 

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Institute.Data;
 using Institute.Model;
 using AutoMapper;
-using Institute.DTOs;
+using DTO=Institute.DTOs;
 using Institute.Repository.FileManager;
 using System.Threading;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
@@ -37,8 +37,39 @@ namespace Institute.Controllers
         //Tutor
         [Authorize(Roles = "Tutor")]
         [Authorize(Policy = "TutorCourseCheck")]
-        [HttpPost("addintrovideo/{coursecode}/{chaptersn}")]
-        public async Task<IActionResult> PostIntroVideo(
+        [HttpPost("lesson")]
+        public async Task<ActionResult> AddLesson
+           (string coursecode,
+           int chapterSN,
+           [FromBody] DTO.LessonCreateForm lesson)
+        {
+            //Getting course id
+            var course = await _datarepository.GetCourse(coursecode);
+            var courseId = course.Id;
+
+            //Change to database
+            var lessonmodel = _mapper.Map<Lesson>(lesson);
+            var chaptermodel = await _datarepository.GetChapterBySN
+                (courseId, chapterSN);
+            if (chaptermodel == null)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    Message = "Request not completed. Concerned Chapter not found."
+                });
+            }
+            lessonmodel.Chapter = chaptermodel;
+            _datarepository.CreateLesson(lessonmodel);
+            await   _datarepository.SaveChanges();
+
+            return Ok(lessonmodel);
+        }
+
+
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
+        [HttpPost("introvideo")]
+        public async Task<IActionResult> AddIntroVideo(
             string coursecode,
             int chapterSN,
             IFormFile uploadingfile,
@@ -100,7 +131,127 @@ namespace Institute.Controllers
         }
 
 
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
+        [HttpPost("pretest")]
+        public async Task<IActionResult> AddPreTest(
+            string coursecode,
+            int chapterSN,
+            DTO.TestCreateForm testform)
+        {
+            var testmodel = _mapper.Map<Test>(testform);
+            var coursemodel = await _datarepository.GetCourse(coursecode);
+            var chaptermodel = await _datarepository.GetChapterBySN
+                (coursemodel.Id, chapterSN);
+            if(chaptermodel == null)
+            {
+                return BadRequest(chaptermodel);
+            }
 
-        
+            var chapterpretestmodel = new ChapterPreTest()
+            {
+                SN = testform.SN,
+                TestDetail = testmodel,
+                RefChapter = chaptermodel,
+            };
+            _datarepository.CreateChapterPreTest(chapterpretestmodel);
+            await _datarepository.SaveChanges();
+
+            return Ok(chapterpretestmodel);
+        }
+
+
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
+        [HttpPost("posttest")]
+        public async Task<IActionResult> AddPostTest(
+            string coursecode,
+            int chapterSN,
+            [FromBody] DTO.TestCreateForm testform)
+        {
+            var testmodel = _mapper.Map<Test>(testform);
+            var coursemodel = await _datarepository.GetCourse(coursecode);
+            var chaptermodel = await _datarepository.GetChapterBySN
+                (coursemodel.Id, chapterSN);
+            if (chaptermodel == null)
+            {
+                return BadRequest(chaptermodel);
+            }
+
+            var chapterposttestmodel = new ChapterPostTest()
+            {
+                SN = testform.SN,
+                TestDetail = testmodel,
+                RefChapter = chaptermodel,
+            };
+            _datarepository.CreateChapterPostTest(chapterposttestmodel);
+            await _datarepository.SaveChanges();
+
+            return Ok(chapterposttestmodel);
+        }
+
+
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
+        [HttpPost("preassignment")]
+        public async Task<IActionResult> AddPreAssignment(
+            string coursecode,
+            int chapterSN,
+            [FromBody] DTO.AssignmentCreateForm assignmentform)
+        {
+            var assignmentmodel = _mapper.Map<Assignment>(assignmentform);
+            var coursemodel = await _datarepository.GetCourse(coursecode);
+            var chaptermodel = await _datarepository.GetChapterBySN
+                (coursemodel.Id, chapterSN);
+            if (chaptermodel == null)
+            {
+                return BadRequest(chaptermodel);
+            }
+
+            var chapterpreassignmentmodel = new ChapterPreAssignment()
+            {
+                SN = assignmentform.SN,
+                AssignmentDetail = assignmentmodel,
+                RefChapter = chaptermodel,
+            };
+            _datarepository.CreateChapterPreAssignment
+                (chapterpreassignmentmodel);
+            await _datarepository.SaveChanges();
+
+            return Ok(chapterpreassignmentmodel);
+        }
+
+
+        [Authorize(Roles = "Tutor")]
+        [Authorize(Policy = "TutorCourseCheck")]
+        [HttpPost("postassignment")]
+        public async Task<IActionResult> AddPostAssignment(
+            string coursecode,
+            int chapterSN,
+            [FromBody] DTO.AssignmentCreateForm assignmentform)
+        {
+            var assignmentmodel = _mapper.Map<Assignment>(assignmentform);
+            var coursemodel = await _datarepository.GetCourse(coursecode);
+            var chaptermodel = await _datarepository.GetChapterBySN
+                (coursemodel.Id, chapterSN);
+            if (chaptermodel == null)
+            {
+                return BadRequest(chaptermodel);
+            }
+
+            var chapterpostassignmentmodel = new ChapterPostAssignment()
+            {
+                SN = assignmentform.SN,
+                AssignmentDetail = assignmentmodel,
+                RefChapter = chaptermodel,
+            };
+            _datarepository.CreateChapterPostAssignment
+                (chapterpostassignmentmodel);
+            await _datarepository.SaveChanges();
+
+            return Ok(chapterpostassignmentmodel);
+        }
+
+
     }
 }

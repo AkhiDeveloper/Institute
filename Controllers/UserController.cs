@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Institute.Data;
 using Institute.Model;
+using Institute.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,15 +21,18 @@ namespace Institute.Controllers
         private readonly IInstituteDataRepoCRUD _dataRepoCRUD;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly NativeUser _nativeUser;
 
         public UserController(
             IInstituteDataRepoCRUD dataRepoCRUD,
             IMapper mapper,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            NativeUser nativeUser)
         {
             _dataRepoCRUD = dataRepoCRUD;
             _mapper = mapper;
             _userManager = userManager;
+            _nativeUser = nativeUser;
         }
 
         [Authorize(Roles = "Admin")]
@@ -96,10 +100,10 @@ namespace Institute.Controllers
         [HttpPost("initialize")]
         public async Task<IActionResult> Initialize()
         {
-            string adminusername = "akhi_3466";
-            string email = "ashishcurocity@gmail.com";
-            string password = "^}F4z,>-cmqK%/Uw";
-            string[] roles = { "Admin", "User" };
+            string adminusername = _nativeUser.UserName;
+            string email = _nativeUser.Email;
+            string password = _nativeUser.Password;
+            string[] roles = _nativeUser.Roles;
 
             //creating Application user
             var appUser = new ApplicationUser()

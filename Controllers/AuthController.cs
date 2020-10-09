@@ -51,8 +51,7 @@ namespace Institute.Controllers
             var appUser = new ApplicationUser() 
                 { UserName = user.Email, Email = user.Email };
             var result = await _userManager.CreateAsync(appUser, user.Password);
-            await _userManager.AddToRoleAsync(appUser, "User");
-
+            
             if (!result.Succeeded)
             {
                 var dictionary = new ModelStateDictionary();
@@ -63,6 +62,8 @@ namespace Institute.Controllers
 
                 return new BadRequestObjectResult(new { Message = "User Registration Failed", Errors = dictionary });
             }
+
+            await _userManager.AddToRoleAsync(appUser, "User");
 
             return Ok(new { Message = "User Reigstration Successful" });
         }

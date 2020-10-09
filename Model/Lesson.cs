@@ -40,10 +40,10 @@ namespace Institute.Model
         public Chapter Chapter { get; set; }
         public Video TeachingVideo { get; set; }
         public ICollection<LessonMaterial> LessonMaterials { get; set; }
-        public ICollection<LessonPreTest> PreTests { get; set; }
-        public ICollection<LessonPreAssignment> PreAssignments { get; set; }
-        public ICollection<LessonPostTest> PostTests { get; set; }
-        public ICollection<LessonPostAssignment> PostAssignments { get; set; }
+        //public ICollection<LessonPreTest> PreTests { get; set; }
+        //public ICollection<LessonPreAssignment> PreAssignments { get; set; }
+        //public ICollection<LessonPostTest> PostTests { get; set; }
+        //public ICollection<LessonPostAssignment> PostAssignments { get; set; }
 
         //public ICollection<LessonTopic> LessonTopics { get; set; }
     }

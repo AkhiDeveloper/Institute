@@ -43,9 +43,9 @@ namespace Institute.Model
         public Video IntroVideo { get; set; }
         //public ICollection<Lesson> Lessons { get; set; }
         public Course Course { get; set; }
-        public ICollection<ChapterPreTest> ChapterPreTests { get; set; }
-        public ICollection<ChapterPostTest> ChapterPostTests { get; set; }
-        public ICollection<ChapterPreAssignment> ChapterPreAssignments { get; set; }
-        public ICollection<ChapterPostAssignment> ChapterPostTasks { get; set; }
+        //public ICollection<ChapterPreTest> ChapterPreTests { get; set; }
+        //public ICollection<ChapterPostTest> ChapterPostTests { get; set; }
+        //public ICollection<ChapterPreAssignment> ChapterPreAssignments { get; set; }
+        //public ICollection<ChapterPostAssignment> ChapterPostTasks { get; set; }
     }
 }
