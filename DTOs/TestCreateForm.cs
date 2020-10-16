@@ -13,5 +13,8 @@ namespace Institute.DTOs
         
         [Required]
         public int SN { get; set; }
+
+        [Required]
+        public string code { get; set; }
     }
 }

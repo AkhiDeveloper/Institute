@@ -92,6 +92,16 @@ namespace Institute
                 {
                     policy.Requirements.Add(new TutorCourseRequriements());
                 });
+                opts.AddPolicy("TestAuthorCheck", policy =>
+                 {
+                     policy.Requirements.Add(new TestAuthorRequirements());
+                     //policy.Requirements.Add(new CoursePreTestRequriements());
+                     //policy.Requirements.Add(new CoursePostTestRequriements());
+                     //policy.Requirements.Add(new ChapterPreTestRequirements());
+                     //policy.Requirements.Add(new ChapterPostTestRequriements());
+                     //policy.Requirements.Add(new LessonPostTestRequirements());
+                     //policy.Requirements.Add(new LessonPreTestRequirements());
+                 });
             });
 
             //Adding Cntrollers
@@ -106,6 +116,18 @@ namespace Institute
             services.AddScoped<IFileManager, DefaultFileManager>();
             services.AddScoped
                 <IAuthorizationHandler, TutorCourseAuthorizationHandler>();
+            services.AddScoped
+                <IAuthorizationHandler, CoursePreTestAuthorizationHandler>();
+            services.AddScoped
+                <IAuthorizationHandler, CoursePostTestAuthorizationHandler>();
+            services.AddScoped
+                <IAuthorizationHandler, ChapterPreTestAuthorizationHandler>();
+            services.AddScoped
+                <IAuthorizationHandler, ChapterPostTestAuthorizationHandler>();
+            services.AddScoped
+                <IAuthorizationHandler, LessonPreTestAuthorizationHandler>();
+            services.AddScoped
+                <IAuthorizationHandler, LessonPostTestAuthorizationHandler>();
 
             services.Configure<FormOptions>(x =>
             {

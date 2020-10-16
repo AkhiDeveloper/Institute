@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace Institute.Controllers
@@ -27,12 +28,12 @@ namespace Institute.Controllers
             IInstituteDataRepoCRUD dataRepoCRUD,
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
-            NativeUser nativeUser)
+            IOptions<NativeUser> nativeUserOpt)
         {
             _dataRepoCRUD = dataRepoCRUD;
             _mapper = mapper;
             _userManager = userManager;
-            _nativeUser = nativeUser;
+            _nativeUser = nativeUserOpt.Value;
         }
 
         [Authorize(Roles = "Admin")]
@@ -138,12 +139,12 @@ namespace Institute.Controllers
                 await _dataRepoCRUD.SaveChanges();
             }
 
-            //Creating tutor
-            var tutor = new Tutor
+            //Assign to Admin
+            var adminuser = new Admin()
             {
                 UserDetail = appUser,
             };
-            _dataRepoCRUD.CreateTutor(tutor);
+            await _dataRepoCRUD.CreateAdmin(adminuser);
             await _dataRepoCRUD.SaveChanges();
 
             //Assigning role to user

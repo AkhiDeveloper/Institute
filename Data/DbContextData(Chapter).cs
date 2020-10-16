@@ -39,6 +39,12 @@ namespace Institute.Data
             await _context.ChapterPreTests.AddAsync(chapterpretestmodel);
         }
 
+        public async Task<Chapter> GetChapter(string id)
+        {
+            var result = await _context.Chapters.FindAsync(id);
+            return result;
+        }
+
         public async Task<Chapter> GetChapterBySN
             (string courseid, int chapterSN)
         {
@@ -48,5 +54,21 @@ namespace Institute.Data
 
             return result;
         }
+
+        public async Task<ChapterPostTest> GetChapterPostTest(string testid)
+        {
+            var result = await _context.ChapterPostTests
+                .FindAsync(testid);
+            return result;
+        }
+
+        public async Task<ChapterPreTest> GetChapterPreTest(string testid)
+        {
+            var result = await _context.ChapterPreTests
+                .FindAsync(testid);
+            return result;
+        }
+
+        
     }
 }

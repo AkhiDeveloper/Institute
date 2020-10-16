@@ -6,19 +6,16 @@ using System.Threading.Tasks;
 
 namespace Institute.Model
 {
-    public class TestQA
+    public class TestQuestion
     {
         [Key]
-        public int QAId { get; set; }
+        public int QuestionId { get; set; }
 
         [Required]
         public int RefTestId { get; set; }
 
-        [Required]
-        public int SN { get; set; }
-
         //Navigation Property
-        public QA QA { get; set; }
+        public Question Question { get; set; }
 
         public Test RefTest { get; set; }
     }

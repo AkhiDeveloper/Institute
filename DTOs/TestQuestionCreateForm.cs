@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Institute.DTOs
 {
-    public class TestQACreateDTO
+    public class TestQuestionCreateForm
     {
         [Required]
-        public int SN { get; set; }
+        public string Statement { get; set; }
 
-        //Navigation Property
-        public QACreateDTO QA { get; set; }
+        [Required]
+        public string Code { get; set; }
     }
 }

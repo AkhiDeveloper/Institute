@@ -13,6 +13,7 @@ namespace Institute.Data
 
         //UserContext
         Task<Tutor> GetTutor(string tutorid);
+        Task CreateAdmin(Admin admin);
 
 
         //CourseContext
@@ -22,16 +23,28 @@ namespace Institute.Data
         Task<RequestedTutorCourse> GetRequestedTutorCourse(string courseid);
 
         //Course
-        void CreateCourse(Course courseModel);
-        Task<Course> GetCourse(string coursecode);
-        void CreateCoursePreTest(CoursePreTest coursePreTest);
-        void CreateCoursePostTest(CoursePostTest coursePostTest);
-        void CreateCoursePreAssignment(CoursePreAssignment coursePreAssignment);
-        void CreateCoursePostAssignment(CoursePostAssignment coursePostAssignment);
+        void CreateCourse
+            (Course courseModel);
+        Task<Course> GetCourse
+            (string coursecode);
+        void CreateCoursePreTest
+            (CoursePreTest coursePreTest);
+        void CreateCoursePostTest
+            (CoursePostTest coursePostTest);
+        void CreateCoursePreAssignment
+            (CoursePreAssignment coursePreAssignment);
+        void CreateCoursePostAssignment
+            (CoursePostAssignment coursePostAssignment);
+        Task<CoursePreTest> GetCoursePreTest
+            (string testid);
+        Task<CoursePostTest> GetCoursePostTest
+            (string testid);
 
         //Chapter
         void CreateChapter
             (Chapter chapter);
+        Task<Chapter> GetChapter
+            (string id);
         Task<Chapter> GetChapterBySN
             (string courseid, int chapterSN);
         void CreateChapterPreTest
@@ -42,13 +55,26 @@ namespace Institute.Data
             (ChapterPreAssignment chapterpreassignment);
         void CreateChapterPostAssignment
             (ChapterPostAssignment chapterpostassignment);
+        Task<ChapterPreTest> GetChapterPreTest
+            (string testid);
+        Task<ChapterPostTest> GetChapterPostTest
+            (string testid);
+
 
         //Lesson
         void CreateLesson(Lesson lesson);
-        Task<Lesson> GetLessonBySN(string chapterid, int lessonSN);
-        Task<Lesson> GetLesson(string id);
+        Task<Lesson> GetLessonBySN
+            (string chapterid, int lessonSN);
+        Task<Lesson> GetLesson
+            (string id);
+        Task CreateTestQuestion
+            (TestQuestion testQuestion);
         void CreateLessonPreTest
             (LessonPreTest lessonpretest);
+        Task<LessonPreTest> GetLessonPreTest
+            (string testid);
+        Task<LessonPostTest> GetLessonPostTest
+            (string testid);
         void CreateLessonPostTest
             (LessonPostTest lessonPostTest);
         void CreateLessonPreAssignment
@@ -56,12 +82,17 @@ namespace Institute.Data
         void CreateLessonPostAssignment
             (LessonPostAssignment lessonPostAssignment);
 
+        //Test
+        Task<Test> GetTestByCode(string testcode);
 
         //User
         void CreateTutor(Tutor tutor);
         void CreateRoles(ICollection<IdentityRole> roles);
         void CreateRole(IdentityRole role);
         
+
+
+
 
 
 

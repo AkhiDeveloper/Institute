@@ -11,7 +11,7 @@ namespace Institute.Model
     {
         [Key]
         [ForeignKey("TestDetail")]
-        public int TestId { get; set; }
+        public string TestId { get; set; }
 
         [Required]
         public string RefChapterId { get; set; }

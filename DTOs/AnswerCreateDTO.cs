@@ -11,6 +11,8 @@ namespace Institute.DTOs
     {
         public int SN { get; set; }
 
+        public string answertext { get; set; }
+
         [Required]
         [DefaultValue(true)]
         public bool IsCorrect { get; set; }

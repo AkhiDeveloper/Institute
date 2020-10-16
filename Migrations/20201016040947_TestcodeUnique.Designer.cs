@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Institute.Migrations
 {
     [DbContext(typeof(InstituteContext))]
-    [Migration("20201007112834_uniqueindex")]
-    partial class uniqueindex
+    [Migration("20201016040947_TestcodeUnique")]
+    partial class TestcodeUnique
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,23 +33,14 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.Answer", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("RefQsnId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SN")
-                        .HasColumnType("int");
+                    b.Property<string>("statement")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RefQsnId");
 
                     b.ToTable("Answers");
                 });
@@ -145,7 +136,7 @@ namespace Institute.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Assignments");
                 });
 
             modelBuilder.Entity("Institute.Model.Chapter", b =>
@@ -219,8 +210,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.ChapterPostTest", b =>
                 {
-                    b.Property<int>("TestId")
-                        .HasColumnType("int");
+                    b.Property<string>("TestId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RefChapterId")
                         .IsRequired()
@@ -266,8 +257,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.ChapterPreTest", b =>
                 {
-                    b.Property<int>("TestId")
-                        .HasColumnType("int");
+                    b.Property<string>("TestId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RefChapterId")
                         .IsRequired()
@@ -313,6 +304,22 @@ namespace Institute.Migrations
                     b.HasIndex("StudentId1");
 
                     b.ToTable("ConfirmedEnrollments");
+                });
+
+            modelBuilder.Entity("Institute.Model.CorrectAnswer", b =>
+                {
+                    b.Property<string>("AnswerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RefQsnId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AnswerId");
+
+                    b.HasIndex("RefQsnId");
+
+                    b.ToTable("CorrectAnswers");
                 });
 
             modelBuilder.Entity("Institute.Model.Course", b =>
@@ -411,8 +418,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.CoursePostTest", b =>
                 {
-                    b.Property<int>("TestId")
-                        .HasColumnType("int");
+                    b.Property<string>("TestId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RefCourseId")
                         .IsRequired()
@@ -451,8 +458,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.CoursePreTest", b =>
                 {
-                    b.Property<int>("TestId")
-                        .HasColumnType("int");
+                    b.Property<string>("TestId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RefCourseId")
                         .IsRequired()
@@ -611,8 +618,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.LessonPostTest", b =>
                 {
-                    b.Property<int>("TestId")
-                        .HasColumnType("int");
+                    b.Property<string>("TestId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RefLessonId")
                         .IsRequired()
@@ -651,8 +658,8 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.LessonPreTest", b =>
                 {
-                    b.Property<int>("TestId")
-                        .HasColumnType("int");
+                    b.Property<string>("TestId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RefLessonId")
                         .IsRequired()
@@ -728,25 +735,23 @@ namespace Institute.Migrations
                     b.ToTable("PendingEnrollments");
                 });
 
-            modelBuilder.Entity("Institute.Model.QA", b =>
+            modelBuilder.Entity("Institute.Model.Question", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("CorrectAnswer")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Question")
+                    b.Property<string>("Statement")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
                     b.HasKey("Id");
 
-                    b.ToTable("QAs");
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("Institute.Model.RegisteredTutorCourse", b =>
@@ -837,10 +842,13 @@ namespace Institute.Migrations
 
             modelBuilder.Entity("Institute.Model.Test", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -849,32 +857,35 @@ namespace Institute.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("Tests");
                 });
 
-            modelBuilder.Entity("Institute.Model.TestQA", b =>
+            modelBuilder.Entity("Institute.Model.TestQuestion", b =>
                 {
-                    b.Property<int>("QAId")
+                    b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("QAId1")
-                        .HasColumnType("int");
+                    b.Property<string>("QuestionId1")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("RefTestId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SN")
-                        .HasColumnType("int");
+                    b.Property<string>("RefTestId1")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("QAId");
+                    b.HasKey("QuestionId");
 
-                    b.HasIndex("QAId1");
+                    b.HasIndex("QuestionId1");
 
-                    b.HasIndex("RefTestId");
+                    b.HasIndex("RefTestId1");
 
-                    b.ToTable("TestQAs");
+                    b.ToTable("TestQuestions");
                 });
 
             modelBuilder.Entity("Institute.Model.TrialEnrollment", b =>
@@ -926,6 +937,9 @@ namespace Institute.Migrations
                     b.Property<bool>("Completed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ConductedTestId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("CorrectlyAnswered")
                         .HasColumnType("int");
 
@@ -937,7 +951,7 @@ namespace Institute.Migrations
 
                     b.HasKey("PerformerId", "ConductedTestId");
 
-                    b.HasIndex("ConductedTestId");
+                    b.HasIndex("ConductedTestId1");
 
                     b.HasIndex("PerformerId1");
 
@@ -1016,6 +1030,22 @@ namespace Institute.Migrations
                     b.HasKey("FileId");
 
                     b.ToTable("Videos");
+                });
+
+            modelBuilder.Entity("Institute.Model.WrongAnswer", b =>
+                {
+                    b.Property<string>("AnswerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RefQsnId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AnswerId");
+
+                    b.HasIndex("RefQsnId");
+
+                    b.ToTable("WrongAnswers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<string>", b =>
@@ -1158,15 +1188,6 @@ namespace Institute.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Institute.Model.Answer", b =>
-                {
-                    b.HasOne("Institute.Model.QA", "RefQsn")
-                        .WithMany("AnsweOptions")
-                        .HasForeignKey("RefQsnId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Institute.Model.Chapter", b =>
                 {
                     b.HasOne("Institute.Model.Course", "Course")
@@ -1185,7 +1206,7 @@ namespace Institute.Migrations
                         .HasForeignKey("AssignmentDetailId");
 
                     b.HasOne("Institute.Model.Chapter", "RefChapter")
-                        .WithMany("ChapterPostTasks")
+                        .WithMany()
                         .HasForeignKey("RefChapterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1213,7 +1234,7 @@ namespace Institute.Migrations
                         .HasForeignKey("AssignmentDetailId");
 
                     b.HasOne("Institute.Model.Chapter", "RefChapter")
-                        .WithMany("ChapterPreAssignments")
+                        .WithMany()
                         .HasForeignKey("RefChapterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1243,6 +1264,21 @@ namespace Institute.Migrations
                     b.HasOne("Institute.Model.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId1");
+                });
+
+            modelBuilder.Entity("Institute.Model.CorrectAnswer", b =>
+                {
+                    b.HasOne("Institute.Model.Answer", "Answer")
+                        .WithMany()
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Institute.Model.Question", "RefQsn")
+                        .WithMany("CorrectAnswers")
+                        .HasForeignKey("RefQsnId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Institute.Model.Course", b =>
@@ -1375,7 +1411,7 @@ namespace Institute.Migrations
             modelBuilder.Entity("Institute.Model.LessonPostAssignment", b =>
                 {
                     b.HasOne("Institute.Model.Lesson", "RefLesson")
-                        .WithMany("PostAssignments")
+                        .WithMany()
                         .HasForeignKey("RefLessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1390,7 +1426,7 @@ namespace Institute.Migrations
             modelBuilder.Entity("Institute.Model.LessonPostTest", b =>
                 {
                     b.HasOne("Institute.Model.Lesson", "RefLesson")
-                        .WithMany("PostTests")
+                        .WithMany()
                         .HasForeignKey("RefLessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1405,7 +1441,7 @@ namespace Institute.Migrations
             modelBuilder.Entity("Institute.Model.LessonPreAssignment", b =>
                 {
                     b.HasOne("Institute.Model.Lesson", "RefLesson")
-                        .WithMany("PreAssignments")
+                        .WithMany()
                         .HasForeignKey("RefLessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1420,7 +1456,7 @@ namespace Institute.Migrations
             modelBuilder.Entity("Institute.Model.LessonPreTest", b =>
                 {
                     b.HasOne("Institute.Model.Lesson", "RefLesson")
-                        .WithMany("PreTests")
+                        .WithMany()
                         .HasForeignKey("RefLessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1499,19 +1535,15 @@ namespace Institute.Migrations
                         .HasForeignKey("RefTaskId1");
                 });
 
-            modelBuilder.Entity("Institute.Model.TestQA", b =>
+            modelBuilder.Entity("Institute.Model.TestQuestion", b =>
                 {
-                    b.HasOne("Institute.Model.QA", "QA")
+                    b.HasOne("Institute.Model.Question", "Question")
                         .WithMany()
-                        .HasForeignKey("QAId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("QuestionId1");
 
                     b.HasOne("Institute.Model.Test", "RefTest")
                         .WithMany("TestQAs")
-                        .HasForeignKey("RefTestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RefTestId1");
                 });
 
             modelBuilder.Entity("Institute.Model.TrialEnrollment", b =>
@@ -1538,9 +1570,7 @@ namespace Institute.Migrations
                 {
                     b.HasOne("Institute.Model.Test", "ConductedTest")
                         .WithMany()
-                        .HasForeignKey("ConductedTestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ConductedTestId1");
 
                     b.HasOne("Institute.Model.ApplicationUser", "Performer")
                         .WithMany()
@@ -1585,6 +1615,21 @@ namespace Institute.Migrations
                     b.HasOne("Institute.Model.File", "FileDetail")
                         .WithMany()
                         .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Institute.Model.WrongAnswer", b =>
+                {
+                    b.HasOne("Institute.Model.Answer", "Answer")
+                        .WithMany()
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Institute.Model.Question", "RefQsn")
+                        .WithMany("WrongAnswers")
+                        .HasForeignKey("RefQsnId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

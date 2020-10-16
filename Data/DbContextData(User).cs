@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Institute.Data
 {
-    public partial class DbContextData 
+    public partial class DbContextData
     {
         public async void CreateRole(IdentityRole role)
         {
@@ -31,6 +31,9 @@ namespace Institute.Data
                 (x => x.Id == tutorid);
         }
 
-
+        public async Task CreateAdmin(Admin admin)
+        {
+            await _context.AddAsync<Admin>(admin);
+        }
     }
 }

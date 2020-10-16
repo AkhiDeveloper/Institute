@@ -99,6 +99,10 @@ namespace Institute.Data
                 .HasIndex(x => new { x.SN, x.RefLessonId })
                 .IsUnique();
 
+            modelBuilder.Entity<Test>()
+                .HasIndex(x => x.Code)
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
 
             //Changing Table Names
@@ -152,12 +156,12 @@ namespace Institute.Data
         public DbSet<RequestedTutorCourse> RequestedTutorCourses { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
-        public DbSet<Assignment> Tasks { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Video> Videos { get; set; }
         public DbSet<Image> Images { get; set; }
-        public DbSet<QA> QAs { get; set; }
+        public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
 
         public DbSet<Admin> Admins { get; set; }
@@ -181,7 +185,7 @@ namespace Institute.Data
         public DbSet<LessonPreTest> LessonPreTests { get; set; }
         public DbSet<LessonPostTest> LessonPostTests { get; set; }
         public DbSet<LessonMaterial> LessonMaterials { get; set; }
-        public DbSet<TestQA> TestQAs { get; set; }
+        public DbSet<TestQuestion> TestQuestions { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
         public DbSet<UserGivenTest> UserGivenTests { get; set; }
         public DbSet<UserWatchedVideo> UserWatchedVideos { get; set; }
@@ -191,6 +195,8 @@ namespace Institute.Data
         public DbSet<CourseApplication> CourseApplications { get; set; }
         public DbSet<RequestedTutorCourse> TutorCourses { get; set; }
         public DbSet<TaskMaterial> TaskMaterials { get; set; }
+        public DbSet<CorrectAnswer> CorrectAnswers { get; set; }
+        public DbSet<WrongAnswer> WrongAnswers { get; set; }
 
     }
 }
