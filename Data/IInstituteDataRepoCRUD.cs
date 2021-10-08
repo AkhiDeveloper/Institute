@@ -53,6 +53,7 @@ namespace Institute.Data
             (ChapterPostTest chapterposttest);
         void CreateChapterPreAssignment
             (ChapterPreAssignment chapterpreassignment);
+       
         void CreateChapterPostAssignment
             (ChapterPostAssignment chapterpostassignment);
         Task<ChapterPreTest> GetChapterPreTest
@@ -67,8 +68,7 @@ namespace Institute.Data
             (string chapterid, int lessonSN);
         Task<Lesson> GetLesson
             (string id);
-        Task CreateTestQuestion
-            (TestQuestion testQuestion);
+        
         void CreateLessonPreTest
             (LessonPreTest lessonpretest);
         Task<LessonPreTest> GetLessonPreTest
@@ -83,7 +83,17 @@ namespace Institute.Data
             (LessonPostAssignment lessonPostAssignment);
 
         //Test
-        Task<Test> GetTestByCode(string testcode);
+        Task<Test> GetTestByCode
+            (string testcode);
+        Task CreateTestQuestion
+            (TestQuestion testQuestion);
+        Task<TestQuestion> GetTestQuestion
+            (string questionid);
+
+        //Question
+        Task<Question> GetQuestionByCode(string questioncode);
+        Task CreateCorrectAnswer(CorrectAnswer correctanswer);
+        Task CreateWrongAnswer(WrongAnswer wrongAnswer);
 
         //User
         void CreateTutor(Tutor tutor);

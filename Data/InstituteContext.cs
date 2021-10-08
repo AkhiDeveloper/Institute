@@ -12,7 +12,9 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Institute.Data
 {
-    public class InstituteContext : IdentityDbContext<ApplicationUser,IdentityRole<string>, string>
+    public class InstituteContext 
+        : IdentityDbContext
+        <ApplicationUser,IdentityRole<string>, string>
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -100,6 +102,10 @@ namespace Institute.Data
                 .IsUnique();
 
             modelBuilder.Entity<Test>()
+                .HasIndex(x => x.Code)
+                .IsUnique();
+
+            modelBuilder.Entity<Question>()
                 .HasIndex(x => x.Code)
                 .IsUnique();
 

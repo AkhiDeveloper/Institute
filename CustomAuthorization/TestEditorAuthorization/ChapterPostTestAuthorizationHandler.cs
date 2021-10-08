@@ -79,7 +79,7 @@ namespace Institute.CustomAuthorization
                 }
                 var testid = test.Id;
 
-                //Geting ChapterPreTest Author
+                //Geting ChapterPostTest Author
                 var chapterposttest = _instituteData
                     .GetChapterPostTest(testid)
                     .GetAwaiter()

@@ -95,12 +95,10 @@ namespace Institute
                 opts.AddPolicy("TestAuthorCheck", policy =>
                  {
                      policy.Requirements.Add(new TestAuthorRequirements());
-                     //policy.Requirements.Add(new CoursePreTestRequriements());
-                     //policy.Requirements.Add(new CoursePostTestRequriements());
-                     //policy.Requirements.Add(new ChapterPreTestRequirements());
-                     //policy.Requirements.Add(new ChapterPostTestRequriements());
-                     //policy.Requirements.Add(new LessonPostTestRequirements());
-                     //policy.Requirements.Add(new LessonPreTestRequirements());
+                 });
+                opts.AddPolicy("QuestionAuthorCheck", policy =>
+                 {
+                     policy.Requirements.Add();
                  });
             });
 

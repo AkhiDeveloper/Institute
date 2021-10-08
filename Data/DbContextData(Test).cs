@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Institute.Data
 {
-    public partial class DbContextData 
+    public partial class DbContextData
+        : IInstituteDataRepoCRUD
     {
         public async Task CreateTestQuestion(TestQuestion testQuestion)
         {
@@ -35,6 +36,13 @@ namespace Institute.Data
             var result = await _context.Tests
                 .FirstOrDefaultAsync(x => x.Code == testcode);
 
+            return result;
+        }
+
+        public async Task<TestQuestion> GetTestQuestion(string questionid)
+        {
+            var result = await _context.TestQuestions
+                .FindAsync(questionid);
             return result;
         }
     }

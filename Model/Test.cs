@@ -21,6 +21,6 @@ namespace Institute.Model
         public string Code { get; set; }
 
         //Navigation Property
-        public ICollection<TestQuestion> TestQAs { get; set; }
+        //public ICollection<TestQuestion> TestQuestions { get; set; }
     }
 }

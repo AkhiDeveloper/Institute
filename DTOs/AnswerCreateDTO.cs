@@ -9,12 +9,6 @@ namespace Institute.DTOs
 {
     public class AnswerCreateDTO
     {
-        public int SN { get; set; }
-
-        public string answertext { get; set; }
-
-        [Required]
-        [DefaultValue(true)]
-        public bool IsCorrect { get; set; }
+        public string Statement { get; set; }
     }
 }

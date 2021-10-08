@@ -9,6 +9,7 @@ using Institute.Repository.FileManager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace Institute.Controllers
 {
@@ -55,11 +56,11 @@ namespace Institute.Controllers
                 await _datarepository.CreateTestQuestion(testQuestionmodel);
                 await _datarepository.SaveChanges();
 
-                return Ok(testmodel);
+                return Ok(testQuestionmodel);
             }
             catch(Exception e)
             {
-                throw new ArgumentNullException("Fail to complete", e);
+                return BadRequest(e);
             }
             
         }

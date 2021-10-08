@@ -410,11 +410,9 @@ namespace Institute.Migrations
                 name: "TestQuestions",
                 columns: table => new
                 {
-                    QuestionId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RefTestId = table.Column<int>(nullable: false),
-                    QuestionId1 = table.Column<string>(nullable: true),
-                    RefTestId1 = table.Column<string>(nullable: true)
+                    QuestionId = table.Column<string>(nullable: false),
+                    RefTestId = table.Column<string>(nullable: false),
+                    QuestionId1 = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -424,13 +422,13 @@ namespace Institute.Migrations
                         column: x => x.QuestionId1,
                         principalTable: "Questions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TestQuestions_Tests_RefTestId1",
-                        column: x => x.RefTestId1,
+                        name: "FK_TestQuestions_Tests_RefTestId",
+                        column: x => x.RefTestId,
                         principalTable: "Tests",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1318,6 +1316,12 @@ namespace Institute.Migrations
                 column: "StudentId1");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Questions_Code",
+                table: "Questions",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RegisteredTutorCourses_CourseId1",
                 table: "RegisteredTutorCourses",
                 column: "CourseId1");
@@ -1360,9 +1364,15 @@ namespace Institute.Migrations
                 column: "QuestionId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestQuestions_RefTestId1",
+                name: "IX_TestQuestions_RefTestId",
                 table: "TestQuestions",
-                column: "RefTestId1");
+                column: "RefTestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tests_Code",
+                table: "Tests",
+                column: "Code",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TrialEnrollments_CourseId1",

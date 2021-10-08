@@ -13,6 +13,7 @@ namespace Institute.Profiles
         public TestProfile()
         {
             CreateMap<TestCreateForm, Test>();
+            CreateMap<TestQuestionCreateForm, TestQuestion>();
         }
     }
 }

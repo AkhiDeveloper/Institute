@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Institute.Migrations
 {
     [DbContext(typeof(InstituteContext))]
-    [Migration("20201013042613_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20201016100505_TQFK")]
+    partial class TQFK
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -738,11 +738,12 @@ namespace Institute.Migrations
             modelBuilder.Entity("Institute.Model.Question", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Statement")
                         .IsRequired()
@@ -750,6 +751,9 @@ namespace Institute.Migrations
                         .HasMaxLength(100);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.ToTable("Questions");
                 });
@@ -843,11 +847,12 @@ namespace Institute.Migrations
             modelBuilder.Entity("Institute.Model.Test", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -856,30 +861,24 @@ namespace Institute.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("Tests");
                 });
 
             modelBuilder.Entity("Institute.Model.TestQuestion", b =>
                 {
-                    b.Property<int>("QuestionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("QuestionId1")
+                    b.Property<string>("QuestionId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RefTestId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RefTestId1")
+                    b.Property<string>("RefTestId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("QuestionId");
 
-                    b.HasIndex("QuestionId1");
-
-                    b.HasIndex("RefTestId1");
+                    b.HasIndex("RefTestId");
 
                     b.ToTable("TestQuestions");
                 });
@@ -1535,11 +1534,15 @@ namespace Institute.Migrations
                 {
                     b.HasOne("Institute.Model.Question", "Question")
                         .WithMany()
-                        .HasForeignKey("QuestionId1");
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Institute.Model.Test", "RefTest")
-                        .WithMany("TestQAs")
-                        .HasForeignKey("RefTestId1");
+                        .WithMany()
+                        .HasForeignKey("RefTestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Institute.Model.TrialEnrollment", b =>
